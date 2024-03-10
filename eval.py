@@ -1,5 +1,5 @@
 from math import gamma
-from matplotlib import type1font
+# from matplotlib import type1font
 import numpy as np
 from samp import *
 from graph import *
