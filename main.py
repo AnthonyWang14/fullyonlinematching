@@ -1,5 +1,5 @@
 from eval import *
-import gurobipy
+# import gurobipy
 
 if __name__ == '__main__':
     np.random.seed(1)

@@ -87,14 +87,6 @@ class Graph:
 
         if self.dist_type == 'single': 
             T = 3
-            # chosen = np.random.randint(0, self.N)
-            # for i in range(self.N):
-            #     if i == chosen:
-            #         n = np.random.randint(0, T)
-            #     else:
-            #         n = 0
-            #     self.dist_paras.append(n)
-            #     self.mean_quit_time.append(n)
             for i in range(self.N):
                 n = np.random.randint(0, self.T)
                 self.dist_paras.append(n)

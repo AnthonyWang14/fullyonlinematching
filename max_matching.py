@@ -49,8 +49,8 @@ class MaxMatching:
             if self.sol[e] > 1e-5:
                 self.matching.append([int(e.split('_')[0]), int(e.split('_')[1])])
             # print(e, self.sol[e])
-        m.write("out.lp")
-        m.write("out.sol")
+        # m.write("out.lp")
+        # m.write("out.sol")
         # print('matching of off', self.matching)
         self.reward = m.getObjective().getValue()
         return self.reward
