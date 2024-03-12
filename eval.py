@@ -1,166 +1,6 @@
-from math import gamma
-# from matplotlib import type1font
-import numpy as np
-from samp import *
-from graph import *
-from max_matching import *
-from batch import *
-from greedy import *
-from randcomp import *
-import time
-import argparse
+from online_matching import *
 
-import sys
-
-
-class OnlineMatching:
-
-    def __init__(self, graph = None, T = 1000) -> None:
-        self.G = graph
-        self.T = T
-        # self.d = d
-
-
-    def gene_sequence(self):
-        seq = []
-        quit_time = []
-        for t in range(self.T):
-            seq_one, quit_one = self.G.gene_an_arrival()
-            seq.append(seq_one)
-            quit_time.append(quit_one)
-        return seq, quit_time
-
-
-    def test_matching_valid(self, algo, matching, reward, seq, quit_time):
-        if algo == 'OFF':
-            return 
-        matched_list = [0 for i in seq]
-        r = 0
-        for m in matching:
-            ind_i = m[0]
-            ind_j = m[1]
-            match_time = m[2]
-            if matched_list[ind_i] > 0:
-                print(ind_i, 'is matched twice', algo)
-                break
-            if matched_list[ind_j] > 0:
-                print(ind_j, 'is matched twice', algo)
-                break
-            if (match_time-ind_i)>quit_time[ind_i] or (match_time-ind_j)>quit_time[ind_j]:
-                print('error quit time', algo)
-                break
-            matched_list[ind_i] = 1
-            matched_list[ind_j] = 1
-            u = seq[m[0]]
-            v = seq[m[1]]
-            r += self.G.weights[u][v]
-        if np.absolute((r-reward)) > 1e-5:
-            print('error reward', algo)
-        return
-
-    def run_test(self, algo_list = ['OFF'], gamma=0.42, test_num = 1, save = 0):
-        algo_result = {}
-        algo_mean = {}
-        run_time = {}
-        algo_ratio = {}
-        for algo in algo_list:
-            algo_result[algo] = []
-            algo_ratio[algo] = 0
-            run_time[algo] = 0
-        for k in range(test_num):
-            seq, quit_time = self.gene_sequence()
-            # print(quit_time)
-            for algo in algo_list:
-                start = time.time()
-                reward = 0
-                matching = []
-                # print('run', algo)
-                if algo == 'SAM':
-                    samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = gamma)
-                    reward = samp.eval()
-                    matching = samp.matching
- 
-
-                if algo == 'SAM1':
-                    grd = GreedyMatching(graph=self.G, seq=seq, quit_time=quit_time)
-                    reward = grd.eval()
-                    matching = grd.matching
-                    # reward = 1
-                    # continue
-                    # samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 1)
-                    # reward = samp.eval()
-                    # matching = samp.matching
-
-                if algo == 'SAM0.6':
-                    samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 0.6)
-                    reward = samp.eval()
-                    matching = samp.matching
-
-                if algo == 'SAMTH':
-                    samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 0.36, threshold=0.8)
-                    reward = samp.eval()
-                    matching = samp.matching
-                
-                if algo == 'RCP':
-                    rcp = RandCompMatching(graph=self.G, seq=seq, quit_time=quit_time)
-                    reward = rcp.eval()
-                    matching = rcp.matching
-
-                if algo == 'GRD':
-                    grd = GreedyMatching(graph=self.G, seq=seq, quit_time=quit_time)
-                    reward = grd.eval()
-                    matching = grd.matching
-
-                if algo == 'BAT':
-                    batch_mean_match = BatchMatching(graph=self.G, seq=seq, quit_time=quit_time, batch_type='MEAN')
-                    reward = batch_mean_match.eval()
-                    matching = batch_mean_match.matching
-
-                if algo == 'BATCH_MIN':
-                    batch_min_match = BatchMatching(graph=self.G, seq=seq, quit_time=quit_time, batch_type='MIN')
-                    reward = batch_min_match.eval()
-                    matching = batch_min_match.matching
-
-                if algo == 'BATCH_MAX':
-                    batch_max_match = BatchMatching(graph=self.G, seq=seq, quit_time=quit_time, batch_type='MAX')
-                    reward = batch_max_match.eval()
-                    matching = batch_max_match.matching
-                    # print(matching)
-
-                if algo == 'OFF':
-                    alive = [1 for i in range(len(seq))]
-                    max_match = MaxMatching(graph=self.G, seq=seq, quit_time=quit_time, alive=alive)
-                    reward = max_match.eval()
-                    matching = max_match.matching
-
-                algo_result[algo].append(reward)
-                run_time[algo] += time.time() - start
-                # print(algo, matching)
-                # self.test_matching_valid(algo, matching, reward, seq, quit_time)
-
-        if save == 1:
-            for algo in algo_list:
-                print(algo)
-        for algo in algo_list:
-            algo_mean[algo] = np.mean(algo_result[algo])
-        
-        for algo in algo_list:
-            if save == 1:
-                print(algo_mean[algo]/algo_mean['OFF'])
-            else:
-                print(algo, algo_mean[algo], algo_mean[algo]/algo_mean['OFF'])
-                algo_ratio[algo] = algo_mean[algo]/algo_mean['OFF']
-        # print(algo_result)
-        print('run time')
-        for algo in algo_list:
-            if save == 1:
-                print(run_time[algo]/test_num)
-            else:
-                print(algo, run_time[algo]/test_num)
-        return(algo_ratio)
-    
-
-def test_save(density=2.5, type_number=100, dist_type=0, shift = 0, gamma=0.36, testnum=2, save=1, algo_list = ['OFF'], n_max=30, p_min=0.5, lam_max=10, filename = None):
+def test_save(density=2.5, type_number=100, dist_type=0, shift = 0, gamma=0.36, testnum=2, save=1, algo_list = ['OFF'], n_max=30, p_min=0.5, lam_max=10, q_min=0.5, filename = None):
     print(density, type_number, dist_type, gamma, n_max, p_min, lam_max)
     dist_type_dict = {0:'geometric', 1:'binomial', 2:'poisson', 3:'single'}
     if filename:
@@ -176,12 +16,13 @@ def test_save(density=2.5, type_number=100, dist_type=0, shift = 0, gamma=0.36, 
                 else:
                     weight_str = line.strip().split()
                     weights.append([float(w) for w in weight_str])
-            g = Graph(type_number = len(rates), dist_type = dist_type_dict[dist_type], density=density, shift_mean = shift, n_max=n_max, p_min=p_min, lam_max=lam_max, weights = weights, rates=rates)
+            g = Graph(type_number = len(rates), dist_type = dist_type_dict[dist_type], density=density, shift_mean = shift, n_max=n_max, p_min=p_min, lam_max=lam_max, q_min = q_min, weights = weights, rates=rates)
             # print(g.weights)
             # print(g.rates)
     else:
-        g = Graph(type_number = type_number, dist_type = dist_type_dict[dist_type], density=density, shift_mean = shift, n_max=n_max, p_min=p_min, lam_max=lam_max, weights = None)
-    T = 5000
+        g = Graph(type_number = type_number, dist_type = dist_type_dict[dist_type], density=density, shift_mean = shift, n_max=n_max, p_min=p_min, lam_max=lam_max, q_min=q_min, weights = None)
+    # should be 5000
+    T = 100
     online_match = OnlineMatching(g, T=T)
     return online_match.run_test(algo_list=algo_list, gamma=gamma, test_num=testnum, save=save)
 
@@ -203,6 +44,7 @@ def diff_type_number(dist_type=2):
     n_max = 30
     p_min = 0.5
     lam_max = 10
+    q_min = 0.5
     type_number_list = [20+i*20 for i in range(10)]
     # dist_type = 2
     algo_list = ['OFF', 'GRD', 'BAT', 'SAM0.5', 'SAM']
@@ -210,7 +52,7 @@ def diff_type_number(dist_type=2):
     with open(filename, 'w+') as file:
         file.write('type_number'+' '+' '.join([algo for algo in algo_list])+'\n')
         for type_number in type_number_list:
-            algo_ratio_list = test_save(density=density, type_number=type_number, dist_type=dist_type, shift=0, gamma=gamma, testnum=testnum, save=0, algo_list=algo_list, n_max=n_max, p_min=p_min, lam_max=lam_max)
+            algo_ratio_list = test_save(density=density, type_number=type_number, dist_type=dist_type, shift=0, gamma=gamma, testnum=testnum, save=0, algo_list=algo_list, n_max=n_max, p_min=p_min, lam_max=lam_max, q_min=q_min)
             file.write(str(type_number)+' '+' '.join([str(round(algo_ratio_list[algo], 3)) for algo in algo_ratio_list])+'\n')
 
 def diff_density(dist_type=2):
@@ -222,12 +64,13 @@ def diff_density(dist_type=2):
     n_max = 30
     p_min = 0.5
     lam_max = 10
+    q_min = 0.5
     algo_list = ['OFF', 'RCP', 'GRD', 'BAT', 'SAM0.6', 'SAM']
     filename = 'result/0.6_20d_dt'+str(dist_type)
     with open(filename, 'w+') as file:
         file.write('density '+' '.join([algo for algo in algo_list])+'\n')
         for density in density_list:
-            algo_ratio_list = test_save(density=density, type_number=type_number, dist_type=dist_type, shift=0, gamma=gamma, testnum=testnum, save=0, algo_list=algo_list, n_max=n_max, p_min=p_min, lam_max=lam_max)
+            algo_ratio_list = test_save(density=density, type_number=type_number, dist_type=dist_type, shift=0, gamma=gamma, testnum=testnum, save=0, algo_list=algo_list, n_max=n_max, p_min=p_min, lam_max=lam_max, q_min=q_min)
             file.write(str(round(density,3))+' '+' '.join([str(round(algo_ratio_list[algo],3)) for algo in algo_ratio_list])+'\n')
 
 # def diff_shift():
@@ -252,6 +95,7 @@ def diff_n_max(SYN=True):
     gamma = 0.42
     testnum = 20
     shift = 0
+    q_min = 0.5
     n_max_list = [10+i*5 for i in range(1, 9)]
     if SYN:
         input_file = 'syn'
@@ -265,7 +109,7 @@ def diff_n_max(SYN=True):
     with open(filename, 'w+') as file:
         file.write('n_max '+' '.join([algo for algo in algo_list])+'\n')
         for n_max in n_max_list:
-            algo_ratio_list = test_save(density=density, type_number=type_number, dist_type=dist_type, shift=shift, gamma=gamma, testnum=testnum, save=0, algo_list=algo_list, n_max=n_max, filename=f)
+            algo_ratio_list = test_save(density=density, type_number=type_number, dist_type=dist_type, shift=shift, gamma=gamma, testnum=testnum, save=0, algo_list=algo_list, n_max=n_max, q_min=q_min, filename=f)
             file.write(str(n_max)+' '+' '.join([str(round(algo_ratio_list[algo],3)) for algo in algo_ratio_list])+'\n')
 
 def diff_p_min(SYN=True):
@@ -289,7 +133,7 @@ def diff_p_min(SYN=True):
     with open(filename, 'w+') as file:
         file.write('p_min '+' '.join([algo for algo in algo_list])+'\n')
         for p_min in p_min_list:
-            algo_ratio_list = test_save(density=density, type_number=type_number, dist_type=dist_type, shift=shift, gamma=gamma, testnum=testnum, save=0, algo_list=algo_list, n_max=n_max, p_min=p_min, filename=f)
+            algo_ratio_list = test_save(density=density, type_number=type_number, dist_type=dist_type, shift=shift, gamma=gamma, testnum=testnum, save=0, algo_list=algo_list, n_max=n_max, p_min=p_min, q_min=0.5, filename=f)
             file.write(str(round(p_min, 3))+' '+' '.join([str(round(algo_ratio_list[algo],3)) for algo in algo_ratio_list])+'\n')
 
 def diff_lam_max(SYN=True):
