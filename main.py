@@ -7,5 +7,6 @@ if __name__ == '__main__':
     # pass
 
     # diff_p_min(SYN=False)
-    diff_lam_max(SYN=True)
+    # diff_lam_max(SYN=True)
+    diff_q_mean(SYN=True)
     # diff_lam_max(SYN=False)

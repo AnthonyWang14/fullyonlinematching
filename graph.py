@@ -9,9 +9,7 @@ import numpy as np
 from scipy.stats import truncnorm
 
 def truncated_normal(mu, sigma, low=0, high=1, size=None):
-    # 计算截断区间
     a, b = (low - mu) / sigma, (high - mu) / sigma
-    # 生成截断正态分布
     samples = truncnorm.rvs(a, b, loc=mu, scale=sigma, size=size)
     return samples
 
@@ -19,7 +17,7 @@ def truncated_normal(mu, sigma, low=0, high=1, size=None):
 
 # underlying graph
 class Graph:
-    def __init__(self, type_number = 10, dist_type = 'geometric', density = 1, shift_mean=0, n_max=30, p_min=0.5, lam_max=10, q_min = 0, weights = None, rates = None, T=3) -> None:
+    def __init__(self, type_number = 10, dist_type = 'geometric', density = 1, shift_mean=0, n_max=30, p_min=0.5, lam_max=10, q_mean = 0.5, weights = None, rates = None, T=3) -> None:
         # np.random.seed(0)
         self.N = type_number
         self.density = density
@@ -28,7 +26,7 @@ class Graph:
         self.n_max = n_max
         self.p_min = p_min
         self.lam_max = lam_max
-        self.q_min = q_min
+        self.q_mean = q_mean
         self.T = T
 
         # print(weights)
@@ -44,6 +42,7 @@ class Graph:
             self.gene_rates()
 
         self.dist_type = dist_type
+        # print(self.dist_type)
         self.gene_quit_dist()
         self.check_lam_dx()
     
@@ -77,22 +76,23 @@ class Graph:
         self.mean_quit_time = []
 
         if self.dist_type == 'twovalue':
-            q_min = self.q_min
+            # std variance = 0.1
+            samples = truncated_normal(self.q_mean, 0.1, low=0, high=1, size=self.N)
             for i in range(self.N):
-                q = np.random.uniform(q_min, 1)
-                paras['q'] = q
+                paras = {}
+                paras['q'] = samples[i]
                 paras['d_min'] = 1
                 paras['d_max'] = 10
                 self.dist_paras.append(paras)
                 self.mean_quit_time.append(paras['q']*paras['d_min']+(1-paras['q'])*paras['d_max'])
 
         if self.dist_type == 'geometric':
-            # need one parameter p > 0.5
             # self.dist_paras = []
             p_min = self.p_min
+            variance = 0.01
+            samples = truncated_normal(p_min, np.sqrt(variance), low=0, high=1, size=self.N)
             for i in range(self.N):
-                paras = {}
-                p = np.random.uniform(p_min, 1)
+                p = samples[i]
                 self.dist_paras.append(p)
                 self.mean_quit_time.append(1/p)
 
@@ -278,13 +278,10 @@ class Graph:
 
 
 if __name__ == '__main__':
-    # 设置平均值和方差
     mu = 0.5
     variance = 0.1
-    # 生成截断正态分布样本
     samples = truncated_normal(mu, np.sqrt(variance), low=0, high=1, size=1000)
 
-    # 示例：打印前10个样本
     print(samples[:10])
     m = 4
     T = 20
