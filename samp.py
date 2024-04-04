@@ -80,30 +80,6 @@ class Samp:
                 for ind in range(start, t):
                     if (t-ind)<=self.quit_time[ind] and matched[ind] == 0:
                         candidate_index.append(ind)
-                # np.random.shuffle(candidate_index)
-                # candidate_index_tie = []
-                # cand_quit_time = []
-                # for ind in candidate_index:
-                #     u = self.seq[ind]
-                #     prob = self.sol[str(u)+'_'+str(v)]*self.gamma/min(1, self.G.mean_quit_time[u]*self.G.rates[u])
-                #     if prob > self.threshold:
-                #         prob = 1
-                #     if np.random.random() <= prob:
-                #         candidate_index_tie.append(ind)
-                #         cand_quit_time.append(ind+self.quit_time[ind])
-
-                # if len(candidate_index_tie) > 0: 
-                #     cand_quit_time = np.array(cand_quit_time)
-                #     # print(cand_quit_time)
-                #     ind_sort = np.argsort(cand_quit_time)
-                #     ind = ind_sort[0]
-                #     # print(cand_quit_time, ind)
-                #     ind = candidate_index_tie[ind]
-                #     self.matching.append([ind, t, t])
-                #     matched[t] = 1
-                #     matched[ind] = 1
-                #     self.reward += self.G.weights[self.seq[ind]][self.seq[t]]
-                
                 candidate_type = [self.seq[ind] for ind in candidate_index]
                 np.random.shuffle(candidate_type)
                 # print(t, candidate_index)
@@ -126,6 +102,49 @@ class Samp:
                         break
         return self.reward
 
+    def eval_Collina(self):
+        self.solve()
+        self.matching = []
+        self.reward = 0
+        matched = [0 for i in self.seq]
+        # print(self.d, 'd')
+        max_quit_time = max(self.quit_time)
+        for t in range(len(self.seq)):
+            if t > 0:
+                v = self.seq[t]
+                start = max(0, t-max_quit_time)
+                # print(start)
+                candidate_index = []
+                for ind in range(start, t):
+                    if (t-ind)<=self.quit_time[ind] and matched[ind] == 0:
+                        candidate_index.append(ind)
+                candidate_type = [self.seq[ind] for ind in candidate_index]
+                # print(t, candidate_index)
+                unique_types = list(set(candidate_type))
+                # if len(unique_types) < len(candidate_type):
+                #     print('Warning: multiple types in candidate_type and the difference is', len(candidate_type)-len(unique_types))
+                np.random.shuffle(unique_types)
+                # print(unique_types)
+                found = False
+                for u in unique_types:
+                    prob = self.sol[str(u)+'_'+str(v)]*self.gamma*max(1, 1/(self.G.mean_quit_time[u]*self.G.rates[u]))
+                    if 1/(self.G.mean_quit_time[u]*self.G.rates[u]) < 1:
+                        print('Warning: mean_quit_time*rate < 1')
+                    if prob > self.threshold:
+                        prob = 1
+                    # print('prob', prob)
+                    if np.random.random() <= prob:
+                        for ind in candidate_index:
+                            if self.seq[ind] == u:
+                                self.matching.append([ind, t, t])
+                                matched[t] = 1
+                                matched[ind] = 1
+                                self.reward += self.G.weights[u][v]
+                                found = True
+                                break
+                    if found:
+                        break
+        return self.reward
  
 
 if __name__ == '__main__':

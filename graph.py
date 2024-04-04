@@ -13,8 +13,6 @@ def truncated_normal(mu, sigma, low=0, high=1, size=None):
     samples = truncnorm.rvs(a, b, loc=mu, scale=sigma, size=size)
     return samples
 
-
-
 # underlying graph
 class Graph:
     def __init__(self, type_number = 10, dist_type = 'geometric', density = 1, shift_mean=0, n_max=30, p_min=0.5, lam_max=10, q_mean = 0.5, weights = None, rates = None, T=3) -> None:
@@ -74,7 +72,6 @@ class Graph:
         # need define quit_pamameter, mean quit time list
         self.dist_paras = []
         self.mean_quit_time = []
-
         if self.dist_type == 'twovalue':
             # std variance = 0.1
             samples = truncated_normal(self.q_mean, 0.1, low=0, high=1, size=self.N)

@@ -14,14 +14,27 @@ class BatchMatching:
         else:
             self.batch_type = 'MEAN'
 
-    def eval(self):
+
+    def eval_tune(self):
+        test_bsize = list(range(int(min(self.quit_time)+1), int(max(self.quit_time)+1)+1))
+        reward_list = []
+        for b_size in test_bsize:
+            reward_list.append(self.eval(b_size=b_size))
+        max_reward = max(reward_list)
+        max_index = reward_list.index(max_reward)
+        print(test_bsize[max_index])
+        return max_reward
+        
+    def eval(self, b_size=None):
         if self.batch_type == 'MAX':
             batch_size = int(max(self.quit_time)+1)
         if self.batch_type == 'MIN':
             batch_size = int(min(self.quit_time)+1)
         if self.batch_type == 'MEAN':
             batch_size = int(np.sum(self.G.rates*self.G.mean_quit_time)+1)
-        # batch_size = self.d+1
+        # batch_size = self.d+1 
+        if b_size:
+            batch_size = b_size
         batch_num = int(len(self.seq)/batch_size)
         reward = 0
         # print('batch_size', batch_size, 'batch_num', batch_num)
@@ -44,7 +57,6 @@ class BatchMatching:
             max_match = MaxMatching(graph=self.G, seq=batch_seq, quit_time=batch_quit_time, alive=alive)
             reward += max_match.eval()
             for m in max_match.matching:
-                # new_m = str(int(m.split('_')[0])+i*batch_size)+'_'+str(int(m.split('_')[1])+i*batch_size)
                 new_m = [m[0]+i*batch_size, m[1]+i*batch_size, batch_end-1]
                 self.matching.append(new_m)
         # print('matching of batch', self.matching)
