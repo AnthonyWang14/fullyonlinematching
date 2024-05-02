@@ -84,6 +84,11 @@ class OnlineMatching:
                     reward = samp.eval()
                     matching = samp.matching
 
+                if algo == 'SAM1N':
+                    samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 1)
+                    reward = samp.eval_no_adjust()
+                    matching = samp.matching
+
                 if algo == 'SAM0.6':
                     samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 0.6)
                     reward = samp.eval()

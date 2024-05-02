@@ -4,7 +4,7 @@ from datetime import datetime
 def test_save(density=2.5, type_number=100, dist_type=0, shift = 0, gamma=0.36, testnum=2, save=1, algo_list = ['OFF'], n_max=30, p_min=0.5, lam_max=10, q_mean=0.5, filename = None):
     print('density', density, 'type_number', type_number, 'dist_type', dist_type, 'gamma', gamma, 'testnum', testnum,'save', save, 'algo_list', algo_list, 'n_max', n_max, 'p_min', p_min, 'lam_max', lam_max, 'q_mean', q_mean)
     dist_type_dict = {0:'geometric', 1:'binomial', 2:'poisson', 3:'single', 4:'twovalue'}
-    graph_num = 2
+    graph_num = 10
     if filename:
         print('test file '+filename)
         with open(filename) as f:
@@ -100,7 +100,7 @@ def diff_p_min(SYN=True):
     density = 2.5
     type_number = 50
     dist_type = 0
-    gamma = 0.42
+    gamma = 1
     testnum = 10
     shift = 0
     p_min_list = [0.1+i*0.1 for i in range(9)]
@@ -108,7 +108,7 @@ def diff_p_min(SYN=True):
     q_mean = 0.5
     if SYN:
         input_file = 'syn'
-        algo_list = ['OFF', 'RCP', 'GRD', 'BATCH', 'SAM1']
+        algo_list = ['OFF', 'COL1', 'SAM1']
         f = None
     else:
         input_file = 'nyc_20_2_842'
@@ -140,7 +140,7 @@ def diff_gamma(SYN=True, dist_type = 0):
         f = None
     else:
         input_file = 'nyc_20_2_842'
-        algo_list = ['OFF', 'GRD', 'BAT', 'SAM0.6', 'SAM']
+        algo_list = ['OFF', 'GRD', 'BATCH', 'SAM0.6', 'SAM']
         f = 'data/'+input_file
     filename = 'result/gamma_'+input_file
     topstr = 'gamma '+' '.join([algo for algo in algo_list])
@@ -158,7 +158,7 @@ def diff_q_mean(SYN=True):
     type_number = 50
     dist_type = 4
     gamma = 0.42
-    testnum = 10
+    testnum = 5
     shift = 0
     p_min = 0.5
     q_mean_list = [0.1+i*0.1 for i in range(9)]
@@ -166,7 +166,7 @@ def diff_q_mean(SYN=True):
     n_max = 30
     if SYN:
         input_file = 'syn'
-        algo_list = ['OFF', 'SAM1', 'BATCH']
+        algo_list = ['OFF', 'SAM1', 'COL1', 'SAM1N', 'BATCH']
         f = None
     else:
         input_file = 'nyc_20_2_842'

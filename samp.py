@@ -61,11 +61,89 @@ class Samp:
         # print(self.sol)
         # print(m.Constr)
         self.lp_opt = m.getObjective().getValue()
-        m.write("out.lp")
-        m.write("out.sol")
-    
+        # m.write("out.lp")
+        # m.write("out.sol")
+
+    # normalize the LP solution
+    def adjust_sol(self):
+        temp_sol = np.zeros((self.G.N, self.G.N))
+        for e in self.sol:
+            i = e.split('_')[0]
+            j = e.split('_')[1]
+            temp_sol[int(i)][int(j)] = self.sol[e]
+        for i in range(self.G.N):
+            for j in range(self.G.N):
+                if i <= j:
+                    t = (temp_sol[i][j]+temp_sol[j][i])/(self.G.mean_quit_time[i]+self.G.mean_quit_time[j])
+                    t = (temp_sol[i][j]*self.G.rates[j] + temp_sol[j][i]*self.G.rates[i])/(self.G.mean_quit_time[i]+self.G.mean_quit_time[j])
+                    xij = t*self.G.mean_quit_time[i]/self.G.rates[j]
+                    xji = t*self.G.mean_quit_time[j]/self.G.rates[i]
+                    self.sol[str(i)+'_'+str(j)] = xij    
+                    self.sol[str(j)+'_'+str(i)] = xji    
+
+    # more tight constraint adjust:
+    def adjust_sol_tight(self):
+        nij = np.zeros((self.G.N, self.G.N))
+        nij_adj = np.zeros((self.G.N, self.G.N))
+        for e in self.sol:
+            i = int(e.split('_')[0])
+            j = int(e.split('_')[1])
+            nij[i][j] = self.sol[e]*self.G.rates[j]
+        
+        for i in range(self.G.N):
+            for j in range(self.G.N):
+                if i <= j:
+                    if self.G.mean_quit_time[i] < self.G.mean_quit_time[j]:
+                        nij_adj[i][j] = min((nij[i][j]+nij[j][i]), self.G.rates[i]*self.G.rates[j]*self.G.mean_quit_time[i])
+                        nij_adj[j][i] = nij[i][j]+nij[j][i] - nij_adj[i][j]
+                    else:
+                        nij_adj[j][i] = min((nij[i][j]+nij[j][i]), self.G.rates[i]*self.G.rates[j]*self.G.mean_quit_time[j])
+                        nij_adj[i][j] = nij[i][j]+nij[j][i] - nij_adj[j][i]
+
+                    self.sol[str(i)+'_'+str(j)] = nij_adj[i][j]/self.G.rates[j]    
+                    self.sol[str(j)+'_'+str(i)] = nij_adj[j][i]/self.G.rates[i] 
+
+    def eval_no_adjust(self):
+        self.solve()
+        # self.adjust_sol()
+        self.matching = []
+        self.reward = 0
+        matched = [0 for i in self.seq]
+        # print(self.d, 'd')
+        max_quit_time = max(self.quit_time)
+        for t in range(len(self.seq)):
+            if t > 0:
+                v = self.seq[t]
+                start = max(0, t-max_quit_time)
+                # print(start)
+                candidate_index = []
+                for ind in range(start, t):
+                    if (t-ind)<=self.quit_time[ind] and matched[ind] == 0:
+                        candidate_index.append(ind)
+                candidate_type = [self.seq[ind] for ind in candidate_index]
+                np.random.shuffle(candidate_type)
+                # print(t, candidate_index)
+                found = False
+                for u in candidate_type:
+                    prob = self.sol[str(u)+'_'+str(v)]*self.gamma/(self.G.mean_quit_time[u]*self.G.rates[u])
+                    if prob > self.threshold:
+                        prob = 1
+                    # print('prob', prob)
+                    if np.random.random() <= prob:
+                        for ind in candidate_index:
+                            if self.seq[ind] == u:
+                                self.matching.append([ind, t, t])
+                                matched[t] = 1
+                                matched[ind] = 1
+                                self.reward += self.G.weights[u][v]
+                                found = True
+                                break
+                    if found:
+                        break
+        return self.reward
     def eval(self):
         self.solve()
+        self.adjust_sol_tight()
         self.matching = []
         self.reward = 0
         matched = [0 for i in self.seq]
@@ -128,8 +206,8 @@ class Samp:
                 found = False
                 for u in unique_types:
                     prob = self.sol[str(u)+'_'+str(v)]*self.gamma*max(1, 1/(self.G.mean_quit_time[u]*self.G.rates[u]))
-                    if 1/(self.G.mean_quit_time[u]*self.G.rates[u]) < 1:
-                        print('Warning: mean_quit_time*rate < 1')
+                    # if 1/self.G.mean_quit_time[u]*self.G.rates[u] < 1:
+                    #     print('Warning: mean_quit_time*rate < 1')
                     if prob > self.threshold:
                         prob = 1
                     # print('prob', prob)
