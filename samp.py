@@ -141,9 +141,10 @@ class Samp:
                     if found:
                         break
         return self.reward
+    
     def eval(self):
         self.solve()
-        self.adjust_sol_tight()
+        self.adjust_sol()
         self.matching = []
         self.reward = 0
         matched = [0 for i in self.seq]
@@ -164,9 +165,9 @@ class Samp:
                 found = False
                 for u in candidate_type:
                     prob = self.sol[str(u)+'_'+str(v)]*self.gamma/(self.G.mean_quit_time[u]*self.G.rates[u])
-                    if prob > self.threshold:
-                        prob = 1
-                    # print('prob', prob)
+                    # if prob > self.threshold:
+                    #     print('prob', prob)
+                    #     prob = 1
                     if np.random.random() <= prob:
                         for ind in candidate_index:
                             if self.seq[ind] == u:

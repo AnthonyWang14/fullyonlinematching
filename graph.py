@@ -15,18 +15,12 @@ def truncated_normal(mu, sigma, low=0, high=1, size=None):
 
 # underlying graph
 class Graph:
-    def __init__(self, type_number = 10, dist_type = 'geometric', density = 1, shift_mean=0, n_max=30, p_min=0.5, lam_max=10, q_mean = 0.5, weights = None, rates = None, T=3) -> None:
+    def __init__(self, type_number = 10, density = 1, dist_type = 'fix', dist_hyperpara = 10, weights = None, rates = None, T=3) -> None:
         # np.random.seed(0)
         self.N = type_number
         self.density = density
         self.sparsity = 1-2/self.N*self.density
-        self.shift_mean = shift_mean
-        self.n_max = n_max
-        self.p_min = p_min
-        self.lam_max = lam_max
-        self.q_mean = q_mean
         self.T = T
-
         # print(weights)
         if weights:
             self.weights = np.array(weights)
@@ -40,7 +34,7 @@ class Graph:
             self.gene_rates()
 
         self.dist_type = dist_type
-        # print(self.dist_type)
+        self.dist_hyperpara = dist_hyperpara
         self.gene_quit_dist()
         self.check_lam_dx()
     
@@ -74,20 +68,45 @@ class Graph:
         self.mean_quit_time = []
         if self.dist_type == 'twovalue':
             # std variance = 0.1
-            samples = truncated_normal(self.q_mean, 0.1, low=0, high=1, size=self.N)
+            samples = truncated_normal(self.dist_hyperpara, 0.01, low=0, high=1, size=self.N)
+            # print(samples)
+            # fix q_mean
+            # samples = np.array([self.q_mean for i in range(self.N)])
             for i in range(self.N):
                 paras = {}
                 paras['q'] = samples[i]
-                paras['d_min'] = 1
-                paras['d_max'] = 10
+                paras['d_min'] = 0
+                paras['d_max'] = 20
                 self.dist_paras.append(paras)
                 self.mean_quit_time.append(paras['q']*paras['d_min']+(1-paras['q'])*paras['d_max'])
 
+        if self.dist_type == 'single':
+            samples = np.random.randint(1, self.dist_hyperpara, self.N)
+            for i in range(self.N):
+                paras = {}
+                paras['d'] = samples[i]
+                self.dist_paras.append(paras)
+                self.mean_quit_time.append(paras['d'])
+
+        if self.dist_type == 'fix':
+            fixd = self.dist_hyperpara
+            for i in range(self.N):
+                paras = {}
+                paras['d'] = fixd
+                # paras['d_min'] = 0
+                # paras['d_max'] = 20
+                self.dist_paras.append(paras)
+                self.mean_quit_time.append(paras['d'])
+
+
         if self.dist_type == 'geometric':
             # self.dist_paras = []
-            p_min = self.p_min
+            p_min = self.dist_hyperpara
             variance = 0.01
-            samples = truncated_normal(p_min, np.sqrt(variance), low=0, high=1, size=self.N)
+            # print(p_min)
+            samples = truncated_normal(p_min, np.sqrt(variance), low=0.001, high=0.999, size=self.N)
+            # fix p_min
+            # samples = np.array([self.p_min for i in range(self.N)])
             for i in range(self.N):
                 p = samples[i]
                 self.dist_paras.append(p)
@@ -112,16 +131,16 @@ class Graph:
                 self.dist_paras.append(n)
                 self.mean_quit_time.append(n)
 
-        if self.dist_type == 'binomial':
-            min_p = 0.5
-            for i in range(self.N):
-                paras = {}
-                paras['n'] = np.random.randint(10, self.n_max)
-                paras['p'] = np.random.rand()
-                # paras['p'] = np.random.rand()*(1-min_p)+min_p
-                paras['dev'] = 0
-                self.dist_paras.append(paras)
-                self.mean_quit_time.append(paras['n']*paras['p']+paras['dev'])
+        # if self.dist_type == 'binomial':
+        #     min_p = 0.5
+        #     for i in range(self.N):
+        #         paras = {}
+        #         paras['n'] = np.random.randint(10, self.n_max)
+        #         paras['p'] = np.random.rand()
+        #         # paras['p'] = np.random.rand()*(1-min_p)+min_p
+        #         paras['dev'] = 0
+        #         self.dist_paras.append(paras)
+        #         self.mean_quit_time.append(paras['n']*paras['p']+paras['dev'])
 
         if self.dist_type == 'poisson':
             for i in range(self.N):
@@ -131,23 +150,10 @@ class Graph:
                 self.dist_paras.append(paras)
                 self.mean_quit_time.append(paras['lam']+paras['dev'])
             
-        # if self.dist_type == 'uniform':
-        #     d_min = 5
-        #     d_max = 20
-        #     d_range = 2
-        #     self.mean_quit_time = []
-        #     self.quit_dist = []
-        #     for i in range(self.N):
-        #         realized_mean = random.randint(d_min, d_max)
-        #         realized_range = random.randint(0, d_range)
-        #         quit_value = list(range(realized_mean-realized_range, realized_mean+realized_range+1))
-        #         quit_prob = [1/len(quit_value) for i in range(len(quit_value))]
-        #         self.quit_dist.append({'value': quit_value, 'prob': quit_prob})
-        #         self.mean_quit_time.append(realized_mean)
-        #     print(self.quit_dist)
-    
     def gene_quit_time(self, ind):
 
+        if self.dist_type == 'fix':
+            return self.dist_paras[ind]['d']
 
         if self.dist_type == 'twovalue':
             q = self.dist_paras[ind]['q']
@@ -181,7 +187,7 @@ class Graph:
             return np.random.geometric(p)+dev
 
         if self.dist_type == 'single':
-            return self.dist_paras[ind]
+            return self.dist_paras[ind]['d']
 
         if self.dist_type == 'uniform':
             val = self.quit_dist[ind]['value']
@@ -270,8 +276,6 @@ class Graph:
             # print(reward)
             opt += reward*self.prob_list[i]
         return opt
-
-
 
 
 if __name__ == '__main__':

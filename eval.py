@@ -1,10 +1,12 @@
 from online_matching import *
 from datetime import datetime
 
-def test_save(density=2.5, type_number=100, dist_type=0, shift = 0, gamma=0.36, testnum=2, save=1, algo_list = ['OFF'], n_max=30, p_min=0.5, lam_max=10, q_mean=0.5, filename = None):
-    print('density', density, 'type_number', type_number, 'dist_type', dist_type, 'gamma', gamma, 'testnum', testnum,'save', save, 'algo_list', algo_list, 'n_max', n_max, 'p_min', p_min, 'lam_max', lam_max, 'q_mean', q_mean)
-    dist_type_dict = {0:'geometric', 1:'binomial', 2:'poisson', 3:'single', 4:'twovalue'}
-    graph_num = 10
+def test_save(density=2.5, type_number=100, dist_type='fix', dist_hyperpara=10, gamma=0.36, testnum=2, save=1, algo_list = ['OFF'], filename = None):
+    graph_num = 5
+    # test_num = 5
+    print('density', density, 'type_number', type_number, 'dist_type', dist_type, 'dist_hyperpara', dist_hyperpara,'gamma', gamma, 'testnum', testnum,'save', save, 'algo_list', algo_list)
+    # dist_type_dict = {0:'geometric', 1:'binomial', 2:'poisson', 3:'single', 4:'twovalue'}
+
     if filename:
         print('test file '+filename)
         with open(filename) as f:
@@ -18,15 +20,14 @@ def test_save(density=2.5, type_number=100, dist_type=0, shift = 0, gamma=0.36, 
                 else:
                     weight_str = line.strip().split()
                     weights.append([float(w) for w in weight_str])
-            # g = Graph(type_number = len(rates), dist_type = dist_type_dict[dist_type], density=density, shift_mean = shift, n_max=n_max, p_min=p_min, lam_max=lam_max, q_mean = q_mean, weights = weights, rates=rates)
-            g_list = [Graph(type_number = len(rates), dist_type = dist_type_dict[dist_type], density=density, shift_mean = shift, n_max=n_max, p_min=p_min, lam_max=lam_max, q_mean = q_mean, weights = weights, rates=rates) for i in range(graph_num)]
+            g_list = [Graph(type_number = len(rates), density=density, dist_type=dist_type, dist_hyperpara = dist_hyperpara, weights = weights, rates=rates) for i in range(graph_num)]
             # print(g.weights)
             # print(g.rates)
     else:
-        g_list = [Graph(type_number = type_number, dist_type = dist_type_dict[dist_type], density=density, shift_mean = shift, n_max=n_max, p_min=p_min, lam_max=lam_max, q_mean=q_mean, weights = None) for i in range(graph_num)]
-        # g = Graph(type_number = type_number, dist_type = dist_type_dict[dist_type], density=density, shift_mean = shift, n_max=n_max, p_min=p_min, lam_max=lam_max, q_mean=q_mean, weights = None)
+        g_list = [Graph(type_number = type_number,  density=density, dist_type = dist_type, dist_hyperpara=dist_hyperpara, weights = None) for i in range(graph_num)]
+
     # should be 5000
-    T = 2000
+    T = 1000
     algo_ratio_list = {}
     algo_ratio_mean = {}
     algo_ratio_std = {}
@@ -81,59 +82,36 @@ def diff_density(dist_type=2):
             algo_ratio_list = test_save(density=density, type_number=type_number, dist_type=dist_type, shift=0, gamma=gamma, testnum=testnum, save=0, algo_list=algo_list, n_max=n_max, p_min=p_min, lam_max=lam_max, q_min=q_min)
             file.write(str(round(density,3))+' '+' '.join([str(round(algo_ratio_list[algo],3)) for algo in algo_ratio_list])+'\n')
 
-# def diff_shift():
-#     density = 2.5
-#     type_number = 100
-#     dist_type = 3
-#     gamma = 0.36
-#     testnum = 10
-#     shift_list = [1+i for i in range(10)]
-#     algo_list = ['OFF', 'RCP', 'GRD', 'BAT', 'SAM1', 'SAM0.5', 'SAM']
-#     filename = 'result/d2.5'+'tn100'+'dt3+1+10'+'ga'+str(gamma)
-#     with open(filename, 'w+') as file:
-#         file.write('shift '+' '.join([algo for algo in algo_list])+'\n')
-#         for shift in shift_list:
-#             algo_ratio_list = test_save(density=density, type_number=type_number, dist_type=dist_type, shift=shift, gamma=gamma, testnum=testnum, save=0, algo_list=algo_list)
-#             file.write(str(shift)+' '+' '.join([str(round(algo_ratio_list[algo],3)) for algo in algo_ratio_list])+'\n')
-    
-def diff_p_min(SYN=True):
+
+def diff_dist(dist_type='fix', dist_hyperpara_list=[10, 20, 30, 40, 50], SYN=True):
     density = 2.5
-    type_number = 50
-    dist_type = 0
+    type_number = 20
     gamma = 1
-    testnum = 10
-    shift = 0
-    p_min_list = [0.1+i*0.1 for i in range(9)]
-    n_max = 30
-    q_mean = 0.5
+    testnum = 5
     if SYN:
         input_file = 'syn'
-        algo_list = ['OFF', 'COL1', 'SAM1']
+        algo_list = ['OFF', 'GRD', 'SAM1', 'COL1', 'BATCH']
         f = None
     else:
         input_file = 'nyc_20_2_842'
-        algo_list = ['OFF', 'GRD', 'BAT', 'SAM0.6', 'SAM']
+        algo_list = ['OFF', 'GRD', 'SAM1', 'COL1', 'BATCH']
         f = 'data/'+input_file
-    filename = 'result/p_min_'+input_file
+    filename = 'result/'+dist_type+input_file
     algo_ratio_mean_list = []
     algo_ratio_std_list = []
-    topstr = 'p_min '+' '.join([algo for algo in algo_list])
-    for p_min in p_min_list:
-        algo_ratio_mean, algo_ratio_std = test_save(density=density, type_number=type_number, dist_type=dist_type, shift=shift, gamma=gamma, testnum=testnum, save=0, algo_list=algo_list, n_max=n_max, p_min=p_min, q_mean=q_mean, filename=f)
+    topstr = dist_type+' '+' '.join([algo for algo in algo_list])
+    for dist_hyperpara in dist_hyperpara_list:
+        algo_ratio_mean, algo_ratio_std = test_save(density=density, type_number=type_number, dist_type=dist_type, dist_hyperpara=dist_hyperpara, gamma=gamma, testnum=testnum, save=0, algo_list=algo_list, filename=f)
         algo_ratio_mean_list.append(algo_ratio_mean)
         algo_ratio_std_list.append(algo_ratio_std)
-    save_to_file(filename, p_min_list, topstr, algo_ratio_mean_list, algo_ratio_std_list, algo_list)
+    save_to_file(filename, dist_hyperpara_list, topstr, algo_ratio_mean_list, algo_ratio_std_list, algo_list)
 
-def diff_gamma(SYN=True, dist_type = 0):
+
+def diff_gamma(SYN=True, dist_type = 'geometric', dist_hyperpara = 0.5):
     density = 2.5
     type_number = 50
-    # dist_type = 
-    gamma_list = [0.1+i*0.1 for i in range(10)]
-    testnum = 10
-    shift = 0
-    p_min = 0.5
-    q_mean = 0.5
-    n_max = 30
+    gamma_list = [0.5+i*0.5 for i in range(8)]
+    testnum = 5
     if SYN:
         input_file = 'syn'
         algo_list = ['OFF', 'SAM']
@@ -147,47 +125,10 @@ def diff_gamma(SYN=True, dist_type = 0):
     algo_ratio_mean_list = []
     algo_ratio_std_list = []
     for gamma in gamma_list:
-        algo_ratio_mean, algo_ratio_std = test_save(density=density, type_number=type_number, dist_type=dist_type, shift=shift, gamma=gamma, testnum=testnum, save=0, algo_list=algo_list, n_max=n_max, p_min=p_min, q_mean=q_mean, filename=f)
+        algo_ratio_mean, algo_ratio_std = test_save(density=density, type_number=type_number, dist_type=dist_type, dist_hyperpara=dist_hyperpara, gamma=gamma, testnum=testnum, save=0, algo_list=algo_list, filename=f)
         algo_ratio_mean_list.append(algo_ratio_mean)
         algo_ratio_std_list.append(algo_ratio_std)
     save_to_file(filename, gamma_list, topstr, algo_ratio_mean_list, algo_ratio_std_list, algo_list)
-
-
-def diff_q_mean(SYN=True):
-    density = 2.5
-    type_number = 50
-    dist_type = 4
-    gamma = 0.42
-    testnum = 5
-    shift = 0
-    p_min = 0.5
-    q_mean_list = [0.1+i*0.1 for i in range(9)]
-    # q_mean_list = [0.5]
-    n_max = 30
-    if SYN:
-        input_file = 'syn'
-        algo_list = ['OFF', 'SAM1', 'COL1', 'SAM1N', 'BATCH']
-        f = None
-    else:
-        input_file = 'nyc_20_2_842'
-        algo_list = ['OFF', 'GRD', 'BAT', 'SAM0.6', 'SAM']
-        f = 'data/'+input_file
-    filename = 'result/q_mean_'+input_file
-    topstr = 'q_mean '+' '.join([algo for algo in algo_list])
-    algo_ratio_mean_list = []
-    algo_ratio_std_list = []
-    for q_mean in q_mean_list:
-        algo_ratio_mean, algo_ratio_std = test_save(density=density, type_number=type_number, dist_type=dist_type, shift=shift, gamma=gamma, testnum=testnum, save=0, algo_list=algo_list, n_max=n_max, p_min=p_min, q_mean=q_mean, filename=f)
-        algo_ratio_mean_list.append(algo_ratio_mean)
-        algo_ratio_std_list.append(algo_ratio_std)
-    save_to_file(filename, q_mean_list, topstr, algo_ratio_mean_list, algo_ratio_std_list, algo_list)
-
-    # with open(filename, 'a+') as file:
-    #     file.write('q_mean '+' '.join([algo for algo in algo_list])+'\n')
-    #     for q_mean in q_mean_list:
-    #         algo_ratio_mean, algo_ratio_std = test_save(density=density, type_number=type_number, dist_type=dist_type, shift=shift, gamma=gamma, testnum=testnum, save=0, algo_list=algo_list, n_max=n_max, p_min=p_min, q_mean=0.5, filename=f)
-    #         # Get the current date and time
-    #         file.write(str(round(q_mean, 3))+' '+' '.join([str(round(algo_ratio_mean[algo],3))+'_'+str(round(algo_ratio_std[algo],3)) for algo in algo_list])+'\n')
 
 def save_to_file(filename, tested_para_list, topstr, algo_ratio_mean_list, algo_ratio_std_list, algo_list):
     current_time = datetime.now()
@@ -196,7 +137,7 @@ def save_to_file(filename, tested_para_list, topstr, algo_ratio_mean_list, algo_
         file.write(time_str+'\n')
         file.write(topstr+'\n')
         for i in range(len(tested_para_list)):
-            file.write(str(round(tested_para_list[i], 3))+' '+' '.join([str(round(algo_ratio_mean_list[i][algo],3))+'_'+str(round(algo_ratio_std_list[i][algo],3)) for algo in algo_list])+'\n')
+            file.write(str(round(tested_para_list[i], 3))+' '+' '.join([str(round(algo_ratio_mean_list[i][algo],3)) for algo in algo_list])+'\n')
 # def default_para_test():
 
 
