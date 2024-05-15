@@ -143,9 +143,10 @@ class Graph:
         #         self.mean_quit_time.append(paras['n']*paras['p']+paras['dev'])
 
         if self.dist_type == 'poisson':
+            lam_max = self.dist_hyperpara
             for i in range(self.N):
                 paras = {}
-                paras['lam'] = self.lam_max*np.random.rand()
+                paras['lam'] = lam_max*np.random.rand()
                 paras['dev'] = 0
                 self.dist_paras.append(paras)
                 self.mean_quit_time.append(paras['lam']+paras['dev'])

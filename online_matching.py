@@ -136,11 +136,11 @@ class OnlineMatching:
 
                 if algo == 'OFF':
                     # no test off
-                    # alive = [1 for i in range(len(seq))]
-                    # max_match = MaxMatching(graph=self.G, seq=seq, quit_time=quit_time, alive=alive)
-                    # reward = max_match.eval()
-                    # matching = max_match.matching
-                    reward = 1
+                    alive = [1 for i in range(len(seq))]
+                    max_match = MaxMatching(graph=self.G, seq=seq, quit_time=quit_time, alive=alive)
+                    reward = max_match.eval()
+                    matching = max_match.matching
+                    # reward = 1
 
                 algo_result[algo].append(reward)
                 run_time[algo] += time.time() - start

@@ -2,7 +2,7 @@ from online_matching import *
 from datetime import datetime
 
 def test_save(density=2.5, type_number=100, dist_type='fix', dist_hyperpara=10, gamma=0.36, testnum=2, save=1, algo_list = ['OFF'], filename = None):
-    graph_num = 5
+    graph_num = 1
     # test_num = 5
     print('density', density, 'type_number', type_number, 'dist_type', dist_type, 'dist_hyperpara', dist_hyperpara,'gamma', gamma, 'testnum', testnum,'save', save, 'algo_list', algo_list)
     # dist_type_dict = {0:'geometric', 1:'binomial', 2:'poisson', 3:'single', 4:'twovalue'}
@@ -64,33 +64,39 @@ def diff_type_number(dist_type=2):
             algo_ratio_list = test_save(density=density, type_number=type_number, dist_type=dist_type, shift=0, gamma=gamma, testnum=testnum, save=0, algo_list=algo_list, n_max=n_max, p_min=p_min, lam_max=lam_max, q_min=q_min)
             file.write(str(type_number)+' '+' '.join([str(round(algo_ratio_list[algo], 3)) for algo in algo_ratio_list])+'\n')
 
-def diff_density(dist_type=2):
-    density_list = [1+i*0.5 for i in range(9)]
-    type_number = 100
-    # dist_type = 2
-    gamma = 0.42
-    testnum = 20
-    n_max = 30
-    p_min = 0.5
-    lam_max = 10
-    q_min = 0.5
-    algo_list = ['OFF', 'RCP', 'GRD', 'BAT', 'SAM0.6', 'SAM']
-    filename = 'result/0.6_20d_dt'+str(dist_type)
-    with open(filename, 'w+') as file:
-        file.write('density '+' '.join([algo for algo in algo_list])+'\n')
-        for density in density_list:
-            algo_ratio_list = test_save(density=density, type_number=type_number, dist_type=dist_type, shift=0, gamma=gamma, testnum=testnum, save=0, algo_list=algo_list, n_max=n_max, p_min=p_min, lam_max=lam_max, q_min=q_min)
-            file.write(str(round(density,3))+' '+' '.join([str(round(algo_ratio_list[algo],3)) for algo in algo_ratio_list])+'\n')
 
-
-def diff_dist(dist_type='fix', dist_hyperpara_list=[10, 20, 30, 40, 50], SYN=True):
+def test_density(dist_type='geometric', dist_hyperpara=0.5, SYN=True):
     density = 2.5
-    type_number = 20
+    density_list = [1+i*0.5 for i in range(9)]
+    type_number = 50
     gamma = 1
     testnum = 5
     if SYN:
         input_file = 'syn'
+        algo_list = ['OFF', 'RCP', 'GRD', 'SAM1', 'COL1', 'BATCH']
+        f = None
+    else:
+        input_file = 'nyc_20_2_842'
         algo_list = ['OFF', 'GRD', 'SAM1', 'COL1', 'BATCH']
+        f = 'data/'+input_file
+    filename = 'result/density_'+input_file
+    algo_ratio_mean_list = []
+    algo_ratio_std_list = []
+    topstr = 'density'+'_'+dist_type+' '+' '.join([algo for algo in algo_list])
+    for density in density_list:
+        algo_ratio_mean, algo_ratio_std = test_save(density=density, type_number=type_number, dist_type=dist_type, dist_hyperpara=dist_hyperpara, gamma=gamma, testnum=testnum, save=0, algo_list=algo_list, filename=f)
+        algo_ratio_mean_list.append(algo_ratio_mean)
+        algo_ratio_std_list.append(algo_ratio_std)
+    save_to_file(filename, density_list, topstr, algo_ratio_mean_list, algo_ratio_std_list, algo_list)
+
+def diff_dist(dist_type='fix', dist_hyperpara_list=[10, 20, 30, 40, 50], SYN=True):
+    density = 2.5
+    type_number = 50
+    gamma = 1
+    testnum = 5
+    if SYN:
+        input_file = 'syn'
+        algo_list = ['OFF', 'RCP', 'GRD', 'SAM1', 'COL1', 'BATCH']
         f = None
     else:
         input_file = 'nyc_20_2_842'
