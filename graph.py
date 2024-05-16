@@ -31,7 +31,7 @@ class Graph:
         if rates:
             self.rates = np.array(rates)
         else:
-            self.gene_rates()
+            self.gene_rates(rmin=0.5)
 
         self.dist_type = dist_type
         self.dist_hyperpara = dist_hyperpara
@@ -58,8 +58,8 @@ class Graph:
                     self.weights[i][j] = q
                     self.weights[j][i] = q
 
-    def gene_rates(self):
-        r = np.random.uniform(0, 1, self.N)
+    def gene_rates(self, rmin=0):
+        r = np.random.uniform(rmin, 1, self.N)
         self.rates = np.array([l/np.sum(r) for l in r])
 
     def gene_quit_dist(self):
@@ -82,6 +82,11 @@ class Graph:
 
         if self.dist_type == 'single':
             samples = np.random.randint(1, self.dist_hyperpara, self.N)
+            # for i in range(self.N):
+            #     if np.random.rand() < 0.5:
+            #         samples[i] = np.random.randint(1, 5)
+            #     else:
+            #         samples[i] = np.random.randint(25, 30)
             for i in range(self.N):
                 paras = {}
                 paras['d'] = samples[i]

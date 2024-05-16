@@ -30,6 +30,12 @@ def plot_one(filename):
             xlabel = r'$L^P$'
         if first_line[0] == 'fix':
             xlabel = r'$D_m$'
+        if first_line[0] == 'geometric':
+            xlabel = r'$P^G$'
+        if first_line[0] == 'poisson':
+            xlabel = r'$L^P$'
+        if first_line[0] == 'single':
+            xlabel = r'$N^B$'
         # xlabel = first_line[0]
         algo_name_list = first_line[2:]
         res = [[] for algo in algo_name_list]
@@ -45,7 +51,7 @@ def plot_one(filename):
         print(res)
         for i in range(len(algo_name_list)):
             algo = algo_name_list[i]
-            # if algo_name_list[i] == 'SAM1':
+            # if algo_name_list[i] != 'SAM1' and algo_name_list[i] != 'COL1':
             #     continue
             plt.plot(x, res[i], color=colors_dict[algo], marker = markers_dict[algo], label=algo)
         plt.xlabel(xlabel, fontsize=16)
@@ -107,16 +113,12 @@ def plot_one_norcp(filename):
         plt.close()
 
 if __name__ == '__main__':
-    plot_one('density_geo_syn')
-    plot_one('density_sin_syn')
-    plot_one('density_poi_syn')
+    # plot_one('density_geo_syn')
+    # plot_one('density_sin_syn_large')
+    # plot_one('density_poi_syn')
+    # plot_one('geo_syn')
+    # plot_one('sin_syn_small')
+    # plot_one('sin_syn_large')
 
-    # plot_one('fixsyn1')
-    # plot_one('0.6_20d_dt1')
-    # plot_one('0.6_20d_dt2')
-    # plot_one('0.6_n_max50_syn')
-    # plot_one('0.6_lam_max_syn')
-    # plot_one('0.6_p_min_syn')
-    # plot_one_norcp('0.6_n_max50_nyc_20_2_842')
-    # plot_one_norcp('0.6_p_min_nyc_20_2_842')
-    # plot_one_norcp('0.6_lam_max_nyc_20_2_842')
+    plot_one('poi_syn_large')
+
