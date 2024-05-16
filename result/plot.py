@@ -8,8 +8,8 @@ import os
 my_path = os.path.dirname(os.path.abspath(__file__))
 
 
-colors_dict = {'OFF': 'g', 'RCP': 'r', 'GRD': 'b', 'BATCH_MAX': 'y', 'SAM0.5': 'g', 'SAM1': 'g', 'SAM': 'g', 'COL1': 'r'}
-markers_dict = {'OFF': 'x', 'RCP': '^', 'GRD': 'o', 'BATCH_MAX': '*', 'SAM0.5': 'x', 'SAM1': '^', 'SAM': 'o', 'COL1':'x'}
+colors_dict = {'OFF': 'g', 'RCP': 'r', 'GRD': 'b', 'BATCH': 'y', 'SAM0.5': 'g', 'SAM1': 'g', 'SAM': 'g', 'COL1': 'r'}
+markers_dict = {'OFF': 'x', 'RCP': '^', 'GRD': 'o', 'BATCH': '*', 'SAM0.5': 'x', 'SAM1': '^', 'SAM': 'o', 'COL1':'x'}
 
 
 def plot_one(filename):
@@ -107,7 +107,11 @@ def plot_one_norcp(filename):
         plt.close()
 
 if __name__ == '__main__':
-    plot_one('fixsyn1')
+    plot_one('density_geo_syn')
+    plot_one('density_sin_syn')
+    plot_one('density_poi_syn')
+
+    # plot_one('fixsyn1')
     # plot_one('0.6_20d_dt1')
     # plot_one('0.6_20d_dt2')
     # plot_one('0.6_n_max50_syn')
