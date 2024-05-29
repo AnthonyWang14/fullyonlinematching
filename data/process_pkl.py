@@ -103,7 +103,8 @@ def cal_rate_bound(pickup, dropoff, L, d):
     M = L*L
     pick_single = []
     drop_single = []
-    count_table = [[0 for j in range(M)] for i in range(M)]
+    count_table = np.zeros((M, M))
+    # count_table = [[0 for j in range(M)] for i in range(M)]
     count = 0
     # print(count_table)
     for i in range(len(pick)):
@@ -118,6 +119,11 @@ def cal_rate_bound(pickup, dropoff, L, d):
         count_table[pick_point][drop_point] += 1
         # count += 1
     # print(count_table)
+
+    type_number = 10
+    top_type_number(type_number, count_table, L)
+    print('11')
+    return 
     type_list = []
     min_count = 30
     count_list = []
@@ -127,6 +133,7 @@ def cal_rate_bound(pickup, dropoff, L, d):
                 type_list.append([i, j])
                 count_list.append(count_table[i][j])
                 # rates.append(count_table[i][j]/count)
+    
     count = sum(count_list)
     rates = [c/count for c in count_list]
     print(count)
@@ -142,12 +149,27 @@ def cal_rate_bound(pickup, dropoff, L, d):
     save_data(rates, weights, L, d, len(rates))
     return
 
+def convert_indices_2d(indices, shape):
+    return [(indices // shape[1], indices % shape[1]) for indices in indices]
+
+def top_type_number(type_number, count_table, L):
+    M = L*L
+    array_2d = count_table
+    k = type_number
+    flattened = array_2d.flatten()
+    top_k_indices = np.argsort(flattened)[-k:]
+    top_k_indices_2d = convert_indices_2d(top_k_indices, array_2d.shape)
+    print("Top-k indices in 2D:", top_k_indices_2d)
+    return rates, weights
+
 def save_data(rates, weights, L, d, type_number):
     filename = 'nyc_'+str(L)+'_'+str(d)+'_'+str(type_number)
     with open(filename, 'w') as f:
         f.write(' '.join([str(i) for i in rates])+'\n')
         for i in range(len(weights)):
             f.write(' '.join([str(j) for j in weights[i]])+'\n')
+
+
 # with open('rate', 'w') as f:
 #     f.write(' '.join([str(i) for i in rate]))
 
