@@ -116,25 +116,25 @@ def cal_rate_bound(pickup, dropoff, L, d):
         # count += 1
     # print(count_table)
 
-    type_number = 50
-    top_k_indices_2d = top_type_number(type_number, count_table, L)
-    count_list = np.zeros(type_number)
-    for i in range(len(top_k_indices_2d)):
-        [x, y] = top_k_indices_2d[i]
-        count_list[i] = count_table[x][y]
+    # type_number = 50
+    # top_k_indices_2d = top_type_number(type_number, count_table, L)
+    # count_list = np.zeros(type_number)
+    # for i in range(len(top_k_indices_2d)):
+    #     [x, y] = top_k_indices_2d[i]
+    #     count_list[i] = count_table[x][y]
     
-    count = sum(count_list)
-    rates = count_list/count
-    print(rates)
-    weights = gen_weight(d, top_k_indices_2d, L)
-    print(weights)
-    save_data(rates, weights, L, d, type_number)
-    save_type_mapping(L, d, type_number, top_k_indices_2d)
-    return
+    # count = sum(count_list)
+    # rates = count_list/count
+    # print(rates)
+    # weights = gen_weight(d, top_k_indices_2d, L)
+    # print(weights)
+    # save_data(rates, weights, L, d, type_number)
+    # save_type_mapping(L, d, type_number, top_k_indices_2d)
+    # return
     # print('11')
      
     type_list = []
-    min_count = 30
+    min_count = 70
     count_list = []
     for i in range(M):
         for j in range(M):
@@ -142,11 +142,13 @@ def cal_rate_bound(pickup, dropoff, L, d):
                 type_list.append([i, j])
                 count_list.append(count_table[i][j])
                 # rates.append(count_table[i][j]/count)
-    
+
+    count_list = np.array(count_list)
     count = sum(count_list)
     rates = [c/count for c in count_list]
     print(count)
-    print('type number', len(rates))
+    type_number = len(rates)
+    print('type number', type_number)
     weights = gen_weight(d, type_list, L)
     deg = [0 for i in weights]
     for i in range(len(weights)):
@@ -156,6 +158,7 @@ def cal_rate_bound(pickup, dropoff, L, d):
     print('avg deg', sum(deg)/len(deg))
     print('max deg', max(deg), 'min deg', min(deg))
     save_data(rates, weights, L, d, len(rates))
+    save_type_mapping(L, d, type_number, type_list)
     return
 
 def convert_indices_2d(indices, shape):
