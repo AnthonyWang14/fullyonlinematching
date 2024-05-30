@@ -113,19 +113,26 @@ def test_tn(dist_type='single', dist_hyperpara=10, SYN=True):
         algo_ratio_std_list.append(algo_ratio_std)
     save_to_file(filename, density_list, topstr, algo_ratio_mean_list, algo_ratio_std_list, algo_list)
 
-def diff_dist(dist_type='fix', dist_hyperpara_list=[10, 20, 30, 40, 50], SYN=True):
+def diff_dist(dist_type='fix', dist_hyperpara_list=[10, 20, 30, 40, 50], input_file=None):
     density = 2.5
     type_number = 50
     gamma = 1
-    testnum = 5
-    if SYN:
+    testnum = 10
+    if input_file:
+        algo_list = ['OFF', 'GRD', 'SAM1', 'COL1', 'BATCH']
+        f = 'data/'+input_file
+    else:
         input_file = 'syn'
         algo_list = ['OFF', 'RCP', 'GRD', 'SAM1', 'COL1', 'BATCH']
         f = None
-    else:
-        input_file = 'nyc_20_2_842'
-        algo_list = ['OFF', 'GRD', 'SAM1', 'COL1', 'BATCH']
-        f = 'data/'+input_file
+    # if SYN:
+    #     input_file = 'syn'
+    #     algo_list = ['OFF', 'RCP', 'GRD', 'SAM1', 'COL1', 'BATCH']
+    #     f = None
+    # else:
+    #     input_file = 'nyc_20_1_50'
+    #     algo_list = ['OFF', 'GRD', 'SAM1', 'COL1', 'BATCH']
+    #     f = 'data/'+input_file
     filename = 'result/'+dist_type+input_file
     algo_ratio_mean_list = []
     algo_ratio_std_list = []

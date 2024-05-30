@@ -112,18 +112,27 @@ def cal_rate_bound(pickup, dropoff, L, d):
         drop_point = drop[i][0]*L+drop[i][1]
         pick_single.append(pick_point)
         drop_single.append(drop_point)
-        # print(pick[i], drop[i])
-        # a = [pick_point, drop_point]
-        # b = [pick_point, drop_point]
-        # check_weight(3, a, b, L)
         count_table[pick_point][drop_point] += 1
         # count += 1
     # print(count_table)
 
-    type_number = 10
-    top_type_number(type_number, count_table, L)
-    print('11')
-    return 
+    type_number = 50
+    top_k_indices_2d = top_type_number(type_number, count_table, L)
+    count_list = np.zeros(type_number)
+    for i in range(len(top_k_indices_2d)):
+        [x, y] = top_k_indices_2d[i]
+        count_list[i] = count_table[x][y]
+    
+    count = sum(count_list)
+    rates = count_list/count
+    print(rates)
+    weights = gen_weight(d, top_k_indices_2d, L)
+    print(weights)
+    save_data(rates, weights, L, d, type_number)
+    save_type_mapping(L, d, type_number, top_k_indices_2d)
+    return
+    # print('11')
+     
     type_list = []
     min_count = 30
     count_list = []
@@ -160,7 +169,7 @@ def top_type_number(type_number, count_table, L):
     top_k_indices = np.argsort(flattened)[-k:]
     top_k_indices_2d = convert_indices_2d(top_k_indices, array_2d.shape)
     print("Top-k indices in 2D:", top_k_indices_2d)
-    return rates, weights
+    return top_k_indices_2d
 
 def save_data(rates, weights, L, d, type_number):
     filename = 'nyc_'+str(L)+'_'+str(d)+'_'+str(type_number)
@@ -168,6 +177,13 @@ def save_data(rates, weights, L, d, type_number):
         f.write(' '.join([str(i) for i in rates])+'\n')
         for i in range(len(weights)):
             f.write(' '.join([str(j) for j in weights[i]])+'\n')
+
+def save_type_mapping(L, d, type_number, top_k_indices_2d):
+    filename = 'mapping_nyc_'+str(L)+'_'+str(d)+'_'+str(type_number)
+    with open(filename, 'w') as f:
+        for i in range(type_number):
+            f.write(str(top_k_indices_2d[i][0] // L)+' '+str(top_k_indices_2d[i][0] % L)+' '+str(top_k_indices_2d[i][1] // L)+' '+str(top_k_indices_2d[i][1] % L)+'\n')
+
 
 
 # with open('rate', 'w') as f:
@@ -192,8 +208,8 @@ def save_data(rates, weights, L, d, type_number):
 if __name__ == '__main__':
     infile = open('taxi_csv1_1.pkl','rb')
     new_dict = pickle.load(infile)
-    L = 20
-    d = 2
+    L = 16
+    
     print(new_dict.columns)
     #print(x1_list)
     #print(y1_list)
@@ -204,7 +220,8 @@ if __name__ == '__main__':
     # dropt = new_dict.head(200000)[' dropoff_datetime']
     # print(pickt[0], pickt[100000])
     # print(pickup)
-    cal_rate_bound(pickup, dropoff, L, d)
+    for d in range(1, 6):
+        cal_rate_bound(pickup, dropoff, L, d)
     infile.close()
 
 
