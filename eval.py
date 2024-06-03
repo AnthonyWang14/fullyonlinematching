@@ -9,7 +9,8 @@ def test_save(density=2.5, type_number=100, dist_type='fix', dist_hyperpara=10, 
 
     if filename:
         print('test file '+filename)
-        with open(filename) as f:
+        full_filename = 'data/'+filename
+        with open(full_filename) as f:
             first_line = True
             weights = []
             for line in f:
@@ -36,7 +37,7 @@ def test_save(density=2.5, type_number=100, dist_type='fix', dist_hyperpara=10, 
         algo_ratio_mean[algo] = 0
         algo_ratio_std[algo] = 0
     for g in g_list:
-        online_match = OnlineMatching(g, T=T)
+        online_match = OnlineMatching(g, T=T, mapping_file = filename)
         single_graph_algo_ratio_list = online_match.run_test(algo_list=algo_list, gamma=gamma, test_num=testnum, save=save)
         for algo in algo_list:
             algo_ratio_list[algo].append(single_graph_algo_ratio_list[algo])
@@ -119,20 +120,13 @@ def diff_dist(dist_type='fix', dist_hyperpara_list=[10, 20, 30, 40, 50], input_f
     gamma = 1
     testnum = 10
     if input_file:
-        algo_list = ['OFF', 'GRD', 'SAM1', 'COL1', 'BATCH']
-        f = 'data/'+input_file
+        # algo_list = ['OFF', 'GRD', 'SAM1', 'COL1', 'BATCH']
+        algo_list = ['OFF', 'HG']
+        f = input_file
     else:
         input_file = 'syn'
         algo_list = ['OFF', 'RCP', 'GRD', 'SAM1', 'COL1', 'BATCH']
         f = None
-    # if SYN:
-    #     input_file = 'syn'
-    #     algo_list = ['OFF', 'RCP', 'GRD', 'SAM1', 'COL1', 'BATCH']
-    #     f = None
-    # else:
-    #     input_file = 'nyc_20_1_50'
-    #     algo_list = ['OFF', 'GRD', 'SAM1', 'COL1', 'BATCH']
-    #     f = 'data/'+input_file
     filename = 'result/'+dist_type+input_file
     algo_ratio_mean_list = []
     algo_ratio_std_list = []

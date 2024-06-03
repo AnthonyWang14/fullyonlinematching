@@ -211,7 +211,7 @@ def save_type_mapping(L, d, type_number, top_k_indices_2d):
 if __name__ == '__main__':
     infile = open('taxi_csv1_1.pkl','rb')
     new_dict = pickle.load(infile)
-    L = 16
+    L = 20
     
     print(new_dict.columns)
     #print(x1_list)

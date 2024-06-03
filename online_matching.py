@@ -7,6 +7,7 @@ from max_matching import *
 from batch import *
 from greedy import *
 from randcomp import *
+from HG import *
 import time
 import argparse
 
@@ -15,9 +16,11 @@ import sys
 
 class OnlineMatching:
 
-    def __init__(self, graph = None, T = 1000) -> None:
+    def __init__(self, graph = None, T = 1000, mapping_file = '', L=20) -> None:
         self.G = graph
         self.T = T
+        self.mapping_file = mapping_file
+        self.L = L
         # self.d = d
 
     def gene_sequence(self):
@@ -141,6 +144,11 @@ class OnlineMatching:
                     reward = max_match.eval()
                     matching = max_match.matching
                     # reward = 1
+
+                if algo == 'HG':
+                    hgmatch = HGMatching(graph=self.G, seq=seq, quit_time=quit_time, mapping_file=self.mapping_file, L=self.L)
+                    reward = hgmatch.eval(m_value=20)
+                    matching = hgmatch.matching
 
                 algo_result[algo].append(reward)
                 run_time[algo] += time.time() - start
