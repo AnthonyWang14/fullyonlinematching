@@ -2,8 +2,7 @@ from online_matching import *
 from datetime import datetime
 
 def test_save(density=2.5, type_number=100, dist_type='fix', dist_hyperpara=10, gamma=0.36, testnum=2, save=1, algo_list = ['OFF'], filename = None):
-    graph_num = 5
-    # test_num = 5
+    graph_num = 1
     print('density', density, 'type_number', type_number, 'dist_type', dist_type, 'dist_hyperpara', dist_hyperpara,'gamma', gamma, 'testnum', testnum,'save', save, 'algo_list', algo_list)
     # dist_type_dict = {0:'geometric', 1:'binomial', 2:'poisson', 3:'single', 4:'twovalue'}
 
@@ -118,10 +117,10 @@ def diff_dist(dist_type='fix', dist_hyperpara_list=[10, 20, 30, 40, 50], input_f
     density = 2.5
     type_number = 50
     gamma = 1
-    testnum = 10
+    testnum = 2
     if input_file:
-        # algo_list = ['OFF', 'GRD', 'SAM1', 'COL1', 'BATCH']
-        algo_list = ['OFF', 'HG']
+        algo_list = ['OFF', 'RCP', 'GRD', 'SAM1', 'COL1', 'BATCH', 'HG']
+        # algo_list = ['OFF', 'RCP']
         f = input_file
     else:
         input_file = 'syn'

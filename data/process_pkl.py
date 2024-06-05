@@ -45,7 +45,12 @@ def check_weight(d, a, b, L):
         route2 = distance(b_start, a_start) + distance(a_start, a_end) + distance(a_end, b_end)
         route3 = distance(b_start, a_start) + distance(a_start, b_end) + distance(b_end, a_end)
         route4 = distance(a_start, b_start) + distance(b_start, b_end) + distance(b_end, a_end)
-        return min(route1, route2, route3, route4)
+        # new weight definition
+        weight = distance(a_start, a_end)+distance(b_start, b_end)-min(route1, route2, route3, route4)
+        threshold = 0.5
+        if weight < threshold:
+            weight = 0
+        return weight
     # print(a_start_x, a_start_y, a_end_x, a_end_y)
 
 def cal_rate_bound(pickup, dropoff, L, d):
@@ -134,7 +139,7 @@ def cal_rate_bound(pickup, dropoff, L, d):
     # print('11')
      
     type_list = []
-    min_count = 70
+    min_count = 80
     count_list = []
     for i in range(M):
         for j in range(M):
