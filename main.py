@@ -22,7 +22,7 @@ if __name__ == '__main__':
     # diff_dist(dist_type='poisson', dist_hyperpara_list=[2, 4, 6, 8, 10, 12, 14, 16, 18, 20], input_file='nyc_20_4_511')
     # diff_dist(dist_type='poisson', dist_hyperpara_list=[2, 4, 6, 8, 10, 12, 14, 16, 18, 20], input_file='nyc_20_5_511')
 
-    diff_dist(dist_type='single', dist_hyperpara_list=[2, 4, 6, 8, 10, 12, 14, 16, 18, 20], input_file='nyc_20_1_511')
+    # diff_dist(dist_type='single', dist_hyperpara_list=[2, 4, 6, 8, 10, 12, 14, 16, 18, 20], input_file='nyc_20_1_511')
     diff_dist(dist_type='single', dist_hyperpara_list=[2, 4, 6, 8, 10, 12, 14, 16, 18, 20], input_file='nyc_20_2_511')
     diff_dist(dist_type='single', dist_hyperpara_list=[2, 4, 6, 8, 10, 12, 14, 16, 18, 20], input_file='nyc_20_3_511')
     diff_dist(dist_type='single', dist_hyperpara_list=[2, 4, 6, 8, 10, 12, 14, 16, 18, 20], input_file='nyc_20_4_511')

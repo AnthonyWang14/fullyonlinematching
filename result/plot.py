@@ -128,8 +128,8 @@ if __name__ == '__main__':
 
     # plot_one('poi_syn_large')
 
-    plot_one('poi_nyc_1')
-    plot_one('poi_nyc_2')
-    plot_one('poi_nyc_3')
-    plot_one('poi_nyc_4')
-    plot_one('poi_nyc_5')
+    plot_one('sin_nyc_1')
+    plot_one('sin_nyc_2')
+    plot_one('sin_nyc_3')
+    plot_one('sin_nyc_4')
+    # plot_one('poi_nyc_5')
