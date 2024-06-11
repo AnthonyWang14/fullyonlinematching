@@ -119,12 +119,12 @@ def diff_dist(dist_type='fix', dist_hyperpara_list=[10, 20, 30, 40, 50], input_f
     gamma = 1
     testnum = 2
     if input_file:
-        algo_list = ['OFF', 'RCP', 'GRD', 'SAM1', 'COL1', 'BATCH', 'HG']
+        algo_list = ['OFF', 'RCP', 'GRD', 'SAM1', 'SAMC1', 'BAT', 'HG']
         # algo_list = ['OFF', 'RCP']
         f = input_file
     else:
         input_file = 'syn'
-        algo_list = ['OFF', 'RCP', 'GRD', 'SAM1', 'COL1', 'BATCH']
+        algo_list = ['OFF', 'RCP', 'GRD', 'SAM1', 'SAMC1', 'BAT']
         f = None
     filename = 'result/'+dist_type+input_file
     algo_ratio_mean_list = []
@@ -137,20 +137,42 @@ def diff_dist(dist_type='fix', dist_hyperpara_list=[10, 20, 30, 40, 50], input_f
     save_to_file(filename, dist_hyperpara_list, topstr, algo_ratio_mean_list, algo_ratio_std_list, algo_list)
 
 
-def diff_gamma(SYN=True, dist_type = 'geometric', dist_hyperpara = 0.5):
+def diff_delta(dist_type='geometric', dist_hyperpara=0.5, input_file=None):
     density = 2.5
     type_number = 50
-    gamma_list = [0.5+i*0.5 for i in range(8)]
+    gamma = 1
+    testnum = 1
+    input_file_list = ['nyc_20_1_511', 'nyc_20_2_511', 'nyc_20_3_511', 'nyc_20_4_511', 'nyc_20_5_511']
+    test_hyperpara_list = [1, 2, 3, 4, 5]
+    filename = 'result/delta_'+dist_type
+    algo_list = ['OFF', 'RCP', 'GRD', 'SAM1', 'SAMC1', 'BAT', 'HG']
+    topstr = 'delta'+' '+' '.join([algo for algo in algo_list])
+    algo_ratio_mean_list = []
+    algo_ratio_std_list = []
+    for input_file in input_file_list:
+        f = input_file
+        algo_ratio_mean, algo_ratio_std = test_save(density=density, type_number=type_number, dist_type=dist_type, dist_hyperpara=dist_hyperpara, gamma=gamma, testnum=testnum, save=0, algo_list=algo_list, filename=f)
+        algo_ratio_mean_list.append(algo_ratio_mean)
+        algo_ratio_std_list.append(algo_ratio_std)
+    save_to_file(filename, test_hyperpara_list, topstr, algo_ratio_mean_list, algo_ratio_std_list, algo_list)
+
+def diff_gamma(dist_type = 'geometric', dist_hyperpara = 0.5, input_file=None):
+    density = 2.5
+    type_number = 50
+    # gamma_list = [0.5+i*0.5 for i in range(10)]
+    gamma_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
     testnum = 5
-    if SYN:
-        input_file = 'syn'
-        algo_list = ['OFF', 'SAM']
-        f = None
+    print('test different gamma')
+    if input_file:
+        algo_list = ['OFF', 'SAM', 'SAMC']
+        # algo_list = ['OFF', 'RCP']
+        f = input_file
     else:
-        input_file = 'nyc_20_2_842'
-        algo_list = ['OFF', 'GRD', 'BATCH', 'SAM0.6', 'SAM']
-        f = 'data/'+input_file
-    filename = 'result/gamma_'+input_file
+        input_file = 'syn'
+        algo_list = ['OFF', 'SAM', 'SAMC']
+        f = None
+        
+    filename = 'result/gamma_'+dist_type+input_file
     topstr = 'gamma '+' '.join([algo for algo in algo_list])
     algo_ratio_mean_list = []
     algo_ratio_std_list = []

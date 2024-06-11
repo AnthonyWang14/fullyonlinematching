@@ -97,8 +97,13 @@ class OnlineMatching:
                     reward = samp.eval()
                     matching = samp.matching
 
-                if algo == 'COL1':
+                if algo == 'SAMC1':
                     samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 1)
+                    reward = samp.eval_Collina()
+                    matching = samp.matching
+
+                if algo == 'SAMC':
+                    samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = gamma)
                     reward = samp.eval_Collina()
                     matching = samp.matching
 
@@ -117,12 +122,12 @@ class OnlineMatching:
                     reward = grd.eval()
                     matching = grd.matching
 
-                if algo == 'BAT':
+                if algo == 'BAT_mean':
                     batch_mean_match = BatchMatching(graph=self.G, seq=seq, quit_time=quit_time, batch_type='MEAN')
                     reward = batch_mean_match.eval()
                     matching = batch_mean_match.matching
 
-                if algo == 'BATCH':
+                if algo == 'BAT':
                     batch_tune = BatchMatching(graph=self.G, seq=seq, quit_time=quit_time, batch_type='TUNE')
                     reward = batch_tune.eval_tune()
 
