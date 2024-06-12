@@ -15,7 +15,7 @@ def truncated_normal(mu, sigma, low=0, high=1, size=None):
 
 # underlying graph
 class Graph:
-    def __init__(self, type_number = 10, density = 1, dist_type = 'fix', dist_hyperpara = 10, weights = None, rates = None, T=3) -> None:
+    def __init__(self, type_number = 10, density = 1, dist_type = 'fix', dist_hyperpara = 10, weights = None, rates = None, rmin=0, T=3) -> None:
         # np.random.seed(0)
         self.N = type_number
         self.density = density
@@ -31,7 +31,7 @@ class Graph:
         if rates:
             self.rates = np.array(rates)
         else:
-            self.gene_rates(rmin=0.5)
+            self.gene_rates(rmin=rmin)
 
         self.dist_type = dist_type
         self.dist_hyperpara = dist_hyperpara
