@@ -7,6 +7,7 @@ from max_matching import *
 from batch import *
 from greedy import *
 from randcomp import *
+from HG import *
 import time
 import argparse
 
@@ -15,9 +16,11 @@ import sys
 
 class OnlineMatching:
 
-    def __init__(self, graph = None, T = 1000) -> None:
+    def __init__(self, graph = None, T = 1000, mapping_file = '', L=20) -> None:
         self.G = graph
         self.T = T
+        self.mapping_file = mapping_file
+        self.L = L
         # self.d = d
 
     def gene_sequence(self):
@@ -94,8 +97,13 @@ class OnlineMatching:
                     reward = samp.eval()
                     matching = samp.matching
 
-                if algo == 'COL1':
+                if algo == 'SAMC1':
                     samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 1)
+                    reward = samp.eval_Collina()
+                    matching = samp.matching
+
+                if algo == 'SAMC':
+                    samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = gamma)
                     reward = samp.eval_Collina()
                     matching = samp.matching
 
@@ -114,12 +122,12 @@ class OnlineMatching:
                     reward = grd.eval()
                     matching = grd.matching
 
-                if algo == 'BAT':
+                if algo == 'BAT_mean':
                     batch_mean_match = BatchMatching(graph=self.G, seq=seq, quit_time=quit_time, batch_type='MEAN')
                     reward = batch_mean_match.eval()
                     matching = batch_mean_match.matching
 
-                if algo == 'BATCH':
+                if algo == 'BAT':
                     batch_tune = BatchMatching(graph=self.G, seq=seq, quit_time=quit_time, batch_type='TUNE')
                     reward = batch_tune.eval_tune()
 
@@ -142,6 +150,11 @@ class OnlineMatching:
                     matching = max_match.matching
                     # reward = 1
 
+                if algo == 'HG':
+                    hgmatch = HGMatching(graph=self.G, seq=seq, quit_time=quit_time, mapping_file=self.mapping_file, L=self.L)
+                    reward = hgmatch.eval(m_value=20)
+                    matching = hgmatch.matching
+
                 algo_result[algo].append(reward)
                 run_time[algo] += time.time() - start
                 # print(algo, matching)
@@ -160,11 +173,11 @@ class OnlineMatching:
                 print(algo, algo_mean[algo], algo_mean[algo]/algo_mean['OFF'])
                 algo_ratio[algo] = algo_mean[algo]/algo_mean['OFF']
         # print(algo_result)
-        # print('run time')
-        # for algo in algo_list:
-        #     if save == 1:
-        #         print(run_time[algo]/test_num)
-        #     else:
-        #         print(algo, run_time[algo]/test_num)
+        print('run time')
+        for algo in algo_list:
+            if save == 1:
+                print(run_time[algo]/test_num)
+            else:
+                print(algo, run_time[algo]/test_num)
         return(algo_ratio)
     

@@ -66,6 +66,7 @@ class RandCompMatching:
             for j in range(self.G.N):
                 eij = str(i)+'_'+str(j)
                 self.flowij[i][j] = 0.25*x[eij].getAttr(GRB.Attr.X)
+                
         # print('flowij', self.flowij)
         sum_row = np.sum(self.flowij, axis=1) # sum_j x_ij
         sum_col = np.sum(self.flowij, axis=0) # sum_j x_ji
