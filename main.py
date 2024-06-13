@@ -3,6 +3,9 @@ from eval import *
 
 if __name__ == '__main__':
     np.random.seed(1)
+
+    test_rmin(dist_type='poisson', dist_hyperpara=20, SYN=True)
+    diff_dist(dist_type='poisson', dist_hyperpara_list=[20], input_file=None)
     # print('hello world')
     # pass
     # test_density(dist_type='geometric', dist_hyperpara=0.5, SYN=True)

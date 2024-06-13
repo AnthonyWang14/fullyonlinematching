@@ -22,7 +22,7 @@ class BatchMatching:
             reward_list.append(self.eval(b_size=b_size))
         max_reward = max(reward_list)
         max_index = reward_list.index(max_reward)
-        print(test_bsize[max_index])
+        # print(test_bsize[max_index])
         return max_reward
         
     def eval(self, b_size=None):
