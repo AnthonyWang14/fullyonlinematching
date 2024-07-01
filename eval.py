@@ -1,8 +1,8 @@
 from online_matching import *
 from datetime import datetime
 
-GRAPH_NUM = 1
-REAL_NUM = 1
+GRAPH_NUM = 5
+REAL_NUM = 5
 def test_save(density=2.5, type_number=100, dist_type='fix', dist_hyperpara=10, gamma=0.36, testnum=2, save=1, algo_list = ['OFF'], filename = None, rmin=0):
     graph_num = 1
     print('density', density, 'type_number', type_number, 'dist_type', dist_type, 'dist_hyperpara', dist_hyperpara,'gamma', gamma, 'testnum', testnum,'save', save, 'algo_list', algo_list)
@@ -75,8 +75,8 @@ def test_density(dist_type='geometric', dist_hyperpara=0.5, SYN=True):
 def test_rmin(dist_type='geometric', dist_hyperpara=0.5, SYN=True):
     density = 2.5
     # density_list = [1+i*0.5 for i in range(9)]
-    # rmin_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-    rmin_list = [0.5]
+    rmin_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+    # rmin_list = [0.5]
     type_number = 50
     gamma = 1
     # testnum = 1
