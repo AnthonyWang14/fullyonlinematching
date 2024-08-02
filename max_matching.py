@@ -20,9 +20,11 @@ class MaxMatching:
                 for ind_j in range(len(self.seq)):
                     if self.alive[ind_j] == 1:
                         if ind_i < ind_j and (ind_j-ind_i)<= self.quit_time[ind_i]:
-                            e = str(ind_i)+'_'+str(ind_j)
-                            edge_name.append(e)
-                            edge_weight[e] = self.G.weights[self.seq[ind_i]][self.seq[ind_j]]
+                            w = self.G.weights[self.seq[ind_i]][self.seq[ind_j]]
+                            if w > 1e-5:
+                                e = str(ind_i)+'_'+str(ind_j)
+                                edge_name.append(e)
+                                edge_weight[e] = w
         # print(edge_name)
         m = Model('LP')
         m.setParam('OutputFlag', False)
@@ -37,9 +39,13 @@ class MaxMatching:
                 for ind_j in range(len(self.seq)):
                     if self.alive[ind_j] == 1:
                         if ind_i < ind_j and (ind_j-ind_i)<=self.quit_time[ind_i]:
-                            edge_i.append(str(ind_i)+'_'+str(ind_j))
+                            e = str(ind_i)+'_'+str(ind_j)
+                            if e in edge_name:
+                                edge_i.append(e)
                         if ind_j < ind_i and (ind_i-ind_j)<=self.quit_time[ind_j]:
-                            edge_i.append(str(ind_j)+'_'+str(ind_i))
+                            e = str(ind_j)+'_'+str(ind_i)
+                            if e in edge_name:
+                                edge_i.append(e)
                 m.addConstr(quicksum(x[e] for e in edge_i) <= 1)
         m.optimize()
         # print(m.status == GRB.Status.OPTIMAL)

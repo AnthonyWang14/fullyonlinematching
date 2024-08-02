@@ -171,13 +171,14 @@ class OnlineMatching:
                 print(algo_mean[algo]/algo_mean['OFF'])
             else:
                 print(algo, algo_mean[algo], algo_mean[algo]/algo_mean['OFF'])
+        
                 algo_ratio[algo] = algo_mean[algo]/algo_mean['OFF']
         # print(algo_result)
-        print('run time')
-        for algo in algo_list:
-            if save == 1:
-                print(run_time[algo]/test_num)
-            else:
-                print(algo, run_time[algo]/test_num)
+        # print('run time')
+        # for algo in algo_list:
+        #     if save == 1:
+        #         print(run_time[algo]/test_num)
+        #     else:
+        #         print(algo, run_time[algo]/test_num)
         return(algo_ratio)
     

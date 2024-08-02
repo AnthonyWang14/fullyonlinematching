@@ -59,6 +59,7 @@ class Graph:
                     self.weights[j][i] = q
 
     def gene_rates(self, rmin=0):
+        print('rmin', rmin)
         r = np.random.uniform(rmin, 1, self.N)
         self.rates = np.array([l/np.sum(r) for l in r])
 

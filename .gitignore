@@ -3,3 +3,5 @@ out.lp
 out.sol
 __pycache__/*
 gubrobi.log
+result/.DS_Store
+result/imgs/.DS_Store
