@@ -133,6 +133,10 @@ def plot_one_RCP(filename):
             xlabel = r'$\delta$'
         if first_line[0] == 'rmin':
             xlabel = r'$p_m$'
+        if first_line[0] == 'L':
+            xlabel = r'$L$'
+        if first_line[0] == 'A':
+            xlabel = r'$A$'
         # xlabel = first_line[0]
         algo_name_list = first_line[2:]
         res = [[] for algo in algo_name_list]
@@ -250,13 +254,14 @@ def plot_gamma(filename):
         plt.close()
 
 if __name__ == '__main__':
-    plot_gamma('gam_nyc_geo2')
-    plot_gamma('gam_nyc_sin2')
-    plot_gamma('gam_nyc_poi2')
-    plot_gamma('gam_nyc_geo5')
-    plot_gamma('gam_nyc_sin5')
-    plot_gamma('gam_nyc_poi5')
-    pass
+    plot_gamma('gam_geo_nycL10del2A1')
+    # plot_gamma('gam_nyc_geo2')
+    # plot_gamma('gam_nyc_sin2')
+    # plot_gamma('gam_nyc_poi2')
+    # plot_gamma('gam_nyc_geo5')
+    # plot_gamma('gam_nyc_sin5')
+    # plot_gamma('gam_nyc_poi5')
+    # pass
 
     # plot_one('density_geo_syn')
     # plot_one('density_sin_syn_large')
@@ -274,12 +279,23 @@ if __name__ == '__main__':
     # plot_one('gamma_geometricsyn')
     # plot_one('gamma_poissonsyn')
     # plot_one('gamma_singlesyn')
-    # plot_one_RCP('delta_geo')
-    # plot_one_RCP('delta_poi')
-    # plot_one_RCP('delta_sin')
-    # plot_one_RCP('geometricnyc_20_2_511')
-    # plot_one_RCP('poissonnyc_20_2_511')
-    # plot_one_RCP('singlenyc_20_2_511')
+    # plot_one_RCP('delta_geo_L20')
+    # plot_one_RCP('delta_poi_L20')
+    # plot_one_RCP('delta_sin_L20')
+    # plot_one_RCP('grid_geometric')
+    # plot_one_RCP('grid_poisson')
+    # plot_one_RCP('grid_single')
+    # plot_one_RCP('wf_geometric_L10del2')
+    # plot_one_RCP('wf_poisson_L10del2')
+    # plot_one_RCP('wf_single_L10del2')
+    # plot_one_RCP('grid_geometric_large')
+    # plot_one_RCP('geometricnyc_20_2_394')
+    # plot_one_RCP('poissonnyc_20_2_394')
+    # plot_one_RCP('singlenyc_20_2_394')
+    # plot_one_RCP('grid_geometric_del5')
+    # plot_one_RCP('grid_single_del5')
+    # plot_one_RCP('grid_poisson_del5')
+
 
 
     # plot_one('gamma_geometricnyc_20_2_511')
@@ -292,9 +308,11 @@ if __name__ == '__main__':
 
     # plot_one_RCP('gamma_singlesyn')
 
-    # plot_one_RCP('geo_syn')
-    # plot_one_RCP('sin_syn')
-    # plot_one_RCP('poi_syn')
+    # plot_one_RCP('geometricnyc_10_2_341')
+    # plot_one_RCP('poissonnyc_20_2_511')
+    # plot_one_RCP('singlenyc_20_2_511')
+    # plot_one_RCP('poissonnyc_10_2_341')
+    # plot_one_RCP('singlenyc_10_2_341')
     # plot_one_RCP('q_geo_syn')
     # plot_one_RCP('q_sin_syn')
     # plot_one_RCP('q_poi_syn')

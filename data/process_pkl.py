@@ -8,6 +8,8 @@ import time
 import numpy as np
 import random
 
+A = 1 # weight factor
+
 
 # d is the constraints of start and ends
 def gen_weight(d, type_list, L):
@@ -32,6 +34,8 @@ def gen_weight(d, type_list, L):
 def distance(u, v):
     return abs(u[0]-v[0])+abs(u[1]-v[1])
 
+
+
 def check_weight(d, a, b, L):
     # print(a, b)
     a_start = [a[0]//L, a[0]%L]
@@ -46,7 +50,7 @@ def check_weight(d, a, b, L):
         route3 = distance(b_start, a_start) + distance(a_start, b_end) + distance(b_end, a_end)
         route4 = distance(a_start, b_start) + distance(b_start, b_end) + distance(b_end, a_end)
         # new weight definition
-        weight = distance(a_start, a_end)+distance(b_start, b_end)-min(route1, route2, route3, route4)
+        weight = A*(distance(a_start, a_end)+distance(b_start, b_end))-min(route1, route2, route3, route4)
         threshold = 0.5
         if weight < threshold:
             weight = 0
@@ -139,7 +143,7 @@ def cal_rate_bound(pickup, dropoff, L, d):
     # print('11')
      
     type_list = []
-    min_count = 80
+    min_count = 100
     count_list = []
     for i in range(M):
         for j in range(M):
@@ -180,14 +184,14 @@ def top_type_number(type_number, count_table, L):
     return top_k_indices_2d
 
 def save_data(rates, weights, L, d, type_number):
-    filename = 'nyc_'+str(L)+'_'+str(d)+'_'+str(type_number)
+    filename = 'nyc_'+str(L)+'_'+str(d)+'_'+str(type_number)+'_'+str(A)
     with open(filename, 'w') as f:
         f.write(' '.join([str(i) for i in rates])+'\n')
         for i in range(len(weights)):
             f.write(' '.join([str(j) for j in weights[i]])+'\n')
 
 def save_type_mapping(L, d, type_number, top_k_indices_2d):
-    filename = 'mapping_nyc_'+str(L)+'_'+str(d)+'_'+str(type_number)
+    filename = 'mapping_nyc_'+str(L)+'_'+str(d)+'_'+str(type_number)+'_'+str(A)
     with open(filename, 'w') as f:
         for i in range(type_number):
             f.write(str(top_k_indices_2d[i][0] // L)+' '+str(top_k_indices_2d[i][0] % L)+' '+str(top_k_indices_2d[i][1] // L)+' '+str(top_k_indices_2d[i][1] % L)+'\n')
@@ -216,7 +220,8 @@ def save_type_mapping(L, d, type_number, top_k_indices_2d):
 if __name__ == '__main__':
     infile = open('taxi_csv1_1.pkl','rb')
     new_dict = pickle.load(infile)
-    L = 20
+    L = 10
+
     
     print(new_dict.columns)
     #print(x1_list)

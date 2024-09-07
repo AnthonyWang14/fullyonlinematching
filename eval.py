@@ -1,14 +1,14 @@
 from online_matching import *
 from datetime import datetime
 
-GRAPH_NUM = 1
+GRAPH_NUM = 5
 REAL_NUM = 5
 def test_save(density=2.5, type_number=100, dist_type='fix', dist_hyperpara=10, gamma=0.36, testnum=2, save=1, algo_list = ['OFF'], filename = None, rmin=0):
     graph_num = 1
     print('density', density, 'type_number', type_number, 'dist_type', dist_type, 'dist_hyperpara', dist_hyperpara,'gamma', gamma, 'testnum', testnum,'save', save, 'algo_list', algo_list)
     # dist_type_dict = {0:'geometric', 1:'binomial', 2:'poisson', 3:'single', 4:'twovalue'}
 
-    np.random.seed(0)
+    np.random.seed(1)
     if filename:
         print('test file '+filename)
         full_filename = 'data/'+filename
@@ -30,7 +30,7 @@ def test_save(density=2.5, type_number=100, dist_type='fix', dist_hyperpara=10, 
         g_list = [Graph(type_number = type_number,  density=density, dist_type = dist_type, dist_hyperpara=dist_hyperpara, weights = None, rates=None, rmin=rmin) for i in range(GRAPH_NUM)]
 
     # should be 5000
-    T = 5000
+    T = 500
     algo_ratio_list = {}
     algo_ratio_mean = {}
     algo_ratio_std = {}
@@ -71,6 +71,32 @@ def test_density(dist_type='geometric', dist_hyperpara=0.5, SYN=True):
         algo_ratio_mean_list.append(algo_ratio_mean)
         algo_ratio_std_list.append(algo_ratio_std)
     save_to_file(filename, density_list, topstr, algo_ratio_mean_list, algo_ratio_std_list, algo_list)
+
+def test_tn(dist_type='geometric', dist_hyperpara=0.5, SYN=True):
+    density = 2.5
+    # density_list = [1+i*0.5 for i in range(9)]
+    # type_number = 50
+    # tn_list = [10, 20, 30, 40, 50]
+    tn_list = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100]
+    gamma = 1
+    # testnum = 1
+    if SYN:
+        input_file = 'syn'
+        algo_list = ['OFF', 'RCP', 'GRD', 'SAM1', 'SAMC1', 'BAT']
+        f = None
+    else:
+        input_file = 'nyc_20_2_842'
+        algo_list = ['OFF', 'GRD', 'SAM1', 'COL1', 'BATCH']
+        f = 'data/'+input_file
+    filename = 'result/tn_'+input_file
+    algo_ratio_mean_list = []
+    algo_ratio_std_list = []
+    topstr = 'tn'+'_'+dist_type+' '+' '.join([algo for algo in algo_list])
+    for type_number in tn_list:
+        algo_ratio_mean, algo_ratio_std = test_save(density=density, type_number=type_number, dist_type=dist_type, dist_hyperpara=dist_hyperpara, gamma=gamma, testnum=REAL_NUM, save=0, algo_list=algo_list, filename=f)
+        algo_ratio_mean_list.append(algo_ratio_mean)
+        algo_ratio_std_list.append(algo_ratio_std)
+    save_to_file(filename, tn_list, topstr, algo_ratio_mean_list, algo_ratio_std_list, algo_list)
 
 def test_rmin(dist_type='geometric', dist_hyperpara=0.5, SYN=True):
     density = 2.5
@@ -113,7 +139,6 @@ def diff_dist(dist_type='fix', dist_hyperpara_list=[10, 20, 30, 40, 50], input_f
         input_file = 'syn'
         algo_list = ['OFF', 'RCP', 'GRD', 'SAM1', 'SAMC1', 'BAT']
         # algo_list = ['OFF', 'GRD', 'SAM1', 'SAMC1']
-
         f = None
     filename = 'result/'+dist_type+input_file
     algo_ratio_mean_list = []
@@ -125,15 +150,65 @@ def diff_dist(dist_type='fix', dist_hyperpara_list=[10, 20, 30, 40, 50], input_f
         algo_ratio_std_list.append(algo_ratio_std)
     save_to_file(filename, dist_hyperpara_list, topstr, algo_ratio_mean_list, algo_ratio_std_list, algo_list)
 
+def diff_wf(dist_type='geometric', dist_hyperpara=0.5, input_file=None):
+    density = 2.5
+    type_number = 50
+    gamma = 1
+    # L=10, mincount=100
+    # input_file_list = ['nyc_5_2_151', 'nyc_10_2_341', 'nyc_15_2_357', 'nyc_25_5_229']
+    # input_file_list = ['nyc_20_2_394_1', 'nyc_20_2_394_2', 'nyc_20_2_394_3', 'nyc_20_2_394_4', 'nyc_20_2_394_5']
+    # input_file_list = ['nyc_20_4_394_1', 'nyc_20_4_394_2', 'nyc_20_4_394_3', 'nyc_20_4_394_4', 'nyc_20_4_394_5']
+    input_file_list = ['nyc_10_2_341', 'nyc_10_2_341_2', 'nyc_10_2_341_3', 'nyc_10_2_341_4', 'nyc_10_2_341_5']
+    # test_hyperpara_list = [5, 10, 15, 25]
+    test_hyperpara_list = [1, 2, 3, 4, 5]
+    filename = 'result/wf_'+dist_type+'_L10del2'
+    algo_list = ['OFF', 'RCP', 'GRD', 'SAM1', 'SAMC1', 'BAT', 'HG']
+    topstr = 'A'+' '+' '.join([algo for algo in algo_list])
+    algo_ratio_mean_list = []
+    algo_ratio_std_list = []
+    for input_file in input_file_list:
+        f = input_file
+        algo_ratio_mean, algo_ratio_std = test_save(density=density, type_number=type_number, dist_type=dist_type, dist_hyperpara=dist_hyperpara, gamma=gamma, testnum=REAL_NUM, save=0, algo_list=algo_list, filename=f)
+        algo_ratio_mean_list.append(algo_ratio_mean)
+        algo_ratio_std_list.append(algo_ratio_std)
+    save_to_file(filename, test_hyperpara_list, topstr, algo_ratio_mean_list, algo_ratio_std_list, algo_list)
+
+def diff_grid(dist_type='geometric', dist_hyperpara=0.5, input_file=None):
+    density = 2.5
+    type_number = 50
+    gamma = 1
+    # L=10, mincount=100
+    # input_file_list = ['nyc_5_2_151', 'nyc_10_2_341', 'nyc_15_2_357', 'nyc_25_5_229']
+    # input_file_list = ['nyc_20_2_394']
+    input_file_list = ['nyc_5_5_151', 'nyc_10_5_341', 'nyc_15_5_357', 'nyc_20_5_394', 'nyc_25_5_229']
+
+    # test_hyperpara_list = [5, 10, 15, 25]
+    test_hyperpara_list = [5, 10, 15, 20, 25]
+    filename = 'result/grid_'+dist_type+'_del5'
+    algo_list = ['OFF', 'RCP', 'GRD', 'SAM1', 'SAMC1', 'BAT', 'HG']
+    topstr = 'L'+' '+' '.join([algo for algo in algo_list])
+    algo_ratio_mean_list = []
+    algo_ratio_std_list = []
+    for input_file in input_file_list:
+        f = input_file
+        algo_ratio_mean, algo_ratio_std = test_save(density=density, type_number=type_number, dist_type=dist_type, dist_hyperpara=dist_hyperpara, gamma=gamma, testnum=REAL_NUM, save=0, algo_list=algo_list, filename=f)
+        algo_ratio_mean_list.append(algo_ratio_mean)
+        algo_ratio_std_list.append(algo_ratio_std)
+    save_to_file(filename, test_hyperpara_list, topstr, algo_ratio_mean_list, algo_ratio_std_list, algo_list)
 
 def diff_delta(dist_type='geometric', dist_hyperpara=0.5, input_file=None):
     density = 2.5
     type_number = 50
     gamma = 1
     testnum = 1
-    input_file_list = ['nyc_20_1_511', 'nyc_20_2_511', 'nyc_20_3_511', 'nyc_20_4_511', 'nyc_20_5_511']
+    # L=10, mincount=100
+    # input_file_list = ['nyc_10_1_341', 'nyc_10_2_341', 'nyc_10_3_341', 'nyc_10_4_341', 'nyc_10_5_341']
+    # L=20, mincount=200
+    input_file_list = ['nyc_20_1_394', 'nyc_20_2_394', 'nyc_20_3_394', 'nyc_20_4_394', 'nyc_20_5_394']
+    # L=10, mincount=200
+    # input_file_list = ['nyc_10_1_172', 'nyc_10_2_172', 'nyc_10_3_172', 'nyc_10_4_172', 'nyc_10_5_172']
     test_hyperpara_list = [1, 2, 3, 4, 5]
-    filename = 'result/delta_'+dist_type
+    filename = 'result/delta_'+dist_type+'_L20'
     algo_list = ['OFF', 'RCP', 'GRD', 'SAM1', 'SAMC1', 'BAT', 'HG']
     topstr = 'delta'+' '+' '.join([algo for algo in algo_list])
     algo_ratio_mean_list = []
@@ -149,7 +224,7 @@ def diff_gamma(dist_type = 'geometric', dist_hyperpara = 0.5, input_file=None):
     density = 5.0
     type_number = 50
     # gamma_list = [0.5+i*0.5 for i in range(10)]
-    gamma_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+    gamma_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
     # testnum = 5
     print('test different gamma')
     if input_file:
@@ -160,8 +235,7 @@ def diff_gamma(dist_type = 'geometric', dist_hyperpara = 0.5, input_file=None):
         input_file = 'syn'
         algo_list = ['OFF', 'SAM']
         f = None
-        
-    rmin = 0.9
+    rmin = 0
     filename = 'result/gamma_'+dist_type+input_file
     topstr = 'gamma '+' '.join([algo for algo in algo_list])
     algo_ratio_mean_list = []

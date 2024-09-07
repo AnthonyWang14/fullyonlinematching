@@ -110,14 +110,14 @@ class Graph:
             p_min = self.dist_hyperpara
             variance = 0.01
             # print(p_min)
-            samples = truncated_normal(p_min, np.sqrt(variance), low=0.001, high=0.999, size=self.N)
+            # samples = truncated_normal(p_min, np.sqrt(variance), low=0.001, high=0.999, size=self.N)
+            samples = np.array([np.random.uniform(p_min, 1) for i in range(self.N)])
             # fix p_min
             # samples = np.array([self.p_min for i in range(self.N)])
             for i in range(self.N):
                 p = samples[i]
                 self.dist_paras.append(p)
                 self.mean_quit_time.append(1/p)
-
         
         if self.dist_type == 'shift_geo':
             # need one parameter p > 0.5
@@ -130,12 +130,12 @@ class Graph:
                 self.dist_paras.append(paras)
                 self.mean_quit_time.append(1/paras['p']+paras['dev'])
 
-        if self.dist_type == 'single': 
-            T = 3
-            for i in range(self.N):
-                n = np.random.randint(0, self.T)
-                self.dist_paras.append(n)
-                self.mean_quit_time.append(n)
+        # if self.dist_type == 'single': 
+        #     T = 3
+        #     for i in range(self.N):
+        #         n = np.random.randint(0, self.T)
+        #         self.dist_paras.append(n)
+        #         self.mean_quit_time.append(n)
 
         # if self.dist_type == 'binomial':
         #     min_p = 0.5

@@ -16,7 +16,14 @@ class BatchMatching:
 
 
     def eval_tune(self):
-        test_bsize = list(range(int(min(self.quit_time)+1), int(max(self.quit_time)+1)+1))
+        # limit the max tested batch size to be min of the max quit time and double of average quit time.
+        # mean_quit_time = int(np.sum(self.G.rates*self.G.mean_quit_time)+1)
+        # max_bsize = min(int(max(self.quit_time)+1), 2*mean_quit_time)
+        if max(self.quit_time) > self.G.T:
+            max_bsize = self.G.T+1
+        else:
+            max_bsize = int(max(self.quit_time))+1
+        test_bsize = list(range(int(min(self.quit_time)+1), max_bsize+1))
         reward_list = []
         for b_size in test_bsize:
             reward_list.append(self.eval(b_size=b_size))

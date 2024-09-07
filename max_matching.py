@@ -19,7 +19,7 @@ class MaxMatching:
             if self.alive[ind_i] == 1:
                 for ind_j in range(len(self.seq)):
                     if self.alive[ind_j] == 1:
-                        if ind_i < ind_j and (ind_j-ind_i)<= self.quit_time[ind_i]:
+                        if ind_i < ind_j and (ind_j-ind_i) <= self.quit_time[ind_i]:
                             w = self.G.weights[self.seq[ind_i]][self.seq[ind_j]]
                             if w > 1e-5:
                                 e = str(ind_i)+'_'+str(ind_j)

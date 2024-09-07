@@ -31,6 +31,7 @@ class OnlineMatching:
             seq_one, quit_one = self.G.gene_an_arrival()
             seq.append(seq_one)
             quit_time.append(quit_one)
+        print('max quit time', max(quit_time))
         return seq, quit_time
 
     def test_matching_valid(self, algo, matching, reward, seq, quit_time):
