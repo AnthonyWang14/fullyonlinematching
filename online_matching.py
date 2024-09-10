@@ -24,7 +24,6 @@ class OnlineMatching:
         # self.d = d
 
     def gene_sequence(self):
-        np.random.seed(0)
         seq = []
         quit_time = []
         for t in range(self.T):
@@ -174,6 +173,21 @@ class OnlineMatching:
                 print(algo, algo_mean[algo], algo_mean[algo]/algo_mean['OFF'])
         
                 algo_ratio[algo] = algo_mean[algo]/algo_mean['OFF']
+
+        # calculate the average rate over different realizations.
+        # algo_single_ratio = {}
+        algo_single_std = {}
+      
+        # the array that stores the ratio of each algorithm over the optimal algorithm
+        # print(algo_result)
+        for algo in algo_list:
+            # algo_single_ratio[algo] = np.array(algo_result[algo])/np.array(algo_result['OFF'])
+            algo_single_std[algo] = np.std(np.array(algo_result[algo])/np.array(algo_result['OFF']))
+        # print(algo_single_ratio)
+        print(algo_single_std)
+
+        # print('std', algo_single_std)
+        
         # print(algo_result)
         # print('run time')
         # for algo in algo_list:
@@ -181,5 +195,5 @@ class OnlineMatching:
         #         print(run_time[algo]/test_num)
         #     else:
         #         print(algo, run_time[algo]/test_num)
-        return(algo_ratio)
+        return algo_ratio, algo_single_std
     

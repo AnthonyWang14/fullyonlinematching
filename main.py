@@ -3,9 +3,12 @@ from eval import *
 
 if __name__ == '__main__':
     np.random.seed(0)
-    diff_wf(dist_type='geometric', dist_hyperpara=0.5, input_file=None)
-    diff_wf(dist_type='single', dist_hyperpara=20, input_file=None)
-    diff_wf(dist_type='poisson', dist_hyperpara=20, input_file=None)
+    diff_dist(dist_type='poisson', dist_hyperpara_list=[10, 20, 30, 40, 50, 60, 70, 80], input_file=None)
+    # diff_dist(dist_type='single', dist_hyperpara_list=[10, 20, 30, 40, 50, 60, 70, 80], input_file=None)
+
+    # diff_wf(dist_type='geometric', dist_hyperpara=0.5, input_file=None)
+    # diff_wf(dist_type='single', dist_hyperpara=20, input_file=None)
+    # diff_wf(dist_type='poisson', dist_hyperpara=20, input_file=None)
 
     # test_tn(dist_type='geometric', dist_hyperpara=0.5, SYN=True)  
     # test_tn(dist_type='single', dist_hyperpara=40, SYN=True)

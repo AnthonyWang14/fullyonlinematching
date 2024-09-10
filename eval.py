@@ -2,7 +2,7 @@ from online_matching import *
 from datetime import datetime
 
 GRAPH_NUM = 5
-REAL_NUM = 5
+REAL_NUM = 20
 def test_save(density=2.5, type_number=100, dist_type='fix', dist_hyperpara=10, gamma=0.36, testnum=2, save=1, algo_list = ['OFF'], filename = None, rmin=0):
     graph_num = 1
     print('density', density, 'type_number', type_number, 'dist_type', dist_type, 'dist_hyperpara', dist_hyperpara,'gamma', gamma, 'testnum', testnum,'save', save, 'algo_list', algo_list)
@@ -34,18 +34,22 @@ def test_save(density=2.5, type_number=100, dist_type='fix', dist_hyperpara=10, 
     algo_ratio_list = {}
     algo_ratio_mean = {}
     algo_ratio_std = {}
+    algo_ratio_std_list = {}
     for algo in algo_list:
         algo_ratio_list[algo] = []
+        algo_ratio_std_list[algo] = []
         algo_ratio_mean[algo] = 0
         algo_ratio_std[algo] = 0
     for g in g_list:
         online_match = OnlineMatching(g, T=T, mapping_file = filename)
-        single_graph_algo_ratio_list = online_match.run_test(algo_list=algo_list, gamma=gamma, test_num=REAL_NUM, save=save)
+        single_graph_algo_ratio_list, single_graph_algo_std_list = online_match.run_test(algo_list=algo_list, gamma=gamma, test_num=REAL_NUM, save=save)
         for algo in algo_list:
             algo_ratio_list[algo].append(single_graph_algo_ratio_list[algo])
+            algo_ratio_std_list[algo].append(single_graph_algo_std_list[algo])
     for algo in algo_list:
         algo_ratio_mean[algo] = np.mean(algo_ratio_list[algo])
-        algo_ratio_std[algo] = np.std(algo_ratio_list[algo])
+        algo_ratio_std[algo] = np.mean(algo_ratio_std_list[algo])
+        # algo_ratio_std[algo] = np.std(algo_ratio_list[algo])
     return algo_ratio_mean, algo_ratio_std
 
 def test_density(dist_type='geometric', dist_hyperpara=0.5, SYN=True):
@@ -148,7 +152,7 @@ def diff_dist(dist_type='fix', dist_hyperpara_list=[10, 20, 30, 40, 50], input_f
         algo_ratio_mean, algo_ratio_std = test_save(density=density, type_number=type_number, dist_type=dist_type, dist_hyperpara=dist_hyperpara, gamma=gamma, testnum=REAL_NUM, save=0, algo_list=algo_list, filename=f)
         algo_ratio_mean_list.append(algo_ratio_mean)
         algo_ratio_std_list.append(algo_ratio_std)
-    save_to_file(filename, dist_hyperpara_list, topstr, algo_ratio_mean_list, algo_ratio_std_list, algo_list)
+    save_to_file_std(filename, dist_hyperpara_list, topstr, algo_ratio_mean_list, algo_ratio_std_list, algo_list)
 
 def diff_wf(dist_type='geometric', dist_hyperpara=0.5, input_file=None):
     density = 2.5
@@ -224,7 +228,8 @@ def diff_gamma(dist_type = 'geometric', dist_hyperpara = 0.5, input_file=None):
     density = 5.0
     type_number = 50
     # gamma_list = [0.5+i*0.5 for i in range(10)]
-    gamma_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+    # gamma_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+    gamma_list = [1]
     # testnum = 5
     print('test different gamma')
     if input_file:
@@ -258,9 +263,16 @@ def save_to_file(filename, tested_para_list, topstr, algo_ratio_mean_list, algo_
             file.write(str(round(tested_para_list[i], 3))+' '+' '.join([str(round(algo_ratio_mean_list[i][algo],3)) for algo in algo_list])+'\n')
             # print(' '.join([str(round(algo_ratio_mean_list[i][algo],3)) for algo in algo_list]))
             
-    # change_file_format(filename, filename+'.csv')
-# def default_para_test():
-
+def save_to_file_std(filename, tested_para_list, topstr, algo_ratio_mean_list, algo_ratio_std_list, algo_list):
+    current_time = datetime.now()
+    time_str = current_time.strftime("%Y-%m-%d %H:%M:%S")
+    print('save to file', filename)
+    with open(filename, 'a+') as file:
+        file.write(time_str+'\n')
+        file.write(topstr+'\n')
+        for i in range(len(tested_para_list)):
+            
+            file.write(str(round(tested_para_list[i], 3))+' '+' '.join([str(round(algo_ratio_mean_list[i][algo],3))+'_'+str(round(algo_ratio_std_list[i][algo],3)) for algo in algo_list])+'\n')
 
     
 if __name__ == '__main__':

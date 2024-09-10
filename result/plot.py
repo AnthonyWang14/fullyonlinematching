@@ -210,7 +210,22 @@ def plot_gamma(filename):
         'L^P=15': r'$L^P=15$',
         'L^P=20': r'$L^P=20$',
         'L^P=25': r'$L^P=25$',
-        'L^P=30': r'$L^P=30$'
+        'L^P=30': r'$L^P=30$',
+        'A=1': r'$A=1$',
+        'A=2': r'$A=2$',
+        'A=3': r'$A=3$',
+        'A=4': r'$A=4$',    
+        'A=5': r'$A=5$',
+        'L=5': r'$L=5$',
+        'L=10': r'$L=10$',
+        'L=15': r'$L=15$',
+        'L=20': r'$L=20$',
+        'L=25': r'$L=25$',
+        'delta=1': r'$\delta=1$',    
+        'delta=2': r'$\delta=2$',
+        'delta=3': r'$\delta=3$',
+        'delta=4': r'$\delta=4$',
+        'delta=5': r'$\delta=5$'
     }
     # env_list = ['D^S=5,p_m=0', 'D^S=20,p_m=0', 'D^S=35,p_m=0', 'D^S=5,p_m=0.9', 'D^S=20,p_m=0.9', 'D^S=35,p_m=0.9']
     with open(filename) as f:
@@ -254,7 +269,12 @@ def plot_gamma(filename):
         plt.close()
 
 if __name__ == '__main__':
-    plot_gamma('gam_geo_nycL10del2A1')
+    # plot_gamma('gam_geo_nycLdel2A1')
+    # plot_gamma('gam_sin_nycLdel2A1')
+    # plot_gamma('gam_poi_nycLdel2A1')
+    plot_gamma('gam_geo_nycL10delA1')
+    plot_gamma('gam_sin_nycL10delA1')
+    plot_gamma('gam_poi_nycL10delA1')
     # plot_gamma('gam_nyc_geo2')
     # plot_gamma('gam_nyc_sin2')
     # plot_gamma('gam_nyc_poi2')

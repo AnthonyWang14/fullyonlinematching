@@ -23,12 +23,16 @@ class BatchMatching:
             max_bsize = self.G.T+1
         else:
             max_bsize = int(max(self.quit_time))+1
-        test_bsize = list(range(int(min(self.quit_time)+1), max_bsize+1))
+        test_bsize = list(range(int(min(self.quit_time))+1, max_bsize+1))
         reward_list = []
-        for b_size in test_bsize:
-            reward_list.append(self.eval(b_size=b_size))
-        max_reward = max(reward_list)
-        max_index = reward_list.index(max_reward)
+        if len(test_bsize) > 0:
+            for b_size in test_bsize:
+                reward_list.append(self.eval(b_size=b_size))
+            max_reward = max(reward_list)
+            max_index = reward_list.index(max_reward)
+        else:
+            max_reward = 0
+            # max_index = 0
         # print(test_bsize[max_index])
         return max_reward
         
