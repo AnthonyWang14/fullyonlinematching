@@ -2,7 +2,7 @@ from online_matching import *
 from datetime import datetime
 
 GRAPH_NUM = 5
-REAL_NUM = 20
+REAL_NUM = 5
 def test_save(density=2.5, type_number=100, dist_type='fix', dist_hyperpara=10, gamma=0.36, testnum=2, save=1, algo_list = ['OFF'], filename = None, rmin=0):
     graph_num = 1
     print('density', density, 'type_number', type_number, 'dist_type', dist_type, 'dist_hyperpara', dist_hyperpara,'gamma', gamma, 'testnum', testnum,'save', save, 'algo_list', algo_list)
@@ -51,6 +51,75 @@ def test_save(density=2.5, type_number=100, dist_type='fix', dist_hyperpara=10, 
         algo_ratio_std[algo] = np.mean(algo_ratio_std_list[algo])
         # algo_ratio_std[algo] = np.std(algo_ratio_list[algo])
     return algo_ratio_mean, algo_ratio_std
+
+# rates = 1/tn, distrubution's hyperpara = tn.
+def test_tn_fix(dist_type='fix_geo', dist_hyperpara=0.5, SYN=True):
+    density = 2.5
+    # density_list = [1+i*0.5 for i in range(9)]
+    # type_number = 50
+    # tn_list = [10, 20, 30, 40, 50]
+    tn_list = [25, 30, 35, 40, 45, 50]
+    gamma = 1
+    # testnum = 1
+    if SYN:
+        input_file = 'syn'
+        algo_list = ['OFF', 'SAM1', 'SAMC1']
+        f = None
+    else:
+        input_file = 'nyc_20_2_842'
+        algo_list = ['OFF', 'GRD', 'SAM1', 'COL1', 'BATCH']
+        f = 'data/'+input_file
+    filename = 'result/tn_fix_'+input_file
+    algo_ratio_mean_list = []
+    algo_ratio_std_list = []
+    topstr = 'tn'+'_'+dist_type+' '+' '.join([algo for algo in algo_list])
+    for type_number in tn_list:
+        if dist_type == 'fix_geo':
+            dist_hyperpara = type_number
+        elif dist_type == 'fix_single':
+            dist_hyperpara = type_number
+        elif dist_type == 'fix_poisson':
+            dist_hyperpara = type_number
+        algo_ratio_mean, algo_ratio_std = test_save(density=density, type_number=type_number, dist_type=dist_type, dist_hyperpara=dist_hyperpara, gamma=gamma, testnum=REAL_NUM, save=0, algo_list=algo_list, filename=f)
+        algo_ratio_mean_list.append(algo_ratio_mean)
+        algo_ratio_std_list.append(algo_ratio_std)
+    save_to_file(filename, tn_list, topstr, algo_ratio_mean_list, algo_ratio_std_list, algo_list)
+
+
+# rates = 1/tn, fixed distrubution's hyperpara.
+def test_tn_fix2(dist_type='fix_geo', dist_hyperpara=20, SYN=True):
+    density = 2.5
+    # density_list = [1+i*0.5 for i in range(9)]
+    # type_number = 50
+    # tn_list = [10, 20, 30, 40, 50]
+    tn_list = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50]
+    gamma = 1
+    # testnum = 1
+    if SYN:
+        input_file = 'syn'
+        algo_list = ['OFF', 'SAM1', 'SAMC1']
+        f = None
+    else:
+        input_file = 'nyc_20_2_842'
+        algo_list = ['OFF', 'GRD', 'SAM1', 'COL1', 'BATCH']
+        f = 'data/'+input_file
+    filename = 'result/tn_fix_'+input_file
+    algo_ratio_mean_list = []
+    algo_ratio_std_list = []
+    topstr = 'tn'+'_'+dist_type+' '+' '.join([algo for algo in algo_list])
+    for type_number in tn_list:
+        # if dist_type == 'fix_geo':
+        #     dist_hyperpara = type_number
+        # elif dist_type == 'fix_single':
+        #     dist_hyperpara = type_number
+        # elif dist_type == 'fix_poisson':
+        #     dist_hyperpara = type_number
+        dist_hyperpara = 20
+        algo_ratio_mean, algo_ratio_std = test_save(density=density, type_number=type_number, dist_type=dist_type, dist_hyperpara=dist_hyperpara, gamma=gamma, testnum=REAL_NUM, save=0, algo_list=algo_list, filename=f)
+        algo_ratio_mean_list.append(algo_ratio_mean)
+        algo_ratio_std_list.append(algo_ratio_std)
+    save_to_file(filename, tn_list, topstr, algo_ratio_mean_list, algo_ratio_std_list, algo_list)
+
 
 def test_density(dist_type='geometric', dist_hyperpara=0.5, SYN=True):
     density = 2.5
@@ -153,6 +222,32 @@ def diff_dist(dist_type='fix', dist_hyperpara_list=[10, 20, 30, 40, 50], input_f
         algo_ratio_mean_list.append(algo_ratio_mean)
         algo_ratio_std_list.append(algo_ratio_std)
     save_to_file_std(filename, dist_hyperpara_list, topstr, algo_ratio_mean_list, algo_ratio_std_list, algo_list)
+
+
+# prob = 1/tn, dist para is the expectation
+def diff_dist_fix(dist_type='fix', dist_hyperpara_list=[10, 20, 30, 40, 50], input_file=None):
+    density = 2.5
+    type_number = 20
+    gamma = 1
+    testnum = 1
+    if input_file:
+        algo_list = ['OFF', 'RCP', 'GRD', 'SAM1', 'SAMC1', 'BAT', 'HG']
+        # algo_list = ['OFF', 'RCP']
+        f = input_file
+    else:
+        input_file = 'syn'
+        algo_list = ['OFF', 'SAM1', 'SAMC1']
+        # algo_list = ['OFF', 'GRD', 'SAM1', 'SAMC1']
+        f = None
+    filename = 'result/'+dist_type+input_file
+    algo_ratio_mean_list = []
+    algo_ratio_std_list = []
+    topstr = dist_type+' '+' '.join([algo for algo in algo_list])
+    for dist_hyperpara in dist_hyperpara_list:
+        algo_ratio_mean, algo_ratio_std = test_save(density=density, type_number=type_number, dist_type=dist_type, dist_hyperpara=dist_hyperpara, gamma=gamma, testnum=REAL_NUM, save=0, algo_list=algo_list, filename=f)
+        algo_ratio_mean_list.append(algo_ratio_mean)
+        algo_ratio_std_list.append(algo_ratio_std)
+    save_to_file(filename, dist_hyperpara_list, topstr, algo_ratio_mean_list, algo_ratio_std_list, algo_list)
 
 def diff_wf(dist_type='geometric', dist_hyperpara=0.5, input_file=None):
     density = 2.5

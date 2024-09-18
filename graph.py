@@ -31,7 +31,8 @@ class Graph:
         if rates:
             self.rates = np.array(rates)
         else:
-            self.gene_rates(rmin=rmin)
+            # self.gene_rates(rmin=rmin)
+            self.fix_gene_rates(rmin=rmin)
 
         self.dist_type = dist_type
         self.dist_hyperpara = dist_hyperpara
@@ -62,6 +63,12 @@ class Graph:
         print('rmin', rmin)
         r = np.random.uniform(rmin, 1, self.N)
         self.rates = np.array([l/np.sum(r) for l in r])
+
+    # rates = 1/N
+    def fix_gene_rates(self, rmin=0):
+        # print('rmin', rmin)
+        r = np.random.uniform(rmin, 1, self.N)
+        self.rates = np.array([1./self.N for l in r])
 
     def gene_quit_dist(self):
         # need define quit_pamameter, mean quit time list
@@ -119,6 +126,18 @@ class Graph:
                 self.dist_paras.append(p)
                 self.mean_quit_time.append(1/p)
         
+        # dist para is the expectation, 1/p
+        if self.dist_type == 'geo':
+            dmax = self.dist_hyperpara
+            # random sample d from 1 to dmax (noninteger), size = self.N
+            samples = np.random.uniform(1, dmax, self.N)
+            # fix p_min
+            # samples = np.array([self.p_min for i in range(self.N)])
+            for i in range(self.N):
+                d = samples[i]
+                self.dist_paras.append(d)
+                self.mean_quit_time.append(d)
+        
         if self.dist_type == 'shift_geo':
             # need one parameter p > 0.5
             # self.dist_paras = []
@@ -156,6 +175,35 @@ class Graph:
                 paras['dev'] = 0
                 self.dist_paras.append(paras)
                 self.mean_quit_time.append(paras['lam']+paras['dev'])
+
+        if self.dist_type == 'fix_geo':
+            # dist_hyperpara is the expectation's range
+            for i in range(self.N):
+                d = self.dist_hyperpara
+                self.dist_paras.append(d)
+                self.mean_quit_time.append(d)
+        
+        if self.dist_type == 'fix_single':
+            # samples = np.random.randint(1, self.dist_hyperpara, self.N)
+            # for i in range(self.N):
+            #     if np.random.rand() < 0.5:
+            #         samples[i] = np.random.randint(1, 5)
+            #     else:
+            #         samples[i] = np.random.randint(25, 30)
+            for i in range(self.N):
+                paras = {}
+                paras['d'] = self.dist_hyperpara
+                self.dist_paras.append(paras)
+                self.mean_quit_time.append(paras['d'])
+
+        if self.dist_type == 'fix_poisson':
+            lam_max = self.dist_hyperpara
+            for i in range(self.N):
+                paras = {}
+                paras['lam'] = lam_max
+                paras['dev'] = 0
+                self.dist_paras.append(paras)
+                self.mean_quit_time.append(paras['lam']+paras['dev'])
             
     def gene_quit_time(self, ind):
 
@@ -176,6 +224,18 @@ class Graph:
             p = self.dist_paras[ind]
             # z = np.random.geometric(p)
             return np.random.geometric(p)
+        
+
+        # dist para is the expectation, 1/p
+        if self.dist_type == 'geo':
+            d = self.dist_paras[ind]
+            # z = np.random.geometric(p)
+            return np.random.geometric(1./d)
+        
+        if self.dist_type == 'fix_geo':
+            d = self.dist_paras[ind]
+            # print ('d', d)
+            return np.random.geometric(1./d)
 
         if self.dist_type == 'binomial':
             n = self.dist_paras[ind]['n']
@@ -183,7 +243,7 @@ class Graph:
             dev = self.dist_paras[ind]['dev']
             return np.random.binomial(n, p)+dev
 
-        if self.dist_type == 'poisson':
+        if self.dist_type == 'poisson' or self.dist_type == 'fix_poisson':
             lam = self.dist_paras[ind]['lam']
             dev = self.dist_paras[ind]['dev']
             return np.random.poisson(lam)+dev
@@ -193,7 +253,7 @@ class Graph:
             dev = self.dist_paras[ind]['dev']
             return np.random.geometric(p)+dev
 
-        if self.dist_type == 'single':
+        if self.dist_type == 'single' or self.dist_type == 'fix_single':
             return self.dist_paras[ind]['d']
 
         if self.dist_type == 'uniform':
