@@ -86,6 +86,19 @@ class OnlineMatching:
                     samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 1)
                     reward = samp.eval()
                     matching = samp.matching
+                if algo == 'SAM2':
+                    samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 2)
+                    reward = samp.eval()
+                    matching = samp.matching
+                if algo == 'SAM3':
+                    samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 3)
+                    reward = samp.eval()
+                    matching = samp.matching
+
+                if algo == 'SAMC1':
+                    samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 1)
+                    reward = samp.eval_Collina()
+                    matching = samp.matching
 
                 if algo == 'SAM1N':
                     samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 1)
@@ -95,11 +108,6 @@ class OnlineMatching:
                 if algo == 'SAM0.6':
                     samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 0.6)
                     reward = samp.eval()
-                    matching = samp.matching
-
-                if algo == 'SAMC1':
-                    samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 1)
-                    reward = samp.eval_Collina()
                     matching = samp.matching
 
                 if algo == 'SAMC':
@@ -158,7 +166,7 @@ class OnlineMatching:
                 algo_result[algo].append(reward)
                 run_time[algo] += time.time() - start
                 # print(algo, matching)
-                # self.test_matching_valid(algo, matching, reward, seq, quit_time)
+                self.test_matching_valid(algo, matching, reward, seq, quit_time)
 
         if save == 1:
             for algo in algo_list:

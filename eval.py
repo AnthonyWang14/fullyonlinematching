@@ -1,8 +1,8 @@
 from online_matching import *
 from datetime import datetime
 
-GRAPH_NUM = 5
-REAL_NUM = 5
+GRAPH_NUM = 3
+REAL_NUM = 3
 def test_save(density=2.5, type_number=100, dist_type='fix', dist_hyperpara=10, gamma=0.36, testnum=2, save=1, algo_list = ['OFF'], filename = None, rmin=0):
     graph_num = 1
     print('density', density, 'type_number', type_number, 'dist_type', dist_type, 'dist_hyperpara', dist_hyperpara,'gamma', gamma, 'testnum', testnum,'save', save, 'algo_list', algo_list)
@@ -30,7 +30,7 @@ def test_save(density=2.5, type_number=100, dist_type='fix', dist_hyperpara=10, 
         g_list = [Graph(type_number = type_number,  density=density, dist_type = dist_type, dist_hyperpara=dist_hyperpara, weights = None, rates=None, rmin=rmin) for i in range(GRAPH_NUM)]
 
     # should be 5000
-    T = 500
+    T = 1000
     algo_ratio_list = {}
     algo_ratio_mean = {}
     algo_ratio_std = {}
@@ -122,14 +122,15 @@ def test_tn_fix2(dist_type='fix_geo', dist_hyperpara=20, SYN=True):
 
 
 def test_density(dist_type='geometric', dist_hyperpara=0.5, SYN=True):
-    density = 2.5
-    density_list = [1+i*0.5 for i in range(9)]
+    # density = 2.5
+    # density_list = [1+i*0.5 for i in range(9)]
+    density_list = [0.1, 0.2, 0.3, 0.4, 0.5]
     type_number = 50
     gamma = 1
     # testnum = 1
     if SYN:
         input_file = 'syn'
-        algo_list = ['OFF', 'RCP', 'GRD', 'SAM1', 'SAMC1', 'BAT']
+        algo_list = ['OFF', 'RCP', 'GRD', 'SAM1', 'SAM2', 'SAM3', 'SAMC1', 'BAT']
         f = None
     else:
         input_file = 'nyc_20_2_842'
@@ -146,7 +147,7 @@ def test_density(dist_type='geometric', dist_hyperpara=0.5, SYN=True):
     save_to_file(filename, density_list, topstr, algo_ratio_mean_list, algo_ratio_std_list, algo_list)
 
 def test_tn(dist_type='geometric', dist_hyperpara=0.5, SYN=True):
-    density = 2.5
+    density = 0.5
     # density_list = [1+i*0.5 for i in range(9)]
     # type_number = 50
     # tn_list = [10, 20, 30, 40, 50]
@@ -155,7 +156,7 @@ def test_tn(dist_type='geometric', dist_hyperpara=0.5, SYN=True):
     # testnum = 1
     if SYN:
         input_file = 'syn'
-        algo_list = ['OFF', 'RCP', 'GRD', 'SAM1', 'SAMC1', 'BAT']
+        algo_list = ['OFF', 'RCP', 'GRD', 'SAM1','SAM2','SAM3', 'SAMC1', 'BAT']
         f = None
     else:
         input_file = 'nyc_20_2_842'
@@ -200,12 +201,12 @@ def test_rmin(dist_type='geometric', dist_hyperpara=0.5, SYN=True):
 
 
 def diff_dist(dist_type='fix', dist_hyperpara_list=[10, 20, 30, 40, 50], input_file=None):
-    density = 2.5
+    density = 0.1
     type_number = 50
     gamma = 1
     testnum = 1
     if input_file:
-        algo_list = ['OFF', 'RCP', 'GRD', 'SAM1', 'SAMC1', 'BAT', 'HG']
+        algo_list = ['OFF', 'RCP', 'GRD', 'SAM1', 'SAM2', 'SAM3', 'SAMC1', 'BAT', 'HG']
         # algo_list = ['OFF', 'RCP']
         f = input_file
     else:
@@ -227,7 +228,7 @@ def diff_dist(dist_type='fix', dist_hyperpara_list=[10, 20, 30, 40, 50], input_f
 # prob = 1/tn, dist para is the expectation
 def diff_dist_fix(dist_type='fix', dist_hyperpara_list=[10, 20, 30, 40, 50], input_file=None):
     density = 2.5
-    type_number = 20
+    type_number = 10
     gamma = 1
     testnum = 1
     if input_file:
@@ -319,21 +320,22 @@ def diff_delta(dist_type='geometric', dist_hyperpara=0.5, input_file=None):
         algo_ratio_std_list.append(algo_ratio_std)
     save_to_file(filename, test_hyperpara_list, topstr, algo_ratio_mean_list, algo_ratio_std_list, algo_list)
 
-def diff_gamma(dist_type = 'geometric', dist_hyperpara = 0.5, input_file=None):
-    density = 5.0
-    type_number = 50
+def diff_gamma(dist_type = 'geometric', dist_hyperpara = 0.5, density = 0.5, type_number= 50, gamma_list= [1], input_file=None):
+    # density = density
+    # type_number = tn
     # gamma_list = [0.5+i*0.5 for i in range(10)]
     # gamma_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-    gamma_list = [1]
+    # gamma_list = [1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10]
+    # gamma_list = [1]
     # testnum = 5
     print('test different gamma')
     if input_file:
-        algo_list = ['OFF', 'SAM']
+        algo_list = ['OFF', 'SAM', 'SAMC', 'GRD']
         # algo_list = ['OFF', 'RCP']
         f = input_file
     else:
         input_file = 'syn'
-        algo_list = ['OFF', 'SAM']
+        algo_list = ['OFF', 'SAM', 'SAMC', 'GRD']
         f = None
     rmin = 0
     filename = 'result/gamma_'+dist_type+input_file

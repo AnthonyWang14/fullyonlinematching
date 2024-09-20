@@ -3,9 +3,11 @@ from eval import *
 
 if __name__ == '__main__':
     np.random.seed(0)
-    test_tn_fix(dist_type='fix_geo', dist_hyperpara=0.5, SYN=True)
-    test_tn_fix(dist_type='fix_single', dist_hyperpara=20, SYN=True)
-    test_tn_fix(dist_type='fix_poisson', dist_hyperpara=20, SYN=True)
+    diff_dist_fix(dist_type='fix_single', dist_hyperpara_list=[5, 10, 15, 20], input_file=None)
+
+    # test_tn_fix(dist_type='fix_geo', dist_hyperpara=0.5, SYN=True)
+    # test_tn_fix(dist_type='fix_single', dist_hyperpara=20, SYN=True)
+    # test_tn_fix(dist_type='fix_poisson', dist_hyperpara=20, SYN=True)
     # diff_dist(dist_type='single', dist_hyperpara_list=[10, 20, 30, 40, 50, 60, 70, 80], input_file=None)
 
     # diff_wf(dist_type='geometric', dist_hyperpara=0.5, input_file=None)

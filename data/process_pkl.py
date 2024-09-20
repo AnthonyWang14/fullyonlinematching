@@ -8,7 +8,7 @@ import time
 import numpy as np
 import random
 
-A = 1 # weight factor
+A = 2 # weight factor
 
 
 # d is the constraints of start and ends
@@ -81,12 +81,12 @@ def cal_rate_bound(pickup, dropoff, L, d):
     # print(t_list)
     # minx = min(x1_list)
     # maxx = max(x1_list)
-    print(minx, maxx)
+    # print(minx, maxx)
     dx = (maxx-minx)/L
 
     miny = np.mean(y1_list)-3*np.std(y1_list, ddof=1)
     maxy = np.mean(y1_list)+3*np.std(y1_list, ddof=1)
-    print(miny, maxy)
+    # print(miny, maxy)
     dy = (maxy-miny)/L
 
     pick = [[math.floor((x[0]-minx)/dx), math.floor((x[1]-miny)/dy)] for x in pick_list]
@@ -160,12 +160,20 @@ def cal_rate_bound(pickup, dropoff, L, d):
     print('type number', type_number)
     weights = gen_weight(d, type_list, L)
     deg = [0 for i in weights]
+    nontrivialedges = 0
     for i in range(len(weights)):
         for j in range(len(weights[i])):
+            if j >= i:
+                if weights[i][j] > 1e-5:
+                    nontrivialedges += 1
+            # if j == i:
+            #     if weights[i][j] > 1e-5:
+            #         nontrivialedges += 1
             if weights[i][j] > 0:
                 deg[i] += 1
-    print('avg deg', sum(deg)/len(deg))
-    print('max deg', max(deg), 'min deg', min(deg))
+    # print('avg deg', sum(deg)/len(deg))
+    # print('max deg', max(deg), 'min deg', min(deg))
+    print('d', d, '*'*10, 'density', 2*nontrivialedges/(type_number*(type_number+1)))
     save_data(rates, weights, L, d, len(rates))
     save_type_mapping(L, d, type_number, type_list)
     return

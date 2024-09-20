@@ -16,23 +16,26 @@ def truncated_normal(mu, sigma, low=0, high=1, size=None):
 # underlying graph
 class Graph:
     def __init__(self, type_number = 10, density = 1, dist_type = 'fix', dist_hyperpara = 10, weights = None, rates = None, rmin=0, T=3) -> None:
-        # np.random.seed(0)
+        np.random.seed(0)
         self.N = type_number
         self.density = density
-        self.sparsity = 1-2/self.N*self.density
+        # density from 0 to 1 = 2e/n(n-1)
+        # self.sparsity = 1-2/self.N*self.density
+        self.sparsity = 1-density
         self.T = T
         # print(weights)
         if weights:
             self.weights = np.array(weights)
         # randomized weights
         else:
-            self.gene_weights()
+            # self.gene_weights()
+            self.gen_weights_update(weight_type='trunc_norm')
 
         if rates:
             self.rates = np.array(rates)
         else:
-            # self.gene_rates(rmin=rmin)
-            self.fix_gene_rates(rmin=rmin)
+            self.gene_rates(rmin=rmin)
+            # self.fix_gene_rates(rmin=rmin)
 
         self.dist_type = dist_type
         self.dist_hyperpara = dist_hyperpara
@@ -58,6 +61,40 @@ class Graph:
                             q = 0
                     self.weights[i][j] = q
                     self.weights[j][i] = q
+
+    # non-trivial edge's weight from 0 to 1
+    def gen_weights_update(self, weight_type='uni_large'):
+        self.weights = np.random.uniform(0, 1, (self.N, self.N))
+        for i in range(self.N):
+            for j in range(self.N):
+                if j >= i:
+                    q = np.random.uniform(0, 1)
+                    # only consider sparse when N>5
+                    if self.N >= 5:
+                        # for q < self.sparsity, set q=0, otherwise, set q generate from 0 to 1
+                        if q < self.sparsity:
+                            p = 0
+                        else:
+                            if weight_type == 'uni_large':
+                                # generate from 1 to 100 uniformly 
+                                p = np.random.uniform(1, 100)
+                            if weight_type == 'uni_small':
+                                p = np.random.uniform(1, 2)
+                            if weight_type == 'trunc_norm':
+                                # generate from 0 to 100 using truncated normal with mean 0.5 and std 0.1
+                                p = truncated_normal(0.1, 0.5, low=0, high=1, size=1)[0]
+                        self.weights[i][j] = p
+                        self.weights[j][i] = p
+                    else:
+                        self.weights[i][j] = q
+                        self.weights[j][i] = q
+                # # j = i is non-trivial?
+                # elif j == i:
+                #     p = np.random.uniform(0, 1)
+                #     self.weights[i][j] = p
+                #     self.weights[j][i] = p
+        # print(self.weights)
+
 
     def gene_rates(self, rmin=0):
         print('rmin', rmin)

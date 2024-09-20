@@ -118,7 +118,8 @@ class Samp:
                 # print(start)
                 candidate_index = []
                 for ind in range(start, t):
-                    if (t-ind)<=self.quit_time[ind] and matched[ind] == 0:
+                    # filter out the dead, matched, and trivial edges
+                    if (t-ind)<=self.quit_time[ind] and matched[ind] == 0 and self.G.weights[v][self.seq[ind]] > 1e-5:
                         candidate_index.append(ind)
                 candidate_type = [self.seq[ind] for ind in candidate_index]
                 np.random.shuffle(candidate_type)
@@ -170,7 +171,7 @@ class Samp:
                     #     prob = 1
                     if np.random.random() <= prob:
                         for ind in candidate_index:
-                            if self.seq[ind] == u:
+                            if self.seq[ind] == u and self.G.weights[u][v]> 1e-5:
                                 self.matching.append([ind, t, t])
                                 matched[t] = 1
                                 matched[ind] = 1
