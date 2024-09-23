@@ -13,6 +13,14 @@ def truncated_normal(mu, sigma, low=0, high=1, size=None):
     samples = truncnorm.rvs(a, b, loc=mu, scale=sigma, size=size)
     return samples
 
+def generate_truncated_normal_lower_bound(low, mean, std, size=1000):
+    # Calculate the parameter for the lower bound
+    a = (low - mean) / std
+    b = np.inf  # No upper limit
+    
+    # Generate truncated normal variables
+    return truncnorm.rvs(a, b, loc=mean, scale=std, size=size)
+
 # underlying graph
 class Graph:
     def __init__(self, type_number = 10, density = 1, dist_type = 'fix', dist_hyperpara = 10, weights = None, rates = None, rmin=0, T=3) -> None:
@@ -29,7 +37,7 @@ class Graph:
         # randomized weights
         else:
             # self.gene_weights()
-            self.gen_weights_update(weight_type='trunc_norm')
+            self.gen_weights_update(weight_type='trunc_norm_lower_bound')
 
         if rates:
             self.rates = np.array(rates)
@@ -75,6 +83,8 @@ class Graph:
                         if q < self.sparsity:
                             p = 0
                         else:
+                            if weight_type == 'uniform':
+                                p = np.random.uniform(0, 1)
                             if weight_type == 'uni_large':
                                 # generate from 1 to 100 uniformly 
                                 p = np.random.uniform(1, 100)
@@ -82,7 +92,10 @@ class Graph:
                                 p = np.random.uniform(1, 2)
                             if weight_type == 'trunc_norm':
                                 # generate from 0 to 100 using truncated normal with mean 0.5 and std 0.1
-                                p = truncated_normal(0.1, 0.5, low=0, high=1, size=1)[0]
+                                p = truncated_normal(0.1, 0.1, low=0, high=1, size=1)[0]
+
+                            if weight_type == 'trunc_norm_lower_bound':
+                                p = generate_truncated_normal_lower_bound(low=0, mean=0.5, std=1, size=1)[0]
                         self.weights[i][j] = p
                         self.weights[j][i] = p
                     else:
@@ -97,7 +110,7 @@ class Graph:
 
 
     def gene_rates(self, rmin=0):
-        print('rmin', rmin)
+        # print('rmin', rmin)
         r = np.random.uniform(rmin, 1, self.N)
         self.rates = np.array([l/np.sum(r) for l in r])
 
@@ -126,7 +139,7 @@ class Graph:
                 self.mean_quit_time.append(paras['q']*paras['d_min']+(1-paras['q'])*paras['d_max'])
 
         if self.dist_type == 'single':
-            samples = np.random.randint(1, self.dist_hyperpara, self.N)
+            samples = np.random.randint(0, self.dist_hyperpara, self.N)
             # for i in range(self.N):
             #     if np.random.rand() < 0.5:
             #         samples[i] = np.random.randint(1, 5)
@@ -163,17 +176,53 @@ class Graph:
                 self.dist_paras.append(p)
                 self.mean_quit_time.append(1/p)
         
-        # dist para is the expectation, 1/p
+        # # dist para is the expectation, 1/p
+        # if self.dist_type == 'geo':
+        #     dmax = self.dist_hyperpara
+        #     # random sample d from 1 to dmax (noninteger), size = self.N
+        #     samples = np.random.uniform(1, dmax, self.N)
+        #     # fix p_min
+        #     # samples = np.array([self.p_min for i in range(self.N)])
+        #     for i in range(self.N):
+        #         d = samples[i]
+        #         self.dist_paras.append(d)
+        #         self.mean_quit_time.append(d)
+
+        if self.dist_type == 'sin':
+            dmean = self.dist_hyperpara
+            std = 10
+            # no high limit, use truncated normal   
+            samples_float = generate_truncated_normal_lower_bound(low = 0, mean = dmean, std = std, size=self.N)
+            samples = samples_float.astype(int)
+            for i in range(self.N):
+                paras = {}
+                paras['d'] = samples[i]
+                self.dist_paras.append(paras)
+                self.mean_quit_time.append(paras['d'])
+            print('mean_quit_time', self.mean_quit_time)
+            
         if self.dist_type == 'geo':
-            dmax = self.dist_hyperpara
-            # random sample d from 1 to dmax (noninteger), size = self.N
-            samples = np.random.uniform(1, dmax, self.N)
-            # fix p_min
-            # samples = np.array([self.p_min for i in range(self.N)])
+            dmean = self.dist_hyperpara
+            std = 10
+            # no high limit, use truncated normal   
+            samples = generate_truncated_normal_lower_bound(low = 1, mean = dmean, std = std, size=self.N)
             for i in range(self.N):
                 d = samples[i]
                 self.dist_paras.append(d)
                 self.mean_quit_time.append(d)
+
+        if self.dist_type == 'poi':
+            dmean = self.dist_hyperpara
+            std = 10
+            samples = generate_truncated_normal_lower_bound(low = 0, mean = dmean, std = std, size=self.N)
+            for i in range(self.N):
+                paras = {}
+                paras['lam'] = samples[i]
+                paras['dev'] = 0
+                self.dist_paras.append(paras)
+                self.mean_quit_time.append(paras['lam']+paras['dev'])
+        
+            
         
         if self.dist_type == 'shift_geo':
             # need one parameter p > 0.5
@@ -280,7 +329,7 @@ class Graph:
             dev = self.dist_paras[ind]['dev']
             return np.random.binomial(n, p)+dev
 
-        if self.dist_type == 'poisson' or self.dist_type == 'fix_poisson':
+        if self.dist_type == 'poisson' or self.dist_type == 'fix_poisson' or self.dist_type == 'poi':
             lam = self.dist_paras[ind]['lam']
             dev = self.dist_paras[ind]['dev']
             return np.random.poisson(lam)+dev
@@ -290,7 +339,7 @@ class Graph:
             dev = self.dist_paras[ind]['dev']
             return np.random.geometric(p)+dev
 
-        if self.dist_type == 'single' or self.dist_type == 'fix_single':
+        if self.dist_type == 'single' or self.dist_type == 'fix_single' or self.dist_type == 'sin':
             return self.dist_paras[ind]['d']
 
         if self.dist_type == 'uniform':

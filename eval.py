@@ -1,13 +1,14 @@
 from online_matching import *
 from datetime import datetime
 
-GRAPH_NUM = 3
-REAL_NUM = 3
+GRAPH_NUM = 1
+REAL_NUM = 1
 def test_save(density=2.5, type_number=100, dist_type='fix', dist_hyperpara=10, gamma=0.36, testnum=2, save=1, algo_list = ['OFF'], filename = None, rmin=0):
     graph_num = 1
     print('density', density, 'type_number', type_number, 'dist_type', dist_type, 'dist_hyperpara', dist_hyperpara,'gamma', gamma, 'testnum', testnum,'save', save, 'algo_list', algo_list)
     # dist_type_dict = {0:'geometric', 1:'binomial', 2:'poisson', 3:'single', 4:'twovalue'}
-
+    # should be 5000
+    T = 2000
     np.random.seed(1)
     if filename:
         print('test file '+filename)
@@ -23,14 +24,13 @@ def test_save(density=2.5, type_number=100, dist_type='fix', dist_hyperpara=10, 
                 else:
                     weight_str = line.strip().split()
                     weights.append([float(w) for w in weight_str])
-            g_list = [Graph(type_number = len(rates), density=density, dist_type=dist_type, dist_hyperpara = dist_hyperpara, weights = weights, rates=rates, rmin=rmin) for i in range(GRAPH_NUM)]
+            g_list = [Graph(type_number = len(rates), density=density, dist_type=dist_type, dist_hyperpara = dist_hyperpara, weights = weights, rates=rates, rmin=rmin, T=T) for i in range(GRAPH_NUM)]
             # print(g.weights)
             # print(g.rates)
     else:
-        g_list = [Graph(type_number = type_number,  density=density, dist_type = dist_type, dist_hyperpara=dist_hyperpara, weights = None, rates=None, rmin=rmin) for i in range(GRAPH_NUM)]
+        g_list = [Graph(type_number = type_number,  density=density, dist_type = dist_type, dist_hyperpara=dist_hyperpara, weights = None, rates=None, rmin=rmin, T=T) for i in range(GRAPH_NUM)]
 
-    # should be 5000
-    T = 1000
+
     algo_ratio_list = {}
     algo_ratio_mean = {}
     algo_ratio_std = {}
@@ -330,12 +330,12 @@ def diff_gamma(dist_type = 'geometric', dist_hyperpara = 0.5, density = 0.5, typ
     # testnum = 5
     print('test different gamma')
     if input_file:
-        algo_list = ['OFF', 'SAM', 'SAMC', 'GRD']
+        algo_list = ['OFF', 'SAM', 'SAMC', 'GRD', 'BAT']
         # algo_list = ['OFF', 'RCP']
         f = input_file
     else:
         input_file = 'syn'
-        algo_list = ['OFF', 'SAM', 'SAMC', 'GRD']
+        algo_list = ['OFF', 'SAM', 'SAMC', 'GRD', 'BAT']
         f = None
     rmin = 0
     filename = 'result/gamma_'+dist_type+input_file

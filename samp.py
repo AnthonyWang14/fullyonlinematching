@@ -52,11 +52,20 @@ class Samp:
             for j in range(self.G.N):
                 e = str(i)+'_'+str(j)
                 m.addConstr(x[e] <= lam_i[e]*self.G.mean_quit_time[i])
+        # # Constraints 3 alpha_ij pj Dj = alpha_ji pi Dj
+        # for i in range(self.G.N):
+        #     for j in range(self.G.N):
+        #         e_ij = str(i)+'_'+str(j)
+        #         e_ji = str(j)+'_'+str(i)
+        #         m.addConstr(x[e_ij]*self.G.rates[j]*self.G.mean_quit_time[j] == x[e_ji]*self.G.rates[i]*self.G.mean_quit_time[i])
         m.optimize()
         # print(m.status == GRB.Status.OPTIMAL)
         self.sol = {}
         for e in edge_name:
             self.sol[e] = x[e].getAttr(GRB.Attr.X)
+            # check if an trivial edge with non-zero sol
+            if self.sol[e] > 1e-5 and self.G.weights[int(e.split('_')[0])][int(e.split('_')[1])] < 1e-5:
+                print(e, self.sol[e])
             # print(e, self.sol[e])
         # print(self.sol)
         # print(m.Constr)
@@ -74,12 +83,16 @@ class Samp:
         for i in range(self.G.N):
             for j in range(self.G.N):
                 if i <= j:
-                    t = (temp_sol[i][j]+temp_sol[j][i])/(self.G.mean_quit_time[i]+self.G.mean_quit_time[j])
-                    t = (temp_sol[i][j]*self.G.rates[j] + temp_sol[j][i]*self.G.rates[i])/(self.G.mean_quit_time[i]+self.G.mean_quit_time[j])
-                    xij = t*self.G.mean_quit_time[i]/self.G.rates[j]
-                    xji = t*self.G.mean_quit_time[j]/self.G.rates[i]
-                    self.sol[str(i)+'_'+str(j)] = xij    
-                    self.sol[str(j)+'_'+str(i)] = xji    
+                    if self.G.mean_quit_time[i]+self.G.mean_quit_time[j] < 1e-5:
+                        self.sol[str(i)+'_'+str(j)] = 1
+                        self.sol[str(j)+'_'+str(i)] = 1
+                    else:
+                        t = (temp_sol[i][j]+temp_sol[j][i])/(self.G.mean_quit_time[i]+self.G.mean_quit_time[j])
+                        t = (temp_sol[i][j]*self.G.rates[j] + temp_sol[j][i]*self.G.rates[i])/(self.G.mean_quit_time[i]+self.G.mean_quit_time[j])
+                        xij = t*self.G.mean_quit_time[i]/self.G.rates[j]
+                        xji = t*self.G.mean_quit_time[j]/self.G.rates[i]
+                        self.sol[str(i)+'_'+str(j)] = xij    
+                        self.sol[str(j)+'_'+str(i)] = xji    
 
     # more tight constraint adjust:
     def adjust_sol_tight(self):
@@ -146,6 +159,19 @@ class Samp:
     def eval(self):
         self.solve()
         self.adjust_sol()
+        # check maximal matching prob
+        matching_prob_matrix = np.zeros((self.G.N, self.G.N))
+        for u in range(self.G.N):
+            for v in range(self.G.N):
+                # matching_prob_matrix[u][v] = self.sol[str(u)+'_'+str(v)]/(self.G.mean_quit_time[u]*self.G.rates[u])
+                if self.G.mean_quit_time[u] < 1e-5:
+                    matching_prob_matrix[u][v] = 1
+                else:
+                    matching_prob_matrix[u][v] = self.sol[str(u)+'_'+str(v)]/(self.G.mean_quit_time[u]*self.G.rates[u])
+        max_matching_prob = np.max(matching_prob_matrix)
+        # print how many prob is larger than 1/2    
+        print('num_prob_larger_than_half', np.sum(matching_prob_matrix > 0.5))
+
         self.matching = []
         self.reward = 0
         matched = [0 for i in self.seq]
@@ -158,20 +184,19 @@ class Samp:
                 # print(start)
                 candidate_index = []
                 for ind in range(start, t):
-                    if (t-ind)<=self.quit_time[ind] and matched[ind] == 0:
+                    if (t-ind)<=self.quit_time[ind] and matched[ind] == 0 and self.G.weights[self.seq[ind]][v] > 1e-5:
                         candidate_index.append(ind)
                 candidate_type = [self.seq[ind] for ind in candidate_index]
                 np.random.shuffle(candidate_type)
                 # print(t, candidate_index)
                 found = False
                 for u in candidate_type:
-                    prob = self.sol[str(u)+'_'+str(v)]*self.gamma/(self.G.mean_quit_time[u]*self.G.rates[u])
-                    # if prob > self.threshold:
-                    #     print('prob', prob)
-                    #     prob = 1
+                    # prob = self.sol[str(u)+'_'+str(v)]*self.gamma/(self.G.mean_quit_time[u]*self.G.rates[u])
+                    prob = self.gamma*matching_prob_matrix[u][v]
+                    # with probability prob, match u with v
                     if np.random.random() <= prob:
                         for ind in candidate_index:
-                            if self.seq[ind] == u and self.G.weights[u][v]> 1e-5:
+                            if self.seq[ind] == u:
                                 self.matching.append([ind, t, t])
                                 matched[t] = 1
                                 matched[ind] = 1
@@ -210,8 +235,8 @@ class Samp:
                     prob = self.sol[str(u)+'_'+str(v)]*self.gamma*max(1, 1/(self.G.mean_quit_time[u]*self.G.rates[u]))
                     # if 1/self.G.mean_quit_time[u]*self.G.rates[u] < 1:
                     #     print('Warning: mean_quit_time*rate < 1')
-                    if prob > self.threshold:
-                        prob = 1
+                    # if prob > self.threshold:
+                    #     prob = 1
                     # print('prob', prob)
                     if np.random.random() <= prob:
                         for ind in candidate_index:

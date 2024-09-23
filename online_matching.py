@@ -34,6 +34,7 @@ class OnlineMatching:
         return seq, quit_time
 
     def test_matching_valid(self, algo, matching, reward, seq, quit_time):
+        # OFF does not output the optimal matching.
         if algo == 'OFF':
             return 
         matched_list = [0 for i in seq]
@@ -57,7 +58,7 @@ class OnlineMatching:
             v = seq[m[1]]
             r += self.G.weights[u][v]
         if np.absolute((r-reward)) > 1e-5:
-            print('error reward', algo)
+            print('error reward', algo, r, reward)
         return
 
     def run_test(self, algo_list = ['OFF'], gamma=0.42, test_num = 1, save = 0):
@@ -137,7 +138,7 @@ class OnlineMatching:
 
                 if algo == 'BAT':
                     batch_tune = BatchMatching(graph=self.G, seq=seq, quit_time=quit_time, batch_type='TUNE')
-                    reward = batch_tune.eval_tune()
+                    reward, matching = batch_tune.eval_tune()
 
                 if algo == 'BATCH_MIN':
                     batch_min_match = BatchMatching(graph=self.G, seq=seq, quit_time=quit_time, batch_type='MIN')
@@ -166,6 +167,8 @@ class OnlineMatching:
                 algo_result[algo].append(reward)
                 run_time[algo] += time.time() - start
                 # print(algo, matching)
+                # print('seq      ', seq)
+                # print('quit_time', quit_time)
                 self.test_matching_valid(algo, matching, reward, seq, quit_time)
 
         if save == 1:

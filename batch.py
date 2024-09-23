@@ -20,21 +20,30 @@ class BatchMatching:
         # mean_quit_time = int(np.sum(self.G.rates*self.G.mean_quit_time)+1)
         # max_bsize = min(int(max(self.quit_time)+1), 2*mean_quit_time)
         if max(self.quit_time) > self.G.T:
-            max_bsize = self.G.T+1
+            max_bsize = self.G.T
         else:
-            max_bsize = int(max(self.quit_time))+1
-        test_bsize = list(range(int(min(self.quit_time))+1, max_bsize+1))
+            max_bsize = int(max(self.quit_time))
+        # test_bsize = list(range(int(min(self.quit_time))+1, max_bsize+1))
+        test_bsize = list(range(1, max_bsize+1))
         reward_list = []
+        matching_list = []
         if len(test_bsize) > 0:
             for b_size in test_bsize:
-                reward_list.append(self.eval(b_size=b_size))
+                reward, matching = self.eval(b_size=b_size)
+                reward_list.append(reward)
+                matching_list.append(matching)
+                # reward_list.append(self.eval(b_size=b_size))
             max_reward = max(reward_list)
             max_index = reward_list.index(max_reward)
+            print('reward_list', reward_list)
+            print('best batch size', test_bsize[max_index])
         else:
+            print('bsize is too small, no batch can be tested.')
             max_reward = 0
             # max_index = 0
         # print(test_bsize[max_index])
-        return max_reward
+        print('max_reward', max_reward)
+        return max_reward, matching_list[max_index]
         
     def eval(self, b_size=None):
         if self.batch_type == 'MAX':
@@ -71,7 +80,7 @@ class BatchMatching:
                 new_m = [m[0]+i*batch_size, m[1]+i*batch_size, batch_end-1]
                 self.matching.append(new_m)
         # print('matching of batch', self.matching)
-        return reward
+        return reward, self.matching
 
 
 if __name__ == '__main__':
