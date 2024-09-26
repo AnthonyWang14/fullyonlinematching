@@ -23,7 +23,6 @@ class BatchMatching:
             max_bsize = self.G.T
         else:
             max_bsize = int(max(self.quit_time))
-
         # to speed up, we find out in our tested parameters, optimal batch size is less than 100.
         max_bsize = min(20, max_bsize)
         test_bsize = list(range(1, max_bsize+1))

@@ -2,7 +2,7 @@ from online_matching import *
 from datetime import datetime
 
 GRAPH_NUM = 3
-REAL_NUM = 3
+REAL_NUM = 20
 def test_save(density=0.5, type_number=50, dist_type='fix', dist_hyperpara=50, gamma=0.36, testnum=2, save=1, algo_list = ['OFF'], filename = None, rmin=0):
     graph_num = 1
     print('density', density, 'type_number', type_number, 'dist_type', dist_type, 'dist_hyperpara', dist_hyperpara,'gamma', gamma, 'testnum', testnum,'save', save, 'algo_list', algo_list)
@@ -29,7 +29,6 @@ def test_save(density=0.5, type_number=50, dist_type='fix', dist_hyperpara=50, g
             # print(g.rates)
     else:
         g_list = [Graph(type_number = type_number,  density=density, dist_type = dist_type, dist_hyperpara=dist_hyperpara, weights = None, rates=None, rmin=rmin, T=T) for i in range(GRAPH_NUM)]
-
 
     algo_ratio_list = {}
     algo_ratio_mean = {}
@@ -331,12 +330,12 @@ def diff_gamma(dist_type = 'geometric', dist_hyperpara = 0.5, density = 0.5, typ
     # testnum = 5
     print('test different gamma')
     if input_file:
-        algo_list = ['OFF', 'SAM', 'SAMC', 'GRD']
+        algo_list = ['OFF', 'SAM', 'SAMC', 'GRD', 'BAT']
         # algo_list = ['OFF', 'RCP']
         f = input_file
     else:
         input_file = 'syn'
-        algo_list = ['OFF', 'SAM', 'SAMC', 'GRD']
+        algo_list = ['OFF', 'SAM', 'SAMC', 'GRD', 'BAT_G']
         f = None
     rmin = 0
     filename = 'result/gamma_'+dist_type+input_file

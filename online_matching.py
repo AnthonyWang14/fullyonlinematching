@@ -91,14 +91,17 @@ class OnlineMatching:
                     samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 1)
                     reward = samp.eval()
                     matching = samp.matching
+
                 if algo == 'SAM2':
                     samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 2)
                     reward = samp.eval()
                     matching = samp.matching
+
                 if algo == 'SAM3':
                     samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 3)
                     reward = samp.eval()
-                    matching = samp.matching                
+                    matching = samp.matching   
+                                 
                 if algo == 'SAM4':
                     samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 4)
                     reward = samp.eval()

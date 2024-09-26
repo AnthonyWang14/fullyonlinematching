@@ -5,8 +5,6 @@ import numpy as np
 class Samp:
     def __init__(self, graph = None, seq=[], quit_time=[], gamma = 0.36, threshold = 1.0) -> None:
         self.G = graph
-        # self.G.show_details()
-        # self.eval([0,1,1,1])
         self.T = len(seq)
         # self.d = d
         self.seq = seq
@@ -66,9 +64,7 @@ class Samp:
             # check if an trivial edge with non-zero sol
             if self.sol[e] > 1e-5 and self.G.weights[int(e.split('_')[0])][int(e.split('_')[1])] < 1e-5:
                 print(e, self.sol[e])
-            # print(e, self.sol[e])
-        # print(self.sol)
-        # print(m.Constr)
+
         self.lp_opt = m.getObjective().getValue()
         # m.write("out.lp")
         # m.write("out.sol")
