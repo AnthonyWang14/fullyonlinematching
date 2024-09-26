@@ -34,7 +34,7 @@ class Samp:
                 lam_j[e] = self.G.rates[j]
                 lam_i[e] = self.G.rates[i]
 
-        x = m.addVars(edge_name, lb=0, ub=1, vtype=GRB.CONTINUOUS,name='edge_name')
+        x = m.addVars(edge_name, lb=0, vtype=GRB.CONTINUOUS,name='edge_name')
         # print(x)
         m.setObjective(sum(edge_cost[l]*lam_j[l]*x[l] for l in edge_name), GRB.MAXIMIZE)
         # Constraints 1
@@ -171,7 +171,9 @@ class Samp:
         max_matching_prob = np.max(matching_prob_matrix)
         # print how many prob is larger than 1/2    
         print('num_prob_larger_than_half', np.sum(matching_prob_matrix > 0.5))
-
+        # print('matching_prob_matrix', matching_prob_matrix)
+        # print('G.weight', self.G.weights)
+        # print('G.rates', self.G.rates)
         self.matching = []
         self.reward = 0
         matched = [0 for i in self.seq]

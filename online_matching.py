@@ -70,8 +70,12 @@ class OnlineMatching:
             algo_result[algo] = []
             algo_ratio[algo] = 0
             run_time[algo] = 0
+        tested_seqs = []
+        tested_quit_time = []
         for k in range(test_num):
             seq, quit_time = self.gene_sequence()
+            tested_seqs.append(seq)
+            tested_quit_time.append(quit_time)
             # print(quit_time)
             for algo in algo_list:
                 start = time.time()
@@ -94,13 +98,31 @@ class OnlineMatching:
                 if algo == 'SAM3':
                     samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 3)
                     reward = samp.eval()
+                    matching = samp.matching                
+                if algo == 'SAM4':
+                    samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 4)
+                    reward = samp.eval()
                     matching = samp.matching
 
                 if algo == 'SAMC1':
                     samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 1)
                     reward = samp.eval_Collina()
                     matching = samp.matching
-
+                if algo == 'SAMC2':
+                    samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 2)
+                    reward = samp.eval_Collina()
+                    matching = samp.matching               
+                
+                if algo == 'SAMC3':
+                    samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 3)
+                    reward = samp.eval_Collina()
+                    matching = samp.matching
+                                    
+                if algo == 'SAMC4':
+                    samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 4)
+                    reward = samp.eval_Collina()
+                    matching = samp.matching
+                    
                 if algo == 'SAM1N':
                     samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 1)
                     reward = samp.eval_no_adjust()
@@ -136,6 +158,7 @@ class OnlineMatching:
                     reward = batch_mean_match.eval()
                     matching = batch_mean_match.matching
 
+                # tune for each realization
                 if algo == 'BAT':
                     batch_tune = BatchMatching(graph=self.G, seq=seq, quit_time=quit_time, batch_type='TUNE')
                     reward, matching = batch_tune.eval_tune()
@@ -170,6 +193,36 @@ class OnlineMatching:
                 # print('seq      ', seq)
                 # print('quit_time', quit_time)
                 self.test_matching_valid(algo, matching, reward, seq, quit_time)
+
+        # find the optimal batch for bath tune graph.
+        if 'BAT_G' in algo_list:
+            # min quit_time of each sequence
+            max_quit_time = [max(tested_quit_time[j]) for j in range(test_num)]
+            max_bsize = int(min(max_quit_time))
+            # to speed up, we find out in our tested parameters, optimal batch size is less than 20.
+            max_bsize = min(20, max_bsize)
+            if max_bsize >= 1:
+                test_bsize = list(range(1, max_bsize+1))
+                reward_list = []
+                reward_bsize_list = []
+                for bsize in test_bsize:
+                    reward_single_bsize_list = []
+                    for j in range(len(tested_seqs)):
+                        batch_g = BatchMatching(graph=self.G, seq=tested_seqs[j], quit_time=tested_quit_time[j], batch_type='G')
+                        reward, matching = batch_g.eval(b_size=bsize)
+                        reward_single_bsize_list.append(reward)
+                    # sum of rewards over different realizations.
+                    total_reward = sum(np.array(reward_single_bsize_list))
+                    reward_bsize_list.append(reward_single_bsize_list)
+                    reward_list.append(total_reward)
+                max_index = reward_list.index(max(reward_list))
+                optimal_bsize = test_bsize[max_index]
+                print('optimal batch size', optimal_bsize)
+                algo_result[algo] = reward_bsize_list[max_index]
+            else:
+                algo_result['BAT_G'] = [0] * test_num
+            run_time['BAT_G'] = 0
+            # print(min_quit_time)
 
         if save == 1:
             for algo in algo_list:

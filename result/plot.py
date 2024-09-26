@@ -18,7 +18,9 @@ new_colors_dict = {
     'SAM1': 'red',
     'SAMC': 'slateblue',  # Same color as 'SAMC1'
     'SAMC1': 'slateblue',
-    'HG': 'darkgoldenrod'
+    'HG': 'darkgoldenrod',
+    'SAM4': 'green',
+    'SAMC4': 'purple'
 }
 color_dict = {
     'D^S=5,p_m=0': 'darkgoldenrod',
@@ -31,7 +33,7 @@ color_dict = {
 
 
 
-markers_dict = {'OFF': 'x', 'RCP': '^', 'GRD': 'o', 'BAT': '*', 'SAM0.5': 'x', 'SAM1': '^', 'SAM': '^', 'SAMC1':'x', 'HG': 'x', 'SAMC':'x'}
+markers_dict = {'OFF': 'x', 'RCP': '^', 'GRD': 'o', 'BAT': '*', 'SAM0.5': 'x', 'SAM1': '^', 'SAM': '^', 'SAMC1':'x', 'HG': 'x', 'SAMC':'x', 'SAM4':'*', 'SAMC4':'o'}
 
 
 def plot_one(filename):
@@ -122,7 +124,7 @@ def plot_one_RCP(filename):
         if first_line[0] == 'fix':
             xlabel = r'$D_m$'
         if first_line[0] == 'geometric':
-            xlabel = r'$P^G$'
+            xlabel = r'$D^G$'
         if first_line[0] == 'poisson':
             xlabel = r'$L^P$'
         if first_line[0] == 'single':
@@ -151,6 +153,8 @@ def plot_one_RCP(filename):
         print(x)
         print(res)
         for i in range(len(algo_name_list)):
+            if algo_name_list[i] == 'BAT_G':
+                continue
             algo = algo_name_list[i]
             # if algo_name_list[i] != 'SAM1' and algo_name_list[i] != 'COL1':
             #     continue
@@ -269,12 +273,15 @@ def plot_gamma(filename):
         plt.close()
 
 if __name__ == '__main__':
+    plot_one_RCP('sin_syn_new')
+    plot_one_RCP('geo_syn_new')
+
     # plot_gamma('gam_geo_nycLdel2A1')
     # plot_gamma('gam_sin_nycLdel2A1')
     # plot_gamma('gam_poi_nycLdel2A1')
-    plot_gamma('gam_geo_nycL10delA1')
-    plot_gamma('gam_sin_nycL10delA1')
-    plot_gamma('gam_poi_nycL10delA1')
+    # plot_gamma('gam_geo_nycL10delA1')
+    # plot_gamma('gam_sin_nycL10delA1')
+    # plot_gamma('gam_poi_nycL10delA1')
     # plot_gamma('gam_nyc_geo2')
     # plot_gamma('gam_nyc_sin2')
     # plot_gamma('gam_nyc_poi2')

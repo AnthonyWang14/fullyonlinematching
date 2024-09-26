@@ -70,7 +70,7 @@ class Graph:
                     self.weights[i][j] = q
                     self.weights[j][i] = q
 
-    # non-trivial edge's weight from 0 to 1
+    # generate non-trivial edge's weight following different distributions
     def gen_weights_update(self, weight_type='uni_large'):
         self.weights = np.random.uniform(0, 1, (self.N, self.N))
         for i in range(self.N):
@@ -91,11 +91,10 @@ class Graph:
                             if weight_type == 'uni_small':
                                 p = np.random.uniform(1, 2)
                             if weight_type == 'trunc_norm':
-                                # generate from 0 to 100 using truncated normal with mean 0.5 and std 0.1
                                 p = truncated_normal(0.1, 0.1, low=0, high=1, size=1)[0]
-
+                            # truncated normal with lower bound 0
                             if weight_type == 'trunc_norm_lower_bound':
-                                p = generate_truncated_normal_lower_bound(low=0, mean=0.5, std=1, size=1)[0]
+                                p = generate_truncated_normal_lower_bound(low=0, mean=1, std=1, size=1)[0]
                         self.weights[i][j] = p
                         self.weights[j][i] = p
                     else:
@@ -176,17 +175,18 @@ class Graph:
                 self.dist_paras.append(p)
                 self.mean_quit_time.append(1/p)
         
-        # # dist para is the expectation, 1/p
-        # if self.dist_type == 'geo':
-        #     dmax = self.dist_hyperpara
-        #     # random sample d from 1 to dmax (noninteger), size = self.N
-        #     samples = np.random.uniform(1, dmax, self.N)
-        #     # fix p_min
-        #     # samples = np.array([self.p_min for i in range(self.N)])
-        #     for i in range(self.N):
-        #         d = samples[i]
-        #         self.dist_paras.append(d)
-        #         self.mean_quit_time.append(d)
+        # dist para is the expectation, 1/p
+        if self.dist_type == 'geo_new':
+            dmax = self.dist_hyperpara
+            # random sample d from 1 to dmax (noninteger), size = self.N
+            samples = np.random.uniform(1, dmax, self.N)
+            # fix p_min
+            # samples = np.array([self.p_min for i in range(self.N)])
+            for i in range(self.N):
+                d = samples[i]
+                self.dist_paras.append(d)
+                self.mean_quit_time.append(d)
+
 
         if self.dist_type == 'sin':
             dmean = self.dist_hyperpara
@@ -211,9 +211,10 @@ class Graph:
                 self.dist_paras.append(d)
                 self.mean_quit_time.append(d)
 
+
         if self.dist_type == 'poi':
             dmean = self.dist_hyperpara
-            std = 10
+            std = 10 
             samples = generate_truncated_normal_lower_bound(low = 0, mean = dmean, std = std, size=self.N)
             for i in range(self.N):
                 paras = {}
@@ -222,7 +223,6 @@ class Graph:
                 self.dist_paras.append(paras)
                 self.mean_quit_time.append(paras['lam']+paras['dev'])
         
-            
         
         if self.dist_type == 'shift_geo':
             # need one parameter p > 0.5
@@ -313,9 +313,8 @@ class Graph:
         
 
         # dist para is the expectation, 1/p
-        if self.dist_type == 'geo':
+        if self.dist_type == 'geo' or self.dist_type == 'geo_new':
             d = self.dist_paras[ind]
-            # z = np.random.geometric(p)
             return np.random.geometric(1./d)
         
         if self.dist_type == 'fix_geo':

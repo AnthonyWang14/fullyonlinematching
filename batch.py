@@ -23,7 +23,9 @@ class BatchMatching:
             max_bsize = self.G.T
         else:
             max_bsize = int(max(self.quit_time))
-        # test_bsize = list(range(int(min(self.quit_time))+1, max_bsize+1))
+
+        # to speed up, we find out in our tested parameters, optimal batch size is less than 100.
+        max_bsize = min(20, max_bsize)
         test_bsize = list(range(1, max_bsize+1))
         reward_list = []
         matching_list = []
@@ -75,7 +77,7 @@ class BatchMatching:
                     alive.append(0)
             # print(alive)
             max_match = MaxMatching(graph=self.G, seq=batch_seq, quit_time=batch_quit_time, alive=alive)
-            reward += max_match.eval()
+            reward += max_match.eval_batch()
             for m in max_match.matching:
                 new_m = [m[0]+i*batch_size, m[1]+i*batch_size, batch_end-1]
                 self.matching.append(new_m)
