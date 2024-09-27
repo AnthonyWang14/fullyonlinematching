@@ -3,7 +3,7 @@ from gurobipy import *
 import numpy as np
 
 class Samp:
-    def __init__(self, graph = None, seq=[], quit_time=[], gamma = 0.36, threshold = 1.0) -> None:
+    def __init__(self, graph = None, seq=[], quit_time=[], gamma = 0.36, threshold = 1) -> None:
         self.G = graph
         self.T = len(seq)
         # self.d = d
@@ -167,6 +167,9 @@ class Samp:
         max_matching_prob = np.max(matching_prob_matrix)
         # print how many prob is larger than 1/2    
         print('num_prob_larger_than_half', np.sum(matching_prob_matrix > 0.5))
+        print('num_prob_larger_than_1/4', np.sum(matching_prob_matrix > 0.25))
+        # print how many prob is larger than 1e-5
+        print('num_prob_larger_than_1e-5', np.sum(matching_prob_matrix > 1e-5))
         # print('matching_prob_matrix', matching_prob_matrix)
         # print('G.weight', self.G.weights)
         # print('G.rates', self.G.rates)
@@ -204,7 +207,66 @@ class Samp:
                     if found:
                         break
         return self.reward
+    
 
+    def eval_threshold(self):
+        self.solve()
+        self.adjust_sol()
+        # check maximal matching prob
+        matching_prob_matrix = np.zeros((self.G.N, self.G.N))
+        for u in range(self.G.N):
+            for v in range(self.G.N):
+                # matching_prob_matrix[u][v] = self.sol[str(u)+'_'+str(v)]/(self.G.mean_quit_time[u]*self.G.rates[u])
+                if self.G.mean_quit_time[u] < 1e-5:
+                    matching_prob_matrix[u][v] = 1
+                else:
+                    matching_prob_matrix[u][v] = self.sol[str(u)+'_'+str(v)]/(self.G.mean_quit_time[u]*self.G.rates[u])
+        max_matching_prob = np.max(matching_prob_matrix)
+        # print how many prob is larger than 1/2    
+        print('num_prob_larger_than_half', np.sum(matching_prob_matrix > 0.5))
+        print('num_prob_larger_than_1/4', np.sum(matching_prob_matrix > 0.25))
+        # print how many prob is larger than 1e-5
+        print('num_prob_larger_than_1e-5', np.sum(matching_prob_matrix > 1e-5))
+        # print('matching_prob_matrix', matching_prob_matrix)
+        # print('G.weight', self.G.weights)
+        # print('G.rates', self.G.rates)
+        self.matching = []
+        self.reward = 0
+        matched = [0 for i in self.seq]
+        # print(self.d, 'd')
+        max_quit_time = max(self.quit_time)
+        for t in range(len(self.seq)):
+            if t > 0:
+                v = self.seq[t]
+                start = max(0, t-max_quit_time)
+                # print(start)
+                candidate_index = []
+                for ind in range(start, t):
+                    if (t-ind)<=self.quit_time[ind] and matched[ind] == 0 and self.G.weights[self.seq[ind]][v] > 1e-5:
+                        candidate_index.append(ind)
+                candidate_type = [self.seq[ind] for ind in candidate_index]
+                np.random.shuffle(candidate_type)
+                # print(t, candidate_index)
+                found = False
+                for u in candidate_type:
+                    # prob = self.sol[str(u)+'_'+str(v)]*self.gamma/(self.G.mean_quit_time[u]*self.G.rates[u])
+                    prob = self.gamma*matching_prob_matrix[u][v]
+                    if prob > self.threshold:
+                        prob = 1
+                    # with probability prob, match u with v
+                    if np.random.random() <= prob:
+                        for ind in candidate_index:
+                            if self.seq[ind] == u:
+                                self.matching.append([ind, t, t])
+                                matched[t] = 1
+                                matched[ind] = 1
+                                self.reward += self.G.weights[u][v]
+                                found = True
+                                break
+                    if found:
+                        break
+        return self.reward
+    
     def eval_Collina(self):
         self.solve()
         self.matching = []

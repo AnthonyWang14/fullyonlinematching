@@ -202,16 +202,16 @@ def test_rmin(dist_type='geometric', dist_hyperpara=0.5, SYN=True):
 
 
 def diff_dist(dist_type='fix', dist_hyperpara_list=[10, 20, 30, 40, 50], input_file=None):
-    density = 0.5
-    type_number = 50
+    density = 1
+    type_number = 100
     gamma = 1
     if input_file:
-        algo_list = ['OFF', 'RCP', 'GRD', 'SAM1', 'SAM2', 'SAM3', 'SAMC1', 'BAT', 'HG']
+        algo_list = ['OFF', 'RCP', 'GRD', 'SAM1', 'TH', 'SAMC1', 'BAT_G', 'HG']
         # algo_list = ['OFF', 'RCP']
         f = input_file
     else:
         input_file = 'syn'
-        algo_list = ['OFF', 'RCP', 'GRD', 'SAM1', 'SAM4', 'SAMC1','SAMC4', 'BAT', 'BAT_G']
+        algo_list = ['OFF', 'RCP', 'GRD', 'SAM1', 'TH', 'SAMC1', 'BAT_G']
         # algo_list = ['OFF', 'GRD', 'SAM1', 'SAMC1']
         f = None
     filename = 'result/'+dist_type+input_file
@@ -335,7 +335,7 @@ def diff_gamma(dist_type = 'geometric', dist_hyperpara = 0.5, density = 0.5, typ
         f = input_file
     else:
         input_file = 'syn'
-        algo_list = ['OFF', 'SAM', 'SAMC', 'GRD', 'BAT_G']
+        algo_list = ['OFF', 'SAM', 'SAMC', 'GRD', 'BAT_G', 'TH']
         f = None
     rmin = 0
     filename = 'result/gamma_'+dist_type+input_file

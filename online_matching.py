@@ -52,6 +52,10 @@ class OnlineMatching:
             if (match_time-ind_i)>quit_time[ind_i] or (match_time-ind_j)>quit_time[ind_j]:
                 print('error quit time', algo)
                 break
+            if ind_i == ind_j:
+                print('error ind_i == ind_j', algo)
+            if match_time < ind_i or match_time < ind_j:
+                print('error match_time < ind_i or match_time < ind_j', algo)
             matched_list[ind_i] = 1
             matched_list[ind_j] = 1
             u = seq[m[0]]
@@ -92,6 +96,11 @@ class OnlineMatching:
                     reward = samp.eval()
                     matching = samp.matching
 
+                if algo == 'TH':
+                    samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 1, threshold=0.5)
+                    reward = samp.eval_threshold()
+                    matching = samp.matching                   
+
                 if algo == 'SAM2':
                     samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 2)
                     reward = samp.eval()
@@ -101,7 +110,7 @@ class OnlineMatching:
                     samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 3)
                     reward = samp.eval()
                     matching = samp.matching   
-                                 
+
                 if algo == 'SAM4':
                     samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 4)
                     reward = samp.eval()
@@ -201,9 +210,10 @@ class OnlineMatching:
         if 'BAT_G' in algo_list:
             # min quit_time of each sequence
             max_quit_time = [max(tested_quit_time[j]) for j in range(test_num)]
-            max_bsize = int(min(max_quit_time))
+            max_bsize = int(max(max_quit_time))
             # to speed up, we find out in our tested parameters, optimal batch size is less than 20.
-            max_bsize = min(20, max_bsize)
+            max_bsize = min(50, max_bsize)
+            print('max_bsize', max_bsize)
             if max_bsize >= 1:
                 test_bsize = list(range(1, max_bsize+1))
                 reward_list = []
@@ -216,12 +226,15 @@ class OnlineMatching:
                         reward_single_bsize_list.append(reward)
                     # sum of rewards over different realizations.
                     total_reward = sum(np.array(reward_single_bsize_list))
+                    # print('reward_single_bsize_list', reward_single_bsize_list)
                     reward_bsize_list.append(reward_single_bsize_list)
                     reward_list.append(total_reward)
                 max_index = reward_list.index(max(reward_list))
+                # print('reward_list', reward_list)
+                # print('reward_bsize_list', reward_bsize_list)
                 optimal_bsize = test_bsize[max_index]
                 print('optimal batch size', optimal_bsize)
-                algo_result[algo] = reward_bsize_list[max_index]
+                algo_result['BAT_G'] = reward_bsize_list[max_index]
             else:
                 algo_result['BAT_G'] = [0] * test_num
             run_time['BAT_G'] = 0
