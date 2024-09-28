@@ -166,10 +166,10 @@ class Samp:
                     matching_prob_matrix[u][v] = self.sol[str(u)+'_'+str(v)]/(self.G.mean_quit_time[u]*self.G.rates[u])
         max_matching_prob = np.max(matching_prob_matrix)
         # print how many prob is larger than 1/2    
-        print('num_prob_larger_than_half', np.sum(matching_prob_matrix > 0.5))
-        print('num_prob_larger_than_1/4', np.sum(matching_prob_matrix > 0.25))
+        # print('num_prob_larger_than_half', np.sum(matching_prob_matrix > 0.5))
+        # print('num_prob_larger_than_1/4', np.sum(matching_prob_matrix > 0.25))
         # print how many prob is larger than 1e-5
-        print('num_prob_larger_than_1e-5', np.sum(matching_prob_matrix > 1e-5))
+        # print('num_prob_larger_than_1e-5', np.sum(matching_prob_matrix > 1e-5))
         # print('matching_prob_matrix', matching_prob_matrix)
         # print('G.weight', self.G.weights)
         # print('G.rates', self.G.rates)
@@ -222,11 +222,11 @@ class Samp:
                 else:
                     matching_prob_matrix[u][v] = self.sol[str(u)+'_'+str(v)]/(self.G.mean_quit_time[u]*self.G.rates[u])
         max_matching_prob = np.max(matching_prob_matrix)
-        # print how many prob is larger than 1/2    
-        print('num_prob_larger_than_half', np.sum(matching_prob_matrix > 0.5))
-        print('num_prob_larger_than_1/4', np.sum(matching_prob_matrix > 0.25))
-        # print how many prob is larger than 1e-5
-        print('num_prob_larger_than_1e-5', np.sum(matching_prob_matrix > 1e-5))
+        # # print how many prob is larger than 1/2    
+        # print('num_prob_larger_than_half', np.sum(matching_prob_matrix > 0.5))
+        # print('num_prob_larger_than_1/4', np.sum(matching_prob_matrix > 0.25))
+        # # print how many prob is larger than 1e-5
+        # print('num_prob_larger_than_1e-5', np.sum(matching_prob_matrix > 1e-5))
         # print('matching_prob_matrix', matching_prob_matrix)
         # print('G.weight', self.G.weights)
         # print('G.rates', self.G.rates)
@@ -293,11 +293,8 @@ class Samp:
                 found = False
                 for u in unique_types:
                     prob = self.sol[str(u)+'_'+str(v)]*self.gamma*max(1, 1/(self.G.mean_quit_time[u]*self.G.rates[u]))
-                    # if 1/self.G.mean_quit_time[u]*self.G.rates[u] < 1:
-                    #     print('Warning: mean_quit_time*rate < 1')
-                    # if prob > self.threshold:
-                    #     prob = 1
-                    # print('prob', prob)
+                    if prob > self.threshold:
+                        prob = 1
                     if np.random.random() <= prob:
                         for ind in candidate_index:
                             if self.seq[ind] == u:

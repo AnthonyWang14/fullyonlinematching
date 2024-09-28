@@ -65,7 +65,7 @@ class OnlineMatching:
             print('error reward', algo, r, reward)
         return
 
-    def run_test(self, algo_list = ['OFF'], gamma=0.42, test_num = 1, save = 0):
+    def run_test(self, algo_list = ['OFF'], gamma=0.42, test_num = 1, save = 0, threshold=1):
         algo_result = {}
         algo_mean = {}
         run_time = {}
@@ -96,10 +96,20 @@ class OnlineMatching:
                     reward = samp.eval()
                     matching = samp.matching
 
-                if algo == 'TH':
+                if algo == 'STH0.1':
+                    samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 1, threshold=0.1)
+                    reward = samp.eval_threshold()
+                    matching = samp.matching 
+
+                if algo == 'STH0.25':
+                    samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 1, threshold=0.25)
+                    reward = samp.eval_threshold()
+                    matching = samp.matching   
+                
+                if algo == 'STH0.5':
                     samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 1, threshold=0.5)
                     reward = samp.eval_threshold()
-                    matching = samp.matching                   
+                    matching = samp.matching                  
 
                 if algo == 'SAM2':
                     samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 2)
@@ -116,16 +126,26 @@ class OnlineMatching:
                     reward = samp.eval()
                     matching = samp.matching
 
-                if algo == 'SAMC1':
+                if algo == 'COL1':
                     samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 1)
                     reward = samp.eval_Collina()
                     matching = samp.matching
-                if algo == 'SAMC2':
+                
+                if algo == 'CTH0.1':
+                    samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 1, threshold=0.1)
+                    reward = samp.eval_Collina()
+                    matching = samp.matching
+                    
+                if algo == 'CTH0.5':
+                    samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 1, threshold=0.5)
+                    reward = samp.eval_Collina()
+                    matching = samp.matching
+                if algo == 'COL2':
                     samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 2)
                     reward = samp.eval_Collina()
                     matching = samp.matching               
                 
-                if algo == 'SAMC3':
+                if algo == 'COL3':
                     samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 3)
                     reward = samp.eval_Collina()
                     matching = samp.matching
@@ -150,9 +170,10 @@ class OnlineMatching:
                     reward = samp.eval_Collina()
                     matching = samp.matching
 
+
                 if algo == 'SAMTH':
-                    samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 0.36, threshold=0.8)
-                    reward = samp.eval()
+                    samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 1, threshold=threshold)
+                    reward = samp.eval_threshold()
                     matching = samp.matching
                 
                 if algo == 'RCP':
@@ -212,7 +233,7 @@ class OnlineMatching:
             max_quit_time = [max(tested_quit_time[j]) for j in range(test_num)]
             max_bsize = int(max(max_quit_time))
             # to speed up, we find out in our tested parameters, optimal batch size is less than 20.
-            max_bsize = min(50, max_bsize)
+            max_bsize = min(20, max_bsize)
             print('max_bsize', max_bsize)
             if max_bsize >= 1:
                 test_bsize = list(range(1, max_bsize+1))
