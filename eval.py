@@ -3,7 +3,7 @@ from datetime import datetime
 
 GRAPH_NUM = 3
 REAL_NUM = 3
-def test_save(density=0.5, type_number=50, dist_type='fix', dist_hyperpara=50, gamma=0.36, testnum=2, save=1, algo_list = ['OFF'], filename = None, rmin=0, threshold=1):
+def test_save(density=0.5, type_number=50, dist_type='fix', dist_hyperpara=50, gamma=0.36, testnum=2, save=1, algo_list = ['OFF'], filename = None, rmin=0, threshold=1, w_std=10):
     graph_num = 1
     print('density', density, 'type_number', type_number, 'dist_type', dist_type, 'dist_hyperpara', dist_hyperpara,'gamma', gamma, 'testnum', testnum,'save', save, 'algo_list', algo_list)
     # dist_type_dict = {0:'geometric', 1:'binomial', 2:'poisson', 3:'single', 4:'twovalue'}
@@ -28,7 +28,7 @@ def test_save(density=0.5, type_number=50, dist_type='fix', dist_hyperpara=50, g
             # print(g.weights)
             # print(g.rates)
     else:
-        g_list = [Graph(type_number = type_number,  density=density, dist_type = dist_type, dist_hyperpara=dist_hyperpara, weights = None, rates=None, rmin=rmin, T=T) for i in range(GRAPH_NUM)]
+        g_list = [Graph(type_number = type_number,  density=density, dist_type = dist_type, dist_hyperpara=dist_hyperpara, weights = None, rates=None, rmin=rmin, T=T, w_std=w_std) for i in range(GRAPH_NUM)]
 
     algo_ratio_list = {}
     algo_ratio_mean = {}
@@ -129,7 +129,7 @@ def test_density(dist_type='geometric', dist_hyperpara=0.5, SYN=True):
     # testnum = 1
     if SYN:
         input_file = 'syn'
-        algo_list = ['OFF', 'RCP', 'GRD', 'SAM1', 'SAM4', 'SAMC1','SAMC4', 'BAT', 'BAT_G']
+        algo_list = ['OFF', 'RCP', 'GRD', 'SAM1', 'STH', 'COL1','CTH', 'BAT']
         # algo_list = ['OFF', 'BAT_G']
 
         f = None
@@ -142,7 +142,7 @@ def test_density(dist_type='geometric', dist_hyperpara=0.5, SYN=True):
     algo_ratio_std_list = []
     topstr = 'density'+'_'+dist_type+' '+' '.join([algo for algo in algo_list])
     for density in density_list:
-        algo_ratio_mean, algo_ratio_std = test_save(density=density, type_number=type_number, dist_type=dist_type, dist_hyperpara=dist_hyperpara, gamma=gamma, testnum=REAL_NUM, save=0, algo_list=algo_list, filename=f)
+        algo_ratio_mean, algo_ratio_std = test_save(density=density, type_number=type_number, dist_type=dist_type, dist_hyperpara=dist_hyperpara, gamma=gamma, testnum=REAL_NUM, save=0, algo_list=algo_list, filename=f, rmin=0, threshold=1, w_std=10)
         algo_ratio_mean_list.append(algo_ratio_mean)
         algo_ratio_std_list.append(algo_ratio_std)
     save_to_file(filename, density_list, topstr, algo_ratio_mean_list, algo_ratio_std_list, algo_list)
@@ -205,13 +205,14 @@ def diff_dist(dist_type='fix', dist_hyperpara_list=[10, 20, 30, 40, 50], input_f
     density = 1
     type_number = 50
     gamma = 1
+    w_std = 1
     if input_file:
         algo_list = ['OFF', 'RCP', 'GRD', 'SAM1', 'TH', 'COL1', 'BAT_G', 'HG']
         # algo_list = ['OFF', 'RCP']
         f = input_file
     else:
         input_file = 'syn'
-        algo_list = ['OFF', 'RCP', 'GRD', 'SAM1', 'STH0.5', 'COL1', 'CTH0.5', 'BAT_G']
+        algo_list = ['OFF', 'RCP', 'GRD', 'SAM1', 'STH', 'COL1', 'CTH', 'BAT']
         # algo_list = ['OFF', 'GRD', 'SAM1', 'SAMC1']
         f = None
     filename = 'result/'+dist_type+input_file
@@ -219,7 +220,7 @@ def diff_dist(dist_type='fix', dist_hyperpara_list=[10, 20, 30, 40, 50], input_f
     algo_ratio_std_list = []
     topstr = dist_type+' '+' '.join([algo for algo in algo_list])
     for dist_hyperpara in dist_hyperpara_list:
-        algo_ratio_mean, algo_ratio_std = test_save(density=density, type_number=type_number, dist_type=dist_type, dist_hyperpara=dist_hyperpara, gamma=gamma, testnum=REAL_NUM, save=0, algo_list=algo_list, filename=f, rmin=0, threshold=1)
+        algo_ratio_mean, algo_ratio_std = test_save(density=density, type_number=type_number, dist_type=dist_type, dist_hyperpara=dist_hyperpara, gamma=gamma, testnum=REAL_NUM, save=0, algo_list=algo_list, filename=f, rmin=0, threshold=1, w_std = w_std)
         algo_ratio_mean_list.append(algo_ratio_mean)
         algo_ratio_std_list.append(algo_ratio_std)
     save_to_file(filename, dist_hyperpara_list, topstr, algo_ratio_mean_list, algo_ratio_std_list, algo_list)

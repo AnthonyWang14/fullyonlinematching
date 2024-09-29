@@ -23,7 +23,7 @@ def generate_truncated_normal_lower_bound(low, mean, std, size=1000):
 
 # underlying graph
 class Graph:
-    def __init__(self, type_number = 10, density = 1, dist_type = 'fix', dist_hyperpara = 10, weights = None, rates = None, rmin=0, T=3) -> None:
+    def __init__(self, type_number = 10, density = 1, dist_type = 'fix', dist_hyperpara = 10, weights = None, rates = None, rmin=0, T=3, w_std = 10) -> None:
         np.random.seed(0)
         self.N = type_number
         self.density = density
@@ -37,7 +37,7 @@ class Graph:
         # randomized weights
         else:
             # self.gene_weights()
-            self.gen_weights_update(weight_type='trunc_norm_lower_bound')
+            self.gen_weights_update(weight_type='trunc_norm_lower_bound', w_std=10)
 
         if rates:
             self.rates = np.array(rates)
@@ -71,7 +71,7 @@ class Graph:
                     self.weights[j][i] = q
 
     # generate non-trivial edge's weight following different distributions
-    def gen_weights_update(self, weight_type='uni_large'):
+    def gen_weights_update(self, weight_type='uni_large', w_std=10):
         self.weights = np.random.uniform(0, 1, (self.N, self.N))
         for i in range(self.N):
             for j in range(self.N):
@@ -94,7 +94,7 @@ class Graph:
                                 p = truncated_normal(0.1, 0.1, low=0, high=1, size=1)[0]
                             # truncated normal with lower bound 0
                             if weight_type == 'trunc_norm_lower_bound':
-                                p = generate_truncated_normal_lower_bound(low=0, mean=1, std=10, size=1)[0]
+                                p = generate_truncated_normal_lower_bound(low=0, mean=1, std=w_std, size=1)[0]
                         self.weights[i][j] = p
                         self.weights[j][i] = p
                     else:

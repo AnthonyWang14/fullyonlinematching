@@ -6,22 +6,57 @@ matplotlib.rcParams['ps.fonttype'] = 42
 import matplotlib.pyplot as plt
 import os
 my_path = os.path.dirname(os.path.abspath(__file__))
+from scipy.signal import savgol_filter
 
 
-colors_dict = {'OFF': 'g', 'RCP': 'r', 'GRD': 'b', 'BATCH': 'y', 'SAM0.5': 'g', 'SAM1': 'g', 'SAM': 'g', 'COL1': 'r', 'HG': 'b'}
+colors_dict = {'OFF': 'g', 'RCP': 'r', 'GRD': 'b', 'BATCH': 'y', 'SAM0.5': 'g', 'COL1': 'g', 'SAM': 'g', 'COL1': 'r', 'HG': 'b'}
+# new_colors_dict = {
+#     'OFF': 'blue',
+#     'RCP': 'blue',
+#     'GRD': 'forestgreen',
+#     'BAT': 'orange',
+#     'SAM': 'red',  # Same color as 'SAM1'
+#     'SAM1': 'red',
+#     'SAMC': 'slateblue',  # Same color as 'SAMC1'
+#     'COL1': 'slateblue',
+#     'HG': 'darkgoldenrod',
+#     'STH0.5': 'green',
+#     'CTH0.5': 'purple'
+# }
+# markers_dict = {'OFF': 'x', 'RCP': '^', 'GRD': 'o', 'BAT': '*', 'SAM0.5': 'x', 'SAM1': '^', 'SAM': '^', 'COL1':'x', 'HG': 'x', 'SAMC':'x', 'STH0.5':'*', 'CTH0.5':'o'}
+
+
 new_colors_dict = {
     'OFF': 'blue',
-    'RCP': 'blue',
+    'RCP': 'skyblue',  # Lighter blue for better contrast
     'GRD': 'forestgreen',
     'BAT': 'orange',
-    'SAM': 'red',  # Same color as 'SAM1'
-    'SAM1': 'red',
-    'SAMC': 'slateblue',  # Same color as 'SAMC1'
-    'SAMC1': 'slateblue',
+    'SAM': 'red',
+    'SAM1': 'darkred',  # Darker shade for distinction
+    'SAMC': 'slateblue',
+    'COL1': 'gold',  # Gold for high visibility
     'HG': 'darkgoldenrod',
-    'SAM4': 'green',
-    'SAMC4': 'purple'
+    'STH0.5': 'lime',  # Brighter green for contrast
+    'CTH0.5': 'purple'
 }
+
+markers_dict = {
+    'OFF': 'x',
+    'RCP': 's',  # Square marker
+    'GRD': 'o',
+    'BAT': '*',
+    'SAM0.5': 'd',  # Diamond marker
+    'SAM1': 'P',  # Plus marker
+    'SAM': '^',
+    'COL1': 'h',  # Hexagon marker
+    'HG': 'x',
+    'SAMC': 'v',  # Downward triangle marker
+    'STH0.5': '8',  # Octagon marker for distinction
+    'CTH0.5': 'X'   # Cross marker for distinction
+}
+
+
+
 color_dict = {
     'D^S=5,p_m=0': 'darkgoldenrod',
     'D^S=20,p_m=0': 'blue',
@@ -30,12 +65,6 @@ color_dict = {
     'D^S=20,p_m=0.9': 'red',
     'D^S=35,p_m=0.9': 'slateblue'
 }
-
-
-
-markers_dict = {'OFF': 'x', 'RCP': '^', 'GRD': 'o', 'BAT': '*', 'SAM0.5': 'x', 'SAM1': '^', 'SAM': '^', 'SAMC1':'x', 'HG': 'x', 'SAMC':'x', 'SAM4':'*', 'SAMC4':'o'}
-
-
 def plot_one(filename):
     # 'OFF', 'RCP', 'GRD', 'BAT', 'SAM0.5', 'SAM'
     colors = ['g', 'g', 'r', 'b', 'b', 'violet', 'violet']
@@ -45,6 +74,8 @@ def plot_one(filename):
         if first_line[0] == 'type_number':
             xlabel = 'm'
         if first_line[0] == 'density':
+            xlabel = 'q'
+        if first_line[0] == 'q':
             xlabel = 'q'
         if first_line[0] == 'n_max':
             xlabel = r'$N^B$'
@@ -153,12 +184,18 @@ def plot_one_RCP(filename):
         print(x)
         print(res)
         for i in range(len(algo_name_list)):
-            if algo_name_list[i] == 'BAT_G':
-                continue
-            algo = algo_name_list[i]
-            # if algo_name_list[i] != 'SAM1' and algo_name_list[i] != 'COL1':
+            # if algo_name_list[i] == 'BAT_G':
+                # continue
+            # if algo_name_list[i] == 'STH0.5':
             #     continue
-            plt.plot(x, res[i], color=new_colors_dict[algo], marker = markers_dict[algo], label=algo)
+            # if algo_name_list[i] == 'CTH0.5':
+            #     continue
+            algo = algo_name_list[i]
+            # plt.plot(x, res[i], color=new_colors_dict[algo], marker = markers_dict[algo], label=algo)
+            smooth_res = savgol_filter(res[i], window_length=5, polyorder=2)  # 调整窗口大小和多项式阶数以获得更好平滑效果
+            plt.plot(x, smooth_res, color=new_colors_dict[algo], marker=markers_dict[algo], label=algo)
+
+
         plt.xlabel(xlabel, fontsize=16)
         plt.ylabel('Empirical Competitive Ratio', fontsize=16)
         plt.xticks(x,fontsize=16)
@@ -273,8 +310,10 @@ def plot_gamma(filename):
         plt.close()
 
 if __name__ == '__main__':
-    plot_one_RCP('sin_syn_new')
-    plot_one_RCP('geo_syn_new')
+    plot_one_RCP('q_geo_syn_d50')
+    plot_one_RCP('q_sin_syn_d50')
+    plot_one_RCP('q_poi_syn_d50')
+
 
     # plot_gamma('gam_geo_nycLdel2A1')
     # plot_gamma('gam_sin_nycLdel2A1')

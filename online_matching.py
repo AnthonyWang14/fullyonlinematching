@@ -191,10 +191,10 @@ class OnlineMatching:
                     reward = batch_mean_match.eval()
                     matching = batch_mean_match.matching
 
-                # tune for each realization
-                if algo == 'BAT':
-                    batch_tune = BatchMatching(graph=self.G, seq=seq, quit_time=quit_time, batch_type='TUNE')
-                    reward, matching = batch_tune.eval_tune()
+                # # tune for each realization
+                # if algo == 'BAT':
+                #     batch_tune = BatchMatching(graph=self.G, seq=seq, quit_time=quit_time, batch_type='TUNE')
+                #     reward, matching = batch_tune.eval_tune()
 
                 if algo == 'BATCH_MIN':
                     batch_min_match = BatchMatching(graph=self.G, seq=seq, quit_time=quit_time, batch_type='MIN')
@@ -228,7 +228,7 @@ class OnlineMatching:
                 self.test_matching_valid(algo, matching, reward, seq, quit_time)
 
         # find the optimal batch for bath tune graph.
-        if 'BAT_G' in algo_list:
+        if 'BAT' in algo_list:
             # min quit_time of each sequence
             max_quit_time = [max(tested_quit_time[j]) for j in range(test_num)]
             max_bsize = int(max(max_quit_time))
@@ -255,11 +255,78 @@ class OnlineMatching:
                 # print('reward_bsize_list', reward_bsize_list)
                 optimal_bsize = test_bsize[max_index]
                 print('optimal batch size', optimal_bsize)
-                algo_result['BAT_G'] = reward_bsize_list[max_index]
+                algo_result['BAT'] = reward_bsize_list[max_index]
             else:
-                algo_result['BAT_G'] = [0] * test_num
-            run_time['BAT_G'] = 0
+                algo_result['BAT'] = [0] * test_num
+            run_time['BAT'] = 0
             # print(min_quit_time)
+        # find the optimal batch for bath tune graph.
+        if 'STH' in algo_list:
+            test_th = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+
+            # test_bsize = list(range(1, max_bsize+1))
+            reward_list = []
+            reward_th_list = []
+            for th in test_th:
+                reward_single_th_list = []
+                for j in range(len(tested_seqs)):
+                    # batch_g = BatchMatching(graph=self.G, seq=tested_seqs[j], quit_time=tested_quit_time[j], batch_type='G')
+                    samp = Samp(graph=self.G, seq=tested_seqs[j], quit_time=tested_quit_time[j], gamma = 1, threshold=th)
+                    reward = samp.eval_threshold()
+                    reward_single_th_list.append(reward)
+                # sum of rewards over different realizations.
+                total_reward = sum(np.array(reward_single_th_list))
+                # print('reward_single_bsize_list', reward_single_bsize_list)
+                reward_th_list.append(reward_single_th_list)
+                reward_list.append(total_reward)
+            max_index = reward_list.index(max(reward_list))
+            # print('reward_list', reward_list)
+            # print('reward_bsize_list', reward_bsize_list)
+            optimal_th = test_th[max_index]
+            print('optimal threshold for STH', optimal_th)
+            algo_result['STH'] = reward_th_list[max_index]
+            run_time['STH'] = 0
+
+        # if save == 1:
+        #     for algo in algo_list:
+        #         print(algo)
+        # for algo in algo_list:
+        #     algo_mean[algo] = np.mean(algo_result[algo])
+        
+        # for algo in algo_list:
+        #     if save == 1:
+        #         print(algo_mean[algo]/algo_mean['OFF'])
+        #     else:
+        #         print(algo, algo_mean[algo], algo_mean[algo]/algo_mean['OFF'])
+        
+        #         algo_ratio[algo] = algo_mean[algo]/algo_mean['OFF']
+
+
+        if 'CTH' in algo_list:
+            test_th = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+
+            # test_bsize = list(range(1, max_bsize+1))
+            reward_list = []
+            reward_th_list = []
+            for th in test_th:
+                reward_single_th_list = []
+                for j in range(len(tested_seqs)):
+                    # batch_g = BatchMatching(graph=self.G, seq=tested_seqs[j], quit_time=tested_quit_time[j], batch_type='G')
+                    samp = Samp(graph=self.G, seq=tested_seqs[j], quit_time=tested_quit_time[j], gamma = 1, threshold=th)
+                    reward = samp.eval_Collina()
+                    reward_single_th_list.append(reward)
+                # sum of rewards over different realizations.
+                total_reward = sum(np.array(reward_single_th_list))
+                # print('reward_single_bsize_list', reward_single_bsize_list)
+                reward_th_list.append(reward_single_th_list)
+                reward_list.append(total_reward)
+            max_index = reward_list.index(max(reward_list))
+            # print('reward_list', reward_list)
+            # print('reward_bsize_list', reward_bsize_list)
+            optimal_th = test_th[max_index]
+            print('optimal threshold for CTH', optimal_th)
+            algo_result['CTH'] = reward_th_list[max_index]
+            run_time['CTH'] = 0
 
         if save == 1:
             for algo in algo_list:
@@ -274,7 +341,6 @@ class OnlineMatching:
                 print(algo, algo_mean[algo], algo_mean[algo]/algo_mean['OFF'])
         
                 algo_ratio[algo] = algo_mean[algo]/algo_mean['OFF']
-
         # calculate the average rate over different realizations.
         # algo_single_ratio = {}
         algo_single_std = {}
