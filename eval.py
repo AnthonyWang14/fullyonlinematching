@@ -174,13 +174,14 @@ def test_tn(dist_type='geometric', dist_hyperpara=0.5, SYN=True):
         algo_ratio_std_list.append(algo_ratio_std)
     save_to_file(filename, tn_list, topstr, algo_ratio_mean_list, algo_ratio_std_list, algo_list)
 
-def test_rmin(dist_type='geometric', dist_hyperpara=0.5, SYN=True):
-    density = 2.5
+def test_rmin(dist_type='geometric', dist_hyperpara=25, SYN=True):
+    density = 0.5
     # density_list = [1+i*0.5 for i in range(9)]
     rmin_list = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
     # rmin_list = [0.5]
-    type_number = 50
+    type_number = 25
     gamma = 1
+    paras_dict = {'type_number':type_number, 'gamma':gamma, 'w_std':10, 'dist_hyperpara':dist_hyperpara}
     # testnum = 1
     if SYN:
         input_file = 'syn'
@@ -196,7 +197,7 @@ def test_rmin(dist_type='geometric', dist_hyperpara=0.5, SYN=True):
     topstr = 'rmin'+'_'+dist_type+' '+' '.join([algo for algo in algo_list])
     # print(REAL_NUM)
     for rmin in rmin_list:
-        algo_ratio_mean, algo_ratio_std = test_save(density=density, type_number=type_number, dist_type=dist_type, dist_hyperpara=dist_hyperpara, gamma=gamma, testnum=REAL_NUM, save=0, algo_list=algo_list, filename=f, rmin=rmin)
+        algo_ratio_mean, algo_ratio_std = test_save(density=density, type_number=type_number, dist_type=dist_type, dist_hyperpara=dist_hyperpara, gamma=gamma, testnum=REAL_NUM, save=0, algo_list=algo_list, filename=f, rmin=rmin, threshold=1, w_std = paras_dict['w_std'])
         algo_ratio_mean_list.append(algo_ratio_mean)
         algo_ratio_std_list.append(algo_ratio_std)
     save_to_file(filename, rmin_list, topstr, algo_ratio_mean_list, algo_ratio_std_list, algo_list)

@@ -32,9 +32,9 @@ new_colors_dict = {
     'SAM1': 'forestgreen',
     'BAT': 'orange',
     'SAM': 'red',
-    'GRD': 'darkred',  # Darker shade for distinction
+    'COL1': 'darkred',  # Darker shade for distinction
     'SAMC': 'slateblue',
-    'COL1': 'gold',  # Gold for high visibility
+    'GRD': 'gold',  # Gold for high visibility
     'HG': 'darkgoldenrod',
     'STH0.5': 'lime',  # Brighter green for contrast
     'CTH0.5': 'purple',
@@ -48,9 +48,9 @@ markers_dict = {
     'SAM1': 'o',
     'BAT': '*',
     'SAM0.5': 'd',  # Diamond marker
-    'GRD': 'P',  # Plus marker
+    'COL1': 'P',  # Plus marker
     'SAM': '^',
-    'COL1': 'h',  # Hexagon marker
+    'GRD': 'h',  # Hexagon marker
     'HG': 'x',
     'SAMC': 'v',  # Downward triangle marker
     'STH0.5': '8',  # Octagon marker for distinction
@@ -322,6 +322,11 @@ if __name__ == '__main__':
     plot_one_RCP('q_geo_syn_tn25std1')
     plot_one_RCP('q_sin_syn_tn25std1')
     plot_one_RCP('q_poi_syn_tn25std1')
+
+    plot_one_RCP('geo_syn_tn25std1q05')
+    plot_one_RCP('poi_syn_tn25std1q05')
+    plot_one_RCP('sin_syn_tn25std1q05')
+
     # plot_one_RCP('sin_syn_tn25std1q01')
 
     # plot_gamma('gam_geo_nycLdel2A1')
