@@ -120,13 +120,14 @@ def test_tn_fix2(dist_type='fix_geo', dist_hyperpara=20, SYN=True):
     save_to_file(filename, tn_list, topstr, algo_ratio_mean_list, algo_ratio_std_list, algo_list)
 
 
-def test_density(dist_type='geometric', dist_hyperpara=0.5, SYN=True):
+def test_density(dist_type='geometric', dist_hyperpara=25, SYN=True):
     # density = 2.5
     # density_list = [1+i*0.5 for i in range(9)]
     density_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
-    type_number = 50
+    type_number = 25
     gamma = 1
     # testnum = 1
+    paras_dict = {'type_number':type_number, 'gamma':gamma, 'w_std':1, 'dist_hyperpara':dist_hyperpara}
     if SYN:
         input_file = 'syn'
         algo_list = ['OFF', 'RCP', 'GRD', 'SAM1', 'STH', 'COL1','CTH', 'BAT']
@@ -135,17 +136,17 @@ def test_density(dist_type='geometric', dist_hyperpara=0.5, SYN=True):
         f = None
     else:
         input_file = 'nyc_20_2_842'
-        algo_list = ['OFF', 'GRD', 'SAM1', 'COL1', 'BAT']
+        algo_list = ['OFF', 'RCP', 'GRD', 'SAM1', 'STH', 'COL1','CTH', 'BAT']
         f = 'data/'+input_file
     filename = 'result/density_'+input_file
     algo_ratio_mean_list = []
     algo_ratio_std_list = []
     topstr = 'density'+'_'+dist_type+' '+' '.join([algo for algo in algo_list])
     for density in density_list:
-        algo_ratio_mean, algo_ratio_std = test_save(density=density, type_number=type_number, dist_type=dist_type, dist_hyperpara=dist_hyperpara, gamma=gamma, testnum=REAL_NUM, save=0, algo_list=algo_list, filename=f, rmin=0, threshold=1, w_std=10)
+        algo_ratio_mean, algo_ratio_std = test_save(density=density, type_number=paras_dict['type_number'], dist_type=dist_type, dist_hyperpara=paras_dict['dist_hyperpara'], gamma=paras_dict['gamma'], testnum=REAL_NUM, save=0, algo_list=algo_list, filename=f, rmin=0, threshold=1, w_std=paras_dict['w_std'])
         algo_ratio_mean_list.append(algo_ratio_mean)
         algo_ratio_std_list.append(algo_ratio_std)
-    save_to_file(filename, density_list, topstr, algo_ratio_mean_list, algo_ratio_std_list, algo_list)
+    save_to_file(filename, density_list, topstr, algo_ratio_mean_list, algo_ratio_std_list, algo_list, paras_dict)
 
 def test_tn(dist_type='geometric', dist_hyperpara=0.5, SYN=True):
     density = 0.5
@@ -202,10 +203,11 @@ def test_rmin(dist_type='geometric', dist_hyperpara=0.5, SYN=True):
 
 
 def diff_dist(dist_type='fix', dist_hyperpara_list=[10, 20, 30, 40, 50], input_file=None):
-    density = 0.3
-    type_number = 50
-    gamma = 1
-    w_std = 10
+    paras_dict = {'density':0.5, 'type_number':25, 'gamma':1, 'w_std':1}
+    # density = 0.3
+    # type_number = 50
+    # gamma = 1
+    # w_std = 10
     if input_file:
         algo_list = ['OFF', 'RCP', 'GRD', 'SAM1', 'TH', 'COL1', 'BAT_G', 'HG']
         # algo_list = ['OFF', 'RCP']
@@ -220,10 +222,10 @@ def diff_dist(dist_type='fix', dist_hyperpara_list=[10, 20, 30, 40, 50], input_f
     algo_ratio_std_list = []
     topstr = dist_type+' '+' '.join([algo for algo in algo_list])
     for dist_hyperpara in dist_hyperpara_list:
-        algo_ratio_mean, algo_ratio_std = test_save(density=density, type_number=type_number, dist_type=dist_type, dist_hyperpara=dist_hyperpara, gamma=gamma, testnum=REAL_NUM, save=0, algo_list=algo_list, filename=f, rmin=0, threshold=1, w_std = w_std)
+        algo_ratio_mean, algo_ratio_std = test_save(density=paras_dict['density'], type_number=paras_dict['type_number'], dist_type=dist_type, dist_hyperpara=dist_hyperpara, gamma=paras_dict['gamma'], testnum=REAL_NUM, save=0, algo_list=algo_list, filename=f, rmin=0, threshold=1, w_std = paras_dict['w_std'])
         algo_ratio_mean_list.append(algo_ratio_mean)
         algo_ratio_std_list.append(algo_ratio_std)
-    save_to_file(filename, dist_hyperpara_list, topstr, algo_ratio_mean_list, algo_ratio_std_list, algo_list)
+    save_to_file(filename, dist_hyperpara_list, topstr, algo_ratio_mean_list, algo_ratio_std_list, algo_list, paras_dict)
 
 
 # prob = 1/tn, dist para is the expectation
@@ -381,12 +383,13 @@ def diff_threshold(dist_type = 'geometric', dist_hyperpara = 0.5, density = 0.5,
         algo_ratio_std_list.append(algo_ratio_std)
     save_to_file(filename, threshold_list, topstr, algo_ratio_mean_list, algo_ratio_std_list, algo_list)
 
-def save_to_file(filename, tested_para_list, topstr, algo_ratio_mean_list, algo_ratio_std_list, algo_list):
+def save_to_file(filename, tested_para_list, topstr, algo_ratio_mean_list, algo_ratio_std_list, algo_list, paras_dict):
     current_time = datetime.now()
     time_str = current_time.strftime("%Y-%m-%d %H:%M:%S")
     print('save to file', filename)
     with open(filename, 'a+') as file:
         file.write(time_str+'\n')
+        file.write(' '.join([para+'='+str(paras_dict[para]) for para in paras_dict])+'\n')
         file.write(topstr+'\n')
         for i in range(len(tested_para_list)):
             file.write(str(round(tested_para_list[i], 3))+' '+' '.join([str(round(algo_ratio_mean_list[i][algo],3)) for algo in algo_list])+'\n')

@@ -29,10 +29,10 @@ colors_dict = {'OFF': 'g', 'RCP': 'r', 'GRD': 'b', 'BATCH': 'y', 'SAM0.5': 'g', 
 new_colors_dict = {
     'OFF': 'blue',
     'RCP': 'skyblue',  # Lighter blue for better contrast
-    'GRD': 'forestgreen',
+    'SAM1': 'forestgreen',
     'BAT': 'orange',
     'SAM': 'red',
-    'SAM1': 'darkred',  # Darker shade for distinction
+    'GRD': 'darkred',  # Darker shade for distinction
     'SAMC': 'slateblue',
     'COL1': 'gold',  # Gold for high visibility
     'HG': 'darkgoldenrod',
@@ -45,10 +45,10 @@ new_colors_dict = {
 markers_dict = {
     'OFF': 'x',
     'RCP': 's',  # Square marker
-    'GRD': 'o',
+    'SAM1': 'o',
     'BAT': '*',
     'SAM0.5': 'd',  # Diamond marker
-    'SAM1': 'P',  # Plus marker
+    'GRD': 'P',  # Plus marker
     'SAM': '^',
     'COL1': 'h',  # Hexagon marker
     'HG': 'x',
@@ -92,7 +92,7 @@ def plot_one(filename):
         if first_line[0] == 'geometric':
             xlabel = r'$P^G$'
         if first_line[0] == 'poisson':
-            xlabel = r'$L^P$'
+            xlabel = r'$D^P$'
         if first_line[0] == 'single':
             xlabel = r'$D^S$'
         if first_line[0] == 'gamma':
@@ -161,7 +161,7 @@ def plot_one_RCP(filename):
         if first_line[0] == 'geometric':
             xlabel = r'$D^G$'
         if first_line[0] == 'poisson':
-            xlabel = r'$L^P$'
+            xlabel = r'$D^P$'
         if first_line[0] == 'single':
             xlabel = r'$D^S$'
         if first_line[0] == 'gamma':
@@ -212,8 +212,8 @@ def plot_one_RCP(filename):
         dt = time.strftime("%H-%M-%S",time_local)
         full_path = str(os.path.join(my_path, 'imgs', filename+dt+'.png'))
 
-        plt.savefig(full_path, format='png')
-        full_path = str(os.path.join(my_path, 'imgs', filename+dt+'.pdf'))
+        # plt.savefig(full_path, format='png')
+        full_path = str(os.path.join(my_path, 'imgv2', filename+dt+'.pdf'))
         plt.savefig(full_path, format='pdf')
 
         # plt.savefig(my_path+'/imgs/'+filename+dt+'.eps', format='eps')
@@ -317,8 +317,12 @@ if __name__ == '__main__':
     # plot_one_RCP('q_geo_syn_d50')
     # plot_one_RCP('q_sin_syn_d50')
     # plot_one_RCP('q_poi_syn_d50')
-    plot_one_RCP('geo_syn_std10')
+    # plot_one_RCP('geo_syn_std10')
 
+    plot_one_RCP('q_geo_syn_tn25std1')
+    plot_one_RCP('q_sin_syn_tn25std1')
+    plot_one_RCP('q_poi_syn_tn25std1')
+    # plot_one_RCP('sin_syn_tn25std1q01')
 
     # plot_gamma('gam_geo_nycLdel2A1')
     # plot_gamma('gam_sin_nycLdel2A1')
