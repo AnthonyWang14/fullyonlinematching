@@ -202,10 +202,10 @@ def test_rmin(dist_type='geometric', dist_hyperpara=0.5, SYN=True):
 
 
 def diff_dist(dist_type='fix', dist_hyperpara_list=[10, 20, 30, 40, 50], input_file=None):
-    density = 1
+    density = 0.3
     type_number = 50
     gamma = 1
-    w_std = 1
+    w_std = 10
     if input_file:
         algo_list = ['OFF', 'RCP', 'GRD', 'SAM1', 'TH', 'COL1', 'BAT_G', 'HG']
         # algo_list = ['OFF', 'RCP']

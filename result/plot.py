@@ -37,7 +37,9 @@ new_colors_dict = {
     'COL1': 'gold',  # Gold for high visibility
     'HG': 'darkgoldenrod',
     'STH0.5': 'lime',  # Brighter green for contrast
-    'CTH0.5': 'purple'
+    'CTH0.5': 'purple',
+    'STH': 'lime',  # Brighter green for contrast
+    'CTH': 'purple',
 }
 
 markers_dict = {
@@ -52,7 +54,9 @@ markers_dict = {
     'HG': 'x',
     'SAMC': 'v',  # Downward triangle marker
     'STH0.5': '8',  # Octagon marker for distinction
-    'CTH0.5': 'X'   # Cross marker for distinction
+    'CTH0.5': 'X',   # Cross marker for distinction
+    'STH': '8',  # Octagon marker for distinction
+    'CTH': 'X'   # Cross marker for distinction
 }
 
 
@@ -310,9 +314,10 @@ def plot_gamma(filename):
         plt.close()
 
 if __name__ == '__main__':
-    plot_one_RCP('q_geo_syn_d50')
-    plot_one_RCP('q_sin_syn_d50')
-    plot_one_RCP('q_poi_syn_d50')
+    # plot_one_RCP('q_geo_syn_d50')
+    # plot_one_RCP('q_sin_syn_d50')
+    # plot_one_RCP('q_poi_syn_d50')
+    plot_one_RCP('geo_syn_std10')
 
 
     # plot_gamma('gam_geo_nycLdel2A1')
