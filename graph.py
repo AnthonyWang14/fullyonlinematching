@@ -94,7 +94,7 @@ class Graph:
                                 p = truncated_normal(0.1, 0.1, low=0, high=1, size=1)[0]
                             # truncated normal with lower bound 0
                             if weight_type == 'trunc_norm_lower_bound':
-                                print('w_std', w_std)
+                                # print('w_std', w_std)
                                 p = generate_truncated_normal_lower_bound(low=0, mean=1, std=w_std, size=1)[0]
                         self.weights[i][j] = p
                         self.weights[j][i] = p

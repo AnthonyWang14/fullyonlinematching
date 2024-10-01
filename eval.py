@@ -124,10 +124,10 @@ def test_density(dist_type='geometric', dist_hyperpara=25, SYN=True):
     # density = 2.5
     # density_list = [1+i*0.5 for i in range(9)]
     density_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
-    type_number = 25
+    type_number = 10
     gamma = 1
     # testnum = 1
-    paras_dict = {'type_number':type_number, 'gamma':gamma, 'w_std':1, 'dist_hyperpara':dist_hyperpara}
+    paras_dict = {'type_number':type_number, 'gamma':gamma, 'w_std':10, 'dist_hyperpara':dist_hyperpara}
     if SYN:
         input_file = 'syn'
         algo_list = ['OFF', 'RCP', 'GRD', 'SAM1', 'STH', 'COL1','CTH', 'BAT']
@@ -185,7 +185,7 @@ def test_rmin(dist_type='geometric', dist_hyperpara=25, SYN=True):
     # testnum = 1
     if SYN:
         input_file = 'syn'
-        algo_list = ['OFF', 'RCP', 'GRD', 'SAM1', 'SAMC1', 'BAT']
+        algo_list = ['OFF', 'RCP', 'GRD', 'SAM1', 'STH', 'COL1', 'CTH', 'BAT']
         f = None
     else:
         input_file = 'nyc_20_2_842'
@@ -200,17 +200,17 @@ def test_rmin(dist_type='geometric', dist_hyperpara=25, SYN=True):
         algo_ratio_mean, algo_ratio_std = test_save(density=density, type_number=type_number, dist_type=dist_type, dist_hyperpara=dist_hyperpara, gamma=gamma, testnum=REAL_NUM, save=0, algo_list=algo_list, filename=f, rmin=rmin, threshold=1, w_std = paras_dict['w_std'])
         algo_ratio_mean_list.append(algo_ratio_mean)
         algo_ratio_std_list.append(algo_ratio_std)
-    save_to_file(filename, rmin_list, topstr, algo_ratio_mean_list, algo_ratio_std_list, algo_list)
+    save_to_file(filename, rmin_list, topstr, algo_ratio_mean_list, algo_ratio_std_list, algo_list, paras_dict)
 
 
 def diff_dist(dist_type='fix', dist_hyperpara_list=[10, 20, 30, 40, 50], input_file=None):
-    paras_dict = {'density':0.5, 'type_number':25, 'gamma':1, 'w_std':1}
+    paras_dict = {'density':0.5, 'type_number':25, 'gamma':1, 'w_std':10}
     # density = 0.3
     # type_number = 50
     # gamma = 1
     # w_std = 10
     if input_file:
-        algo_list = ['OFF', 'RCP', 'GRD', 'SAM1', 'TH', 'COL1', 'BAT_G', 'HG']
+        algo_list = ['OFF', 'RCP', 'GRD', 'SAM1', 'STH', 'COL1', 'CTH', 'BAT']
         # algo_list = ['OFF', 'RCP']
         f = input_file
     else:

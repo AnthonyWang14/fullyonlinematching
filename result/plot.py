@@ -319,13 +319,19 @@ if __name__ == '__main__':
     # plot_one_RCP('q_poi_syn_d50')
     # plot_one_RCP('geo_syn_std10')
 
-    plot_one_RCP('q_geo_syn_tn25std1')
-    plot_one_RCP('q_sin_syn_tn25std1')
-    plot_one_RCP('q_poi_syn_tn25std1')
+    # plot_one_RCP('q_geo_syn_tn25std1')
+    # plot_one_RCP('q_sin_syn_tn25std1')
+    # plot_one_RCP('q_poi_syn_tn25std1')
+    plot_one_RCP('q_geo_syn_d10')
+    plot_one_RCP('q_sin_syn_d10')
+    plot_one_RCP('q_poi_syn_d10')
 
-    plot_one_RCP('geo_syn_tn25std1q05')
-    plot_one_RCP('poi_syn_tn25std1q05')
-    plot_one_RCP('sin_syn_tn25std1q05')
+    # plot_one_RCP('geo_syn_tn25std1q05')
+    # plot_one_RCP('poi_syn_tn25std1q05')
+    # plot_one_RCP('sin_syn_tn25std1q05')
+    # plot_one_RCP('geo_syn_pm')
+    # plot_one_RCP('sin_syn_pm')
+    # plot_one_RCP('poi_syn_pm')
 
     # plot_one_RCP('sin_syn_tn25std1q01')
 
