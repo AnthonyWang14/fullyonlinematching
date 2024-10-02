@@ -139,7 +139,7 @@ class Graph:
                 self.mean_quit_time.append(paras['q']*paras['d_min']+(1-paras['q'])*paras['d_max'])
 
         if self.dist_type == 'single':
-            samples = np.random.randint(0, self.dist_hyperpara, self.N)
+            samples = np.random.randint(0, self.dist_hyperpara+1, self.N)
             # for i in range(self.N):
             #     if np.random.rand() < 0.5:
             #         samples[i] = np.random.randint(1, 5)
@@ -150,6 +150,20 @@ class Graph:
                 paras['d'] = samples[i]
                 self.dist_paras.append(paras)
                 self.mean_quit_time.append(paras['d'])
+
+        if self.dist_type == 'uniform':
+            samples = np.random.randint(0, self.dist_hyperpara+1, self.N)
+            # for i in range(self.N):
+            #     if np.random.rand() < 0.5:
+            #         samples[i] = np.random.randint(1, 5)
+            #     else:
+            #         samples[i] = np.random.randint(25, 30)
+            for i in range(self.N):
+                paras = {}
+                paras['d'] = samples[i]
+                self.dist_paras.append(paras)
+                self.mean_quit_time.append(paras['d'])
+
 
         if self.dist_type == 'fix':
             fixd = self.dist_hyperpara
@@ -323,6 +337,10 @@ class Graph:
             # print ('d', d)
             return np.random.geometric(1./d)
 
+        if self.dist_type == 'uniform':
+            mean = self.dist_paras[ind]['d']
+            return np.random.randint(0, 2*mean+1)
+        
         if self.dist_type == 'binomial':
             n = self.dist_paras[ind]['n']
             p = self.dist_paras[ind]['p']
