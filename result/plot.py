@@ -164,6 +164,8 @@ def plot_one_RCP(filename):
             xlabel = r'$D^P$'
         if first_line[0] == 'single':
             xlabel = r'$D^S$'
+        if first_line[0] == 'uniform':
+            xlabel = r'$D^U$'
         if first_line[0] == 'gamma':
             xlabel = r'$\gamma$'
         if first_line[0] == 'delta':
@@ -188,8 +190,8 @@ def plot_one_RCP(filename):
         print(x)
         print(res)
         for i in range(len(algo_name_list)):
-            # if algo_name_list[i] == 'BAT_G':
-                # continue
+            if algo_name_list[i] == 'RCP':
+                continue
             # if algo_name_list[i] == 'STH0.5':
             #     continue
             # if algo_name_list[i] == 'CTH0.5':
@@ -322,9 +324,12 @@ if __name__ == '__main__':
     # plot_one_RCP('q_geo_syn_tn25std1')
     # plot_one_RCP('q_sin_syn_tn25std1')
     # plot_one_RCP('q_poi_syn_tn25std1')
-    plot_one_RCP('q_geo_syn_d10')
-    plot_one_RCP('q_sin_syn_d10')
-    plot_one_RCP('q_poi_syn_d10')
+    # plot_one_RCP('q_geo_syn_d10')
+    # plot_one_RCP('q_sin_syn_d10')
+    # plot_one_RCP('q_poi_syn_d10')
+    plot_one_RCP('dist_uni_syn')
+    plot_one_RCP('dist_geo_syn')
+    plot_one_RCP('dist_poi_syn')
 
     # plot_one_RCP('geo_syn_tn25std1q05')
     # plot_one_RCP('poi_syn_tn25std1q05')
