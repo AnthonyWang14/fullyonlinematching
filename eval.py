@@ -206,7 +206,7 @@ def test_rmin(dist_type='geometric', dist_hyperpara=25, SYN=True):
 
 
 def diff_dist(dist_type='fix', dist_hyperpara_list=[10, 20, 30, 40, 50], input_file=None):
-    paras_dict = {'density':1, 'type_number':20, 'gamma':1, 'w_std':10}
+    paras_dict = {'density':1, 'type_number':10, 'gamma':1, 'w_std':10}
     # density = 0.3
     # type_number = 50
     # gamma = 1

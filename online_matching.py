@@ -234,8 +234,8 @@ class OnlineMatching:
             max_bsize = int(max(max_quit_time))
             # to speed up, we find out in our tested parameters, optimal batch size is less than 20.
             max_bsize = min(20, max_bsize)
-            print('max_bsize', max_bsize)
-            print('max_bsize', max_bsize)
+            # print('max_bsize', max_bsize)
+            # print('max_bsize', max_bsize)
             if max_bsize >= 1:
                 test_bsize = list(range(1, max_bsize+1))
                 reward_list = []
