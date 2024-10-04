@@ -42,7 +42,9 @@ def check_weight(d, a, b, L):
     a_end = [a[1]//L, a[1]%L]
     b_start = [b[0]//L, b[0]%L]
     b_end = [b[1]//L, b[1]%L]
+    
     if distance(a_start, b_start) > d or distance(a_end, b_end) > d:
+        print('small d')
         return 0
     else:
         route1 = distance(a_start, b_start) + distance(b_start, a_end) + distance(a_end, b_end)
@@ -51,9 +53,9 @@ def check_weight(d, a, b, L):
         route4 = distance(a_start, b_start) + distance(b_start, b_end) + distance(b_end, a_end)
         # new weight definition
         weight = A*(distance(a_start, a_end)+distance(b_start, b_end))-min(route1, route2, route3, route4)
-        threshold = 0.5
-        if weight < threshold:
-            weight = 0
+        # threshold = 0.5
+        # if weight < threshold:
+        #     weight = 0
         return weight
     # print(a_start_x, a_start_y, a_end_x, a_end_y)
 
@@ -241,8 +243,14 @@ if __name__ == '__main__':
     # dropt = new_dict.head(200000)[' dropoff_datetime']
     # print(pickt[0], pickt[100000])
     # print(pickup)
-    for d in range(1, 6):
-        cal_rate_bound(pickup, dropoff, L, d)
+
+    # for d in range(1, 6):
+    #     cal_rate_bound(pickup, dropoff, L, d)
+
+
+    # this d ensure the constraint d is not binding on the weight calculation
+    d = 2*L
+    cal_rate_bound(pickup, dropoff, L, d)
     infile.close()
 
 
