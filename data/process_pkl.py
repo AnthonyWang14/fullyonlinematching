@@ -8,16 +8,16 @@ import time
 import numpy as np
 import random
 
-A = 2 # weight factor
+# A = 5 # weight factor
 
 
 # d is the constraints of start and ends
-def gen_weight(d, type_list, L):
+def gen_weight(d, type_list, L, A):
     weights = [[0 for k in type_list] for i in type_list]
     for i in range(len(type_list)):
         for j in range(len(type_list)):
             if j >= i:
-                wij = check_weight(d, type_list[i], type_list[j], L)
+                wij = check_weight(d, type_list[i], type_list[j], L, A)
                 weights[i][j] = wij
                 weights[j][i] = wij
             # if i == j:
@@ -29,6 +29,11 @@ def gen_weight(d, type_list, L):
             #     weights[i][j] = wij
             #     weights[j][i] = wij       
     # print(weights)
+    weights = np.array(weights)
+    # get max weight from weights
+    max_weight = np.max(weights)
+    # normalize weights to 0~1
+    weights = weights/max_weight
     return weights
 
 def distance(u, v):
@@ -36,7 +41,7 @@ def distance(u, v):
 
 
 
-def check_weight(d, a, b, L):
+def check_weight(d, a, b, L, A):
     # print(a, b)
     a_start = [a[0]//L, a[0]%L]
     a_end = [a[1]//L, a[1]%L]
@@ -52,14 +57,16 @@ def check_weight(d, a, b, L):
         route3 = distance(b_start, a_start) + distance(a_start, b_end) + distance(b_end, a_end)
         route4 = distance(a_start, b_start) + distance(b_start, b_end) + distance(b_end, a_end)
         # new weight definition
+        # a = np.random.uniform(1, A)
         weight = A*(distance(a_start, a_end)+distance(b_start, b_end))-min(route1, route2, route3, route4)
+        weight = max(weight, 0)
         # threshold = 0.5
         # if weight < threshold:
         #     weight = 0
         return weight
     # print(a_start_x, a_start_y, a_end_x, a_end_y)
 
-def cal_rate_bound(pickup, dropoff, L, d):
+def cal_rate_bound(pickup, dropoff, L, d, A):
     x1_list = []
     y1_list = []
     pick_list = []
@@ -145,8 +152,10 @@ def cal_rate_bound(pickup, dropoff, L, d):
     # print('11')
      
     type_list = []
-    min_count = 100
     count_list = []
+
+    # use min count to filter out the small types
+    min_count = 200
     for i in range(M):
         for j in range(M):
             if count_table[i][j] >= min_count:
@@ -154,13 +163,23 @@ def cal_rate_bound(pickup, dropoff, L, d):
                 count_list.append(count_table[i][j])
                 # rates.append(count_table[i][j]/count)
 
-    count_list = np.array(count_list)
+    # use type number to filter out the small types
+    # type_number = 20
+    # top_k_indices_2d = top_type_number(type_number, count_table, L)
+    # print('top_k_indices_2d', top_k_indices_2d)
+
+    # type_list = top_k_indices_2d
+    # for k in range(len(type_list)):
+    #     [x, y] = type_list[k]
+    #     count_list.append(count_table[x][y])
+    # count_list = np.array(count_list)
+
     count = sum(count_list)
     rates = [c/count for c in count_list]
     print(count)
     type_number = len(rates)
     print('type number', type_number)
-    weights = gen_weight(d, type_list, L)
+    weights = gen_weight(d, type_list, L, A)
     deg = [0 for i in weights]
     nontrivialedges = 0
     for i in range(len(weights)):
@@ -230,9 +249,10 @@ def save_type_mapping(L, d, type_number, top_k_indices_2d):
 if __name__ == '__main__':
     infile = open('taxi_csv1_1.pkl','rb')
     new_dict = pickle.load(infile)
-    L = 10
+    L = 20
 
     
+    np.random.seed(0)
     print(new_dict.columns)
     #print(x1_list)
     #print(y1_list)
@@ -249,8 +269,14 @@ if __name__ == '__main__':
 
 
     # this d ensure the constraint d is not binding on the weight calculation
+    # test_d = [5, 10, 15, 20]
+    # for d in test_d:
+        # cal_rate_bound(pickup, dropoff, L, d)
+        # 
     d = 2*L
-    cal_rate_bound(pickup, dropoff, L, d)
+    A_list = [1, 1.2, 1.4, 1.6, 1.8, 2, 3, 4, 5]
+    for A in A_list:
+        cal_rate_bound(pickup, dropoff, L, d, A)
     infile.close()
 
 

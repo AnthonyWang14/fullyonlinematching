@@ -186,6 +186,11 @@ class OnlineMatching:
                     reward = grd.eval()
                     matching = grd.matching
 
+                if algo == 'GRD2':
+                    grd = GreedyMatching(graph=self.G, seq=seq, quit_time=quit_time)
+                    reward = grd.eval(0.3)
+                    matching = grd.matching
+
                 if algo == 'BAT_mean':
                     batch_mean_match = BatchMatching(graph=self.G, seq=seq, quit_time=quit_time, batch_type='MEAN')
                     reward = batch_mean_match.eval()
@@ -233,7 +238,7 @@ class OnlineMatching:
             max_quit_time = [max(tested_quit_time[j]) for j in range(test_num)]
             max_bsize = int(max(max_quit_time))
             # to speed up, we find out in our tested parameters, optimal batch size is less than 20.
-            max_bsize = min(20, max_bsize)
+            max_bsize = min(5, max_bsize)
             # print('max_bsize', max_bsize)
             # print('max_bsize', max_bsize)
             if max_bsize >= 1:

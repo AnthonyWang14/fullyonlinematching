@@ -212,7 +212,7 @@ def diff_dist(dist_type='fix', dist_hyperpara_list=[10, 20, 30, 40, 50], input_f
     # gamma = 1
     # w_std = 10
     if input_file:
-        algo_list = ['OFF', 'GRD', 'SAM1', 'STH', 'COL1', 'CTH', 'HG']
+        algo_list = ['OFF', 'GRD', 'HG', 'BAT', 'SAM1', 'STH', 'COL1', 'CTH', 'GRD2']
         # algo_list = ['OFF', 'RCP']
         f = input_file
     else:

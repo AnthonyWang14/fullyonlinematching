@@ -7,7 +7,7 @@ class GreedyMatching:
         self.seq = seq
         self.quit_time = quit_time
 
-    def eval(self):
+    def eval(self, th=1e-5):
         self.reward = 0
         self.matching = []
         matched = [0 for i in self.seq]
@@ -23,7 +23,8 @@ class GreedyMatching:
                     if self.G.weights[u][v] > best_reward:
                         best_reward = self.G.weights[u][v]
                         best = ind
-            if best_reward > 1e-5:
+            # th = 1e-5
+            if best_reward > th:
                 self.matching.append([best, t, t])
                 matched[t] = 1
                 matched[best] = 1

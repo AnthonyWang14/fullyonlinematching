@@ -45,6 +45,10 @@ class Graph:
             self.gene_rates(rmin=rmin)
             # self.fix_gene_rates(rmin=rmin)
 
+        # print('weights', self.weights)
+        # print('rates', self.rates)
+        # print('type_number', self.N)
+
         self.dist_type = dist_type
         self.dist_hyperpara = dist_hyperpara
         self.gene_quit_dist()
