@@ -386,7 +386,8 @@ if __name__ == '__main__':
     # for A in A_list:
     #     cal_rate_bound(pickup, dropoff, L, d, A)
     # cr_list = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3]
-    A_list = [1, 1.1, 1.2, 1.3, 1.4, 1.5]
+    # A_list = [1, 1.1, 1.2, 1.3, 1.4, 1.5]
+    A_list = [1.05, 1.15, 1.25, 1.35, 1.45]
     tn = 20
     for A in A_list:
         cal_kmeans(pickup, dropoff, A, tn)

@@ -110,7 +110,8 @@ class Graph:
                 #     p = np.random.uniform(0, 1)
                 #     self.weights[i][j] = p
                 #     self.weights[j][i] = p
-        # print(self.weights)
+        # if w_std > 10:
+            # print(self.weights)
 
 
     def gene_rates(self, rmin=0):

@@ -140,7 +140,7 @@ def plot_one(filename):
         plt.close()
 
 # with RCP
-def plot_one_RCP(filename):
+def plot_one_RCP(filename, show_RCP = False):
     # 'OFF', 'RCP', 'GRD', 'BAT', 'SAM0.5', 'SAM'
     colors = ['g', 'g', 'r', 'b', 'b', 'violet', 'violet']
     markers = ['x', '^', 'o', '*', 'o', '*', 'o']
@@ -176,6 +176,8 @@ def plot_one_RCP(filename):
             xlabel = r'$L$'
         if first_line[0] == 'A':
             xlabel = r'$A$'
+        if first_line[0] == 'sigma':
+            xlabel = r'$\sigma$'
         # xlabel = first_line[0]
         algo_name_list = first_line[2:]
         res = [[] for algo in algo_name_list]
@@ -190,11 +192,14 @@ def plot_one_RCP(filename):
         print(x)
         print(res)
         for i in range(len(algo_name_list)):
-            if algo_name_list[i] == 'RCP':
-                continue
-            # if algo_name_list[i] == 'STH0.5':
+            if show_RCP == False:
+                if algo_name_list[i] == 'RCP':
+                    continue
+                if algo_name_list[i] == 'HG':
+                    continue
+            # if algo_name_list[i] == 'STH':
             #     continue
-            # if algo_name_list[i] == 'CTH0.5':
+            # if algo_name_list[i] == 'CTH':
             #     continue
             algo = algo_name_list[i]
             # plt.plot(x, res[i], color=new_colors_dict[algo], marker = markers_dict[algo], label=algo)
@@ -212,6 +217,9 @@ def plot_one_RCP(filename):
         time_now = int(time.time())
         time_local = time.localtime(time_now)
         dt = time.strftime("%H-%M-%S",time_local)
+
+        if show_RCP:
+            filename = 'full_'+filename
         full_path = str(os.path.join(my_path, 'imgs', filename+dt+'.png'))
 
         # plt.savefig(full_path, format='png')
@@ -272,7 +280,11 @@ def plot_gamma(filename):
         'delta=2': r'$\delta=2$',
         'delta=3': r'$\delta=3$',
         'delta=4': r'$\delta=4$',
-        'delta=5': r'$\delta=5$'
+        'delta=5': r'$\delta=5$',
+        'sigma=0.5': r'$\sigma=0.5$',
+        'sigma=1': r'$\sigma=1$',
+        'sigma=5': r'$\sigma=5$',
+        'sigma=10': r'$\sigma=10$'
     }
     # env_list = ['D^S=5,p_m=0', 'D^S=20,p_m=0', 'D^S=35,p_m=0', 'D^S=5,p_m=0.9', 'D^S=20,p_m=0.9', 'D^S=35,p_m=0.9']
     with open(filename) as f:
@@ -309,7 +321,7 @@ def plot_gamma(filename):
         dt = time.strftime("%H-%M-%S",time_local)
         # full_path = str(os.path.join(my_path, 'imgs', filename+dt+'.png'))
         # plt.savefig(full_path, format='png')
-        full_path = str(os.path.join(my_path, 'imgs', filename+dt+'.pdf'))
+        full_path = str(os.path.join(my_path, 'imgv2', filename+dt+'.pdf'))
         plt.savefig(full_path, format='pdf')
 
         # plt.savefig(my_path+'/imgs/'+filename+dt+'.eps', format='eps')
@@ -327,18 +339,41 @@ if __name__ == '__main__':
     # plot_one_RCP('q_geo_syn_d10')
     # plot_one_RCP('q_sin_syn_d10')
     # plot_one_RCP('q_poi_syn_d10')
-    plot_one_RCP('dist_uni_syn')
-    plot_one_RCP('dist_geo_syn')
-    plot_one_RCP('dist_poi_syn')
-
+    # plot_one_RCP('dist_uni_syn')
+    # plot_one_RCP('dist_geo_syn')
+    # plot_one_RCP('dist_poi_syn')
+    plot_one_RCP('geo_nyc')
+    plot_one_RCP('uni_nyc')
+    plot_one_RCP('poi_nyc')
+    # plot_one_RCP('wf_geo_new')
+    # plot_one_RCP('wf_uniform')
+    # plot_one_RCP('wf_poisson')
+    # plot_one_RCP('geo_syn')
+    # plot_one_RCP('uni_syn')
+    # plot_one_RCP('poi_syn')
     # plot_one_RCP('geo_syn_tn25std1q05')
     # plot_one_RCP('poi_syn_tn25std1q05')
     # plot_one_RCP('sin_syn_tn25std1q05')
     # plot_one_RCP('geo_syn_pm')
     # plot_one_RCP('sin_syn_pm')
     # plot_one_RCP('poi_syn_pm')
+    # plot_one_RCP('sigma_uni1')
+    # plot_one_RCP('sigma_uni2')
+    # plot_one_RCP('sigma_geo1')
+    # plot_one_RCP('sigma_geo2')
+    # plot_one_RCP('sigma_poi1')
+    # plot_one_RCP('sigma_poi2')
 
+    # plot_one_RCP('rmin_geo')
+    # plot_one_RCP('rmin_uni')
+    # plot_one_RCP('rmin_poi')
+
+    # plot_one_RCP('delta_geo_L20')
     # plot_one_RCP('sin_syn_tn25std1q01')
+
+    # plot_gamma('gam_geo_syn')
+    # plot_gamma('gam_uni_syn')
+    # plot_gamma('gam_poi_syn')
 
     # plot_gamma('gam_geo_nycLdel2A1')
     # plot_gamma('gam_sin_nycLdel2A1')
