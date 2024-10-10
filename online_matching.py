@@ -238,7 +238,7 @@ class OnlineMatching:
             max_quit_time = [max(tested_quit_time[j]) for j in range(test_num)]
             max_bsize = int(max(max_quit_time))
             # to speed up, we find out in our tested parameters, optimal batch size is less than 20.
-            max_bsize = min(10, max_bsize)
+            max_bsize = min(20, max_bsize)
             # print('max_bsize', max_bsize)
             # print('max_bsize', max_bsize)
             if max_bsize >= 1:
@@ -273,15 +273,20 @@ class OnlineMatching:
             # test_bsize = list(range(1, max_bsize+1))
             reward_list = []
             reward_th_list = []
+            multiset_avg_list = []
             for th in test_th:
                 reward_single_th_list = []
+                multiset_ratio_list = []
                 for j in range(len(tested_seqs)):
                     # batch_g = BatchMatching(graph=self.G, seq=tested_seqs[j], quit_time=tested_quit_time[j], batch_type='G')
                     samp = Samp(graph=self.G, seq=tested_seqs[j], quit_time=tested_quit_time[j], gamma = 1, threshold=th)
-                    reward = samp.eval_threshold()
+                    reward, multiset_ratio = samp.eval_threshold()
                     reward_single_th_list.append(reward)
+                    multiset_ratio_list.append(multiset_ratio)
                 # sum of rewards over different realizations.
                 total_reward = sum(np.array(reward_single_th_list))
+                multiset_avg = sum(np.array(multiset_ratio_list))/len(multiset_ratio_list)
+                multiset_avg_list.append(multiset_avg)
                 # print('reward_single_bsize_list', reward_single_bsize_list)
                 reward_th_list.append(reward_single_th_list)
                 reward_list.append(total_reward)
@@ -290,6 +295,7 @@ class OnlineMatching:
             # print('reward_bsize_list', reward_bsize_list)
             optimal_th = test_th[max_index]
             print('optimal threshold for STH', optimal_th)
+            print('multiset_ratio_of_optimal_threshold', multiset_avg_list[max_index])
             algo_result['STH'] = reward_th_list[max_index]
             run_time['STH'] = 0
 

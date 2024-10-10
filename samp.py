@@ -165,6 +165,11 @@ class Samp:
                 else:
                     matching_prob_matrix[u][v] = self.sol[str(u)+'_'+str(v)]/(self.G.mean_quit_time[u]*self.G.rates[u])
         max_matching_prob = np.max(matching_prob_matrix)
+        col_counts = 0
+        for u in range(self.G.N):
+            if self.G.mean_quit_time[u]*self.G.rates[u] > 1:
+                col_counts += 1
+        print('col_counts', col_counts, col_counts)
         # print how many prob is larger than 1/2    
         # print('num_prob_larger_than_half', np.sum(matching_prob_matrix > 0.5))
         # print('num_prob_larger_than_1/4', np.sum(matching_prob_matrix > 0.25))
@@ -177,6 +182,7 @@ class Samp:
         self.reward = 0
         matched = [0 for i in self.seq]
         # print(self.d, 'd')
+        # multi_set_count = 0
         max_quit_time = max(self.quit_time)
         for t in range(len(self.seq)):
             if t > 0:
@@ -184,10 +190,12 @@ class Samp:
                 start = max(0, t-max_quit_time)
                 # print(start)
                 candidate_index = []
+                # multi_set_count = 0
                 for ind in range(start, t):
                     if (t-ind)<=self.quit_time[ind] and matched[ind] == 0 and self.G.weights[self.seq[ind]][v] > 1e-5:
                         candidate_index.append(ind)
                 candidate_type = [self.seq[ind] for ind in candidate_index]
+
                 np.random.shuffle(candidate_type)
                 # print(t, candidate_index)
                 found = False
@@ -206,6 +214,7 @@ class Samp:
                                 break
                     if found:
                         break
+        # print('multi_set_count', multi_set_count/self.T)
         return self.reward
     
 
@@ -234,6 +243,7 @@ class Samp:
         self.reward = 0
         matched = [0 for i in self.seq]
         # print(self.d, 'd')
+        multi_set_count = 0
         max_quit_time = max(self.quit_time)
         for t in range(len(self.seq)):
             if t > 0:
@@ -246,7 +256,8 @@ class Samp:
                         candidate_index.append(ind)
                 candidate_type = [self.seq[ind] for ind in candidate_index]
                 np.random.shuffle(candidate_type)
-                # print(t, candidate_index)
+                unique_list = list(set(candidate_type))
+                multi_set_count += len(candidate_type)-len(unique_list)
                 found = False
                 for u in candidate_type:
                     # prob = self.sol[str(u)+'_'+str(v)]*self.gamma/(self.G.mean_quit_time[u]*self.G.rates[u])
@@ -265,7 +276,9 @@ class Samp:
                                 break
                     if found:
                         break
-        return self.reward
+
+        # print('multi_set_count of sth', multi_set_count/self.T)
+        return self.reward, multi_set_count/self.T
     
     def eval_Collina(self):
         self.solve()

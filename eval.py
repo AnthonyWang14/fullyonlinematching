@@ -186,14 +186,14 @@ def test_tn(dist_type='geo_new', dist_hyperpara=10, SYN=True):
     # density_list = [1+i*0.5 for i in range(9)]
     # type_number = 50
     # tn_list = [10, 20, 30, 40, 50]
-    tn_list = [5, 10, 15, 20]
+    tn_list = [5, 10, 15, 20, 25, 30]
     gamma = 1
-    paras_dict = {'gamma':gamma, 'w_std':10, 'dist_hyperpara':dist_hyperpara}
+    paras_dict = {'gamma':gamma, 'w_std':5, 'dist_hyperpara':dist_hyperpara}
     rmin = 0
     # testnum = 1
     if SYN:
         input_file = 'syn'
-        algo_list = ['OFF', 'RCP', 'GRD', 'BAT', 'SAM1','COL1']
+        algo_list = ['OFF', 'RCP', 'GRD', 'BAT', 'SAM1', 'STH', 'COL1', 'CTH']
         f = None
     else:
         input_file = 'nyc_20_2_842'
