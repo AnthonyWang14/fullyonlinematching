@@ -234,6 +234,7 @@ class OnlineMatching:
 
         # find the optimal batch for bath tune graph.
         if 'BAT' in algo_list:
+            start = time.time()
             # min quit_time of each sequence
             max_quit_time = [max(tested_quit_time[j]) for j in range(test_num)]
             max_bsize = int(max(max_quit_time))
@@ -264,10 +265,11 @@ class OnlineMatching:
                 algo_result['BAT'] = reward_bsize_list[max_index]
             else:
                 algo_result['BAT'] = [0] * test_num
-            run_time['BAT'] = 0
+            run_time['BAT'] = time.time()-start
             # print(min_quit_time)
         # find the optimal batch for bath tune graph.
         if 'STH' in algo_list:
+            start = time.time()
             test_th = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
 
             # test_bsize = list(range(1, max_bsize+1))
@@ -297,7 +299,7 @@ class OnlineMatching:
             print('optimal threshold for STH', optimal_th)
             print('multiset_ratio_of_optimal_threshold', multiset_avg_list[max_index])
             algo_result['STH'] = reward_th_list[max_index]
-            run_time['STH'] = 0
+            run_time['STH'] = time.time()-start
 
         # if save == 1:
         #     for algo in algo_list:
@@ -315,6 +317,7 @@ class OnlineMatching:
 
 
         if 'CTH' in algo_list:
+            start = time.time()
             test_th = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
 
             # test_bsize = list(range(1, max_bsize+1))
@@ -338,7 +341,7 @@ class OnlineMatching:
             optimal_th = test_th[max_index]
             print('optimal threshold for CTH', optimal_th)
             algo_result['CTH'] = reward_th_list[max_index]
-            run_time['CTH'] = 0
+            run_time['CTH'] = time.time()-start
 
         if save == 1:
             for algo in algo_list:
@@ -368,11 +371,11 @@ class OnlineMatching:
         # print('std', algo_single_std)
         
         # print(algo_result)
-        # print('run time')
-        # for algo in algo_list:
-        #     if save == 1:
-        #         print(run_time[algo]/test_num)
-        #     else:
-        #         print(algo, run_time[algo]/test_num)
+        print('run time')
+        for algo in algo_list:
+            if save == 1:
+                print(run_time[algo]/test_num)
+            else:
+                print(algo, run_time[algo]/test_num)
         return algo_ratio, algo_single_std
     

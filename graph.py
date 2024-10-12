@@ -53,6 +53,27 @@ class Graph:
         self.dist_hyperpara = dist_hyperpara
         self.gene_quit_dist()
         self.check_lam_dx()
+
+        # normalize the weights to [0, 1]
+        self.weights_norm = (self.weights) / (np.mean(self.weights))
+        # print the variance of weights
+        # print standard deviation of weights
+        print('std of weights', np.std(self.weights_norm))
+        # count the number of weights less than 1e-5
+        zero_count = 0
+        for i in range(self.N):
+            for j in range(self.N):
+                if self.weights[i][j] < 1e-5:
+                    zero_count += 1
+        print('density', 1-zero_count/self.N**2)
+        large_edge_count = 0
+        for i in range(self.N):
+            wii = self.weights[i][i]
+            for j in range(self.N):
+                if i != j:
+                    if self.weights[i][j] > wii:
+                        large_edge_count += 1
+        # print('large_edge_count', large_edge_count)
     
     def check_lam_dx(self):
         larger_one_count = 0

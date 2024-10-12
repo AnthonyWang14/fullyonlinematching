@@ -69,75 +69,6 @@ color_dict = {
     'D^S=20,p_m=0.9': 'red',
     'D^S=35,p_m=0.9': 'slateblue'
 }
-def plot_one(filename):
-    # 'OFF', 'RCP', 'GRD', 'BAT', 'SAM0.5', 'SAM'
-    colors = ['g', 'g', 'r', 'b', 'b', 'violet', 'violet']
-    markers = ['x', '^', 'o', '*', 'o', '*', 'o']
-    with open(filename) as f:
-        first_line = f.readline().strip().split()
-        if first_line[0] == 'type_number':
-            xlabel = 'm'
-        if first_line[0] == 'density':
-            xlabel = 'q'
-        if first_line[0] == 'q':
-            xlabel = 'q'
-        if first_line[0] == 'n_max':
-            xlabel = r'$N^B$'
-        if first_line[0] == 'p_min':
-            xlabel = r'$P^G$'
-        if first_line[0] == 'lam_max':
-            xlabel = r'$L^P$'
-        if first_line[0] == 'fix':
-            xlabel = r'$D_m$'
-        if first_line[0] == 'geometric':
-            xlabel = r'$P^G$'
-        if first_line[0] == 'poisson':
-            xlabel = r'$D^P$'
-        if first_line[0] == 'single':
-            xlabel = r'$D^S$'
-        if first_line[0] == 'gamma':
-            xlabel = r'$\gamma$'
-        if first_line[0] == 'delta':
-            xlabel = r'$\delta$'
-        # xlabel = first_line[0]
-        algo_name_list = first_line[2:]
-        res = [[] for algo in algo_name_list]
-        x = []
-        for l in f:
-            line = l.strip().split()
-            x.append(float(line[0]))
-            for i in range(len(algo_name_list)):
-                res[i].append(float(line[i+2]))
-                # with standard deviation
-                # res[i].append(float(line[i+2].split('_')[0]))
-        print(x)
-        print(res)
-        for i in range(len(algo_name_list)):
-            algo = algo_name_list[i]
-            # no plot RCP
-            if algo_name_list[i] == 'RCP':
-                continue
-            # if algo_name_list[i] != 'SAM1' and algo_name_list[i] != 'COL1':
-            #     continue
-            plt.plot(x, res[i], color=new_colors_dict[algo], marker = markers_dict[algo], label=algo)
-        plt.xlabel(xlabel, fontsize=16)
-        plt.ylabel('Empirical Competitive Ratio', fontsize=16)
-        plt.xticks(x,fontsize=16)
-        plt.yticks(fontsize=14)
-        plt.legend(fontsize=12, loc='lower right')
-        # plt.show()
-        plt.tight_layout()
-        time_now = int(time.time())
-        time_local = time.localtime(time_now)
-        dt = time.strftime("%H-%M-%S",time_local)
-        full_path = str(os.path.join(my_path, 'imgs', filename+dt+'.png'))
-
-        plt.savefig(full_path, format='png')
-        full_path = str(os.path.join(my_path, 'imgs', filename+dt+'.pdf'))
-        plt.savefig(full_path, format='pdf')
-
-        # plt.savefig(my_path+'/imgs/'+filename+dt+'.eps', format='eps')
-        plt.close()
 
 # with RCP
 def plot_one_RCP(filename, show_RCP = False):
@@ -146,8 +77,8 @@ def plot_one_RCP(filename, show_RCP = False):
     markers = ['x', '^', 'o', '*', 'o', '*', 'o']
     with open(filename) as f:
         first_line = f.readline().strip().split()
-        if first_line[0] == 'type_number':
-            xlabel = 'm'
+        if first_line[0] == 'm':
+            xlabel = r'$m$'
         if first_line[0] == 'density':
             xlabel = 'q'
         if first_line[0] == 'n_max':
@@ -171,7 +102,7 @@ def plot_one_RCP(filename, show_RCP = False):
         if first_line[0] == 'delta':
             xlabel = r'$\delta$'
         if first_line[0] == 'rmin':
-            xlabel = r'$p_m$'
+            xlabel = r'$l_m$'
         if first_line[0] == 'L':
             xlabel = r'$L$'
         if first_line[0] == 'A':
@@ -271,6 +202,11 @@ def plot_gamma(filename):
         'A=3': r'$A=3$',
         'A=4': r'$A=4$',    
         'A=5': r'$A=5$',
+        'A=1.1': r'$A=1.1$',
+        'A=1.2': r'$A=1.2$',
+        'A=1.3': r'$A=1.3$',
+        'A=1.4': r'$A=1.4$',
+        'A=1.5': r'$A=1.5$',
         'L=5': r'$L=5$',
         'L=10': r'$L=10$',
         'L=15': r'$L=15$',
@@ -284,7 +220,16 @@ def plot_gamma(filename):
         'sigma=0.5': r'$\sigma=0.5$',
         'sigma=1': r'$\sigma=1$',
         'sigma=5': r'$\sigma=5$',
-        'sigma=10': r'$\sigma=10$'
+        'sigma=10': r'$\sigma=10$',
+        'l_m=0': r'$l_m=0$',
+        'l_m=0.3': r'$l_m=0.3$',
+        'l_m=0.6': r'$l_m=0.6$',
+        'l_m=0.9': r'$l_m=0.9$',
+        'm=10': r'$m=10$',
+        'm=15': r'$m=15$',
+        'm=20': r'$m=20$',
+        'm=25': r'$m=25$',
+        'm=30': r'$m=30$'
     }
     # env_list = ['D^S=5,p_m=0', 'D^S=20,p_m=0', 'D^S=35,p_m=0', 'D^S=5,p_m=0.9', 'D^S=20,p_m=0.9', 'D^S=35,p_m=0.9']
     with open(filename) as f:
@@ -342,39 +287,48 @@ if __name__ == '__main__':
     # plot_one_RCP('dist_uni_syn')
     # plot_one_RCP('dist_geo_syn')
     # plot_one_RCP('dist_poi_syn')
-    plot_one_RCP('geo_nyc')
-    plot_one_RCP('uni_nyc')
-    plot_one_RCP('poi_nyc')
-    # plot_one_RCP('wf_geo_new')
-    # plot_one_RCP('wf_uniform')
-    # plot_one_RCP('wf_poisson')
-    # plot_one_RCP('geo_syn')
-    # plot_one_RCP('uni_syn')
-    # plot_one_RCP('poi_syn')
+    # plot_one_RCP('geo_nyc', True)
+    # plot_one_RCP('uni_nyc', True)
+    # plot_one_RCP('poi_nyc', True)
+    # plot_one_RCP('wf_geo_new', True)
+    # plot_one_RCP('wf_uniform', True)
+    # plot_one_RCP('wf_poisson', True)
+    # plot_one_RCP('geo_syn', show_RCP = True)
+    # plot_one_RCP('uni_syn', show_RCP = True)
+    # plot_one_RCP('poi_syn', show_RCP = True)
     # plot_one_RCP('geo_syn_tn25std1q05')
     # plot_one_RCP('poi_syn_tn25std1q05')
     # plot_one_RCP('sin_syn_tn25std1q05')
     # plot_one_RCP('geo_syn_pm')
     # plot_one_RCP('sin_syn_pm')
     # plot_one_RCP('poi_syn_pm')
-    # plot_one_RCP('sigma_uni1')
-    # plot_one_RCP('sigma_uni2')
-    # plot_one_RCP('sigma_geo1')
-    # plot_one_RCP('sigma_geo2')
-    # plot_one_RCP('sigma_poi1')
-    # plot_one_RCP('sigma_poi2')
+    # plot_one_RCP('sigma_uni1', True)
+    # plot_one_RCP('sigma_uni2', True)
+    # plot_one_RCP('sigma_geo1', True)
+    # plot_one_RCP('sigma_geo2', True)
+    # plot_one_RCP('sigma_poi1', True)
+    # plot_one_RCP('sigma_poi2', True)
 
-    # plot_one_RCP('rmin_geo')
-    # plot_one_RCP('rmin_uni')
-    # plot_one_RCP('rmin_poi')
+    # plot_one_RCP('rmin_geo', True)
+    # plot_one_RCP('rmin_uni', True)
+    # plot_one_RCP('rmin_poi', True)
+
+    # plot_one_RCP('tnnyc_geo_new', True)
+    # plot_one_RCP('tnnyc_uniform', True)
+    # plot_one_RCP('tnnyc_poisson', True)
 
     # plot_one_RCP('delta_geo_L20')
     # plot_one_RCP('sin_syn_tn25std1q01')
 
-    # plot_gamma('gam_geo_syn')
-    # plot_gamma('gam_uni_syn')
-    # plot_gamma('gam_poi_syn')
-
+    # plot_gamma('gam_geo_syn_rmin')
+    # plot_gamma('gam_uni_syn_rmin')
+    # plot_gamma('gam_poi_syn_rmin')
+    # plot_gamma('gam_geo_nyc_wf')
+    # plot_gamma('gam_uni_nyc_wf')
+    # plot_gamma('gam_poi_nyc_wf')
+    plot_gamma('gam_geo_tn')
+    plot_gamma('gam_uni_tn')
+    plot_gamma('gam_poi_tn')
     # plot_gamma('gam_geo_nycLdel2A1')
     # plot_gamma('gam_sin_nycLdel2A1')
     # plot_gamma('gam_poi_nycLdel2A1')
