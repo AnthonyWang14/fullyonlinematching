@@ -38,8 +38,9 @@ new_colors_dict = {
     'HG': 'darkgoldenrod',
     'STH0.5': 'lime',  # Brighter green for contrast
     'CTH0.5': 'purple',
-    'STH': 'lime',  # Brighter green for contrast
-    'CTH': 'purple',
+    'SAM+': 'lime',  # Brighter green for contrast
+    'COL+': 'purple',
+    'SGAM': 'forestgreen'
 }
 
 markers_dict = {
@@ -55,8 +56,9 @@ markers_dict = {
     'SAMC': 'v',  # Downward triangle marker
     'STH0.5': '8',  # Octagon marker for distinction
     'CTH0.5': 'X',   # Cross marker for distinction
-    'STH': '8',  # Octagon marker for distinction
-    'CTH': 'X'   # Cross marker for distinction
+    'SAM+': '8',  # Octagon marker for distinction
+    'COL+': 'X',   # Cross marker for distinction
+    'SGAM': 'd'
 }
 
 
@@ -128,13 +130,13 @@ def plot_one_RCP(filename, show_RCP = False):
                     continue
                 if algo_name_list[i] == 'HG':
                     continue
-            # if algo_name_list[i] == 'STH':
-            #     continue
-            # if algo_name_list[i] == 'CTH':
-            #     continue
+            if algo_name_list[i] == 'SAM+':
+                continue
+            if algo_name_list[i] == 'COL+':
+                continue
             algo = algo_name_list[i]
             # plt.plot(x, res[i], color=new_colors_dict[algo], marker = markers_dict[algo], label=algo)
-            smooth_res = savgol_filter(res[i], window_length=5, polyorder=2)  # 调整窗口大小和多项式阶数以获得更好平滑效果
+            smooth_res = savgol_filter(res[i], window_length=5, polyorder=2)  # make the window size larger to smooth the curve
             plt.plot(x, smooth_res, color=new_colors_dict[algo], marker=markers_dict[algo], label=algo)
 
 
@@ -156,6 +158,7 @@ def plot_one_RCP(filename, show_RCP = False):
         # plt.savefig(full_path, format='png')
         full_path = str(os.path.join(my_path, 'imgv2', filename+dt+'.pdf'))
         plt.savefig(full_path, format='pdf')
+        print('save to', full_path)
 
         # plt.savefig(my_path+'/imgs/'+filename+dt+'.eps', format='eps')
         plt.close()
@@ -268,11 +271,14 @@ def plot_gamma(filename):
         # plt.savefig(full_path, format='png')
         full_path = str(os.path.join(my_path, 'imgv2', filename+dt+'.pdf'))
         plt.savefig(full_path, format='pdf')
-
+        print('save to', full_path)
         # plt.savefig(my_path+'/imgs/'+filename+dt+'.eps', format='eps')
         plt.close()
 
 if __name__ == '__main__':
+    # plot_one_RCP('geo_syn')
+    # plot_one_RCP('uni_syn')
+    # plot_one_RCP('poi_syn')
     # plot_one_RCP('q_geo_syn_d50')
     # plot_one_RCP('q_sin_syn_d50')
     # plot_one_RCP('q_poi_syn_d50')
@@ -293,6 +299,9 @@ if __name__ == '__main__':
     # plot_one_RCP('wf_geo_new', True)
     # plot_one_RCP('wf_uniform', True)
     # plot_one_RCP('wf_poisson', True)
+    # plot_one_RCP('geo_syn')
+    # plot_one_RCP('uni_syn')
+    # plot_one_RCP('poi_syn')
     # plot_one_RCP('geo_syn', show_RCP = True)
     # plot_one_RCP('uni_syn', show_RCP = True)
     # plot_one_RCP('poi_syn', show_RCP = True)
@@ -320,15 +329,18 @@ if __name__ == '__main__':
     # plot_one_RCP('delta_geo_L20')
     # plot_one_RCP('sin_syn_tn25std1q01')
 
+    # plot_gamma('gam_geo_syn_large')
+    plot_gamma('gam_uni_syn_large')
+    plot_gamma('gam_poi_syn_large')
     # plot_gamma('gam_geo_syn_rmin')
     # plot_gamma('gam_uni_syn_rmin')
     # plot_gamma('gam_poi_syn_rmin')
     # plot_gamma('gam_geo_nyc_wf')
     # plot_gamma('gam_uni_nyc_wf')
     # plot_gamma('gam_poi_nyc_wf')
-    plot_gamma('gam_geo_tn')
-    plot_gamma('gam_uni_tn')
-    plot_gamma('gam_poi_tn')
+    # plot_gamma('gam_geo_tn')
+    # plot_gamma('gam_uni_tn')
+    # plot_gamma('gam_poi_tn')
     # plot_gamma('gam_geo_nycLdel2A1')
     # plot_gamma('gam_sin_nycLdel2A1')
     # plot_gamma('gam_poi_nycLdel2A1')

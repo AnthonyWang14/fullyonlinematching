@@ -1,0 +1,378 @@
+{'density': 1, 'type_number': 10, 'gamma': 1, 'w_std': 0.5, 'r_min': 0, 'dist_hyperpara': 20, 'dist_type': 'geo_new'}
+geo_new
+best eta: 1e-05
+{'density': 1, 'type_number': 10, 'gamma': 1, 'w_std': 1, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'geo_new'}
+geo_new
+best eta: 0.05
+{'density': 1, 'type_number': 10, 'gamma': 1, 'w_std': 1, 'r_min': 0, 'dist_hyperpara': 20, 'dist_type': 'geo_new'}
+geo_new
+best eta: 1e-05
+{'density': 1, 'type_number': 10, 'gamma': 1, 'w_std': 5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'geo_new'}
+geo_new
+best eta: 0.05
+{'density': 1, 'type_number': 10, 'gamma': 1, 'w_std': 5, 'r_min': 0, 'dist_hyperpara': 20, 'dist_type': 'geo_new'}
+geo_new
+best eta: 1e-05
+{'density': 1, 'type_number': 10, 'gamma': 1, 'w_std': 10, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'geo_new'}
+geo_new
+best eta: 0.05
+{'density': 1, 'type_number': 10, 'gamma': 1, 'w_std': 10, 'r_min': 0, 'dist_hyperpara': 20, 'dist_type': 'geo_new'}
+geo_new
+best eta: 1e-05
+{'density': 1, 'type_number': 10, 'gamma': 1, 'w_std': 0.5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'uniform'}
+uniform
+best eta: 0.1
+{'density': 1, 'type_number': 10, 'gamma': 1, 'w_std': 0.5, 'r_min': 0, 'dist_hyperpara': 20, 'dist_type': 'uniform'}
+uniform
+best eta: 0.05
+{'density': 1, 'type_number': 10, 'gamma': 1, 'w_std': 1, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'uniform'}
+uniform
+best eta: 0.05
+{'density': 1, 'type_number': 10, 'gamma': 1, 'w_std': 1, 'r_min': 0, 'dist_hyperpara': 20, 'dist_type': 'uniform'}
+uniform
+best eta: 0.1
+{'density': 1, 'type_number': 10, 'gamma': 1, 'w_std': 5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'uniform'}
+uniform
+best eta: 1e-05
+{'density': 1, 'type_number': 10, 'gamma': 1, 'w_std': 5, 'r_min': 0, 'dist_hyperpara': 20, 'dist_type': 'uniform'}
+uniform
+best eta: 0.1
+{'density': 1, 'type_number': 10, 'gamma': 1, 'w_std': 10, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'uniform'}
+uniform
+best eta: 0.2
+{'density': 1, 'type_number': 10, 'gamma': 1, 'w_std': 10, 'r_min': 0, 'dist_hyperpara': 20, 'dist_type': 'uniform'}
+uniform
+best eta: 0.05
+{'density': 1, 'type_number': 10, 'gamma': 1, 'w_std': 0.5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'poisson'}
+poisson
+best eta: 1e-05
+{'density': 1, 'type_number': 10, 'gamma': 1, 'w_std': 0.5, 'r_min': 0, 'dist_hyperpara': 20, 'dist_type': 'poisson'}
+poisson
+best eta: 0.05
+{'density': 1, 'type_number': 10, 'gamma': 1, 'w_std': 1, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'poisson'}
+poisson
+best eta: 1e-05
+{'density': 1, 'type_number': 10, 'gamma': 1, 'w_std': 1, 'r_min': 0, 'dist_hyperpara': 20, 'dist_type': 'poisson'}
+poisson
+best eta: 0.1
+{'density': 1, 'type_number': 10, 'gamma': 1, 'w_std': 5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'poisson'}
+poisson
+best eta: 1e-05
+{'density': 1, 'type_number': 10, 'gamma': 1, 'w_std': 5, 'r_min': 0, 'dist_hyperpara': 20, 'dist_type': 'poisson'}
+poisson
+best eta: 0.1
+{'density': 1, 'type_number': 10, 'gamma': 1, 'w_std': 10, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'poisson'}
+poisson
+best eta: 0.2
+{'density': 1, 'type_number': 10, 'gamma': 1, 'w_std': 10, 'r_min': 0, 'dist_hyperpara': 20, 'dist_type': 'poisson'}
+poisson
+best eta: 0.1
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 0.5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'geo_new'}
+geo_new
+best eta: 0.05
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 0.5, 'r_min': 0, 'dist_hyperpara': 20, 'dist_type': 'geo_new'}
+geo_new
+best eta: 1e-05
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 1, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'geo_new'}
+geo_new
+best eta: 1e-05
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 1, 'r_min': 0, 'dist_hyperpara': 20, 'dist_type': 'geo_new'}
+geo_new
+best eta: 0.05
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'geo_new'}
+geo_new
+best eta: 0.1
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 5, 'r_min': 0, 'dist_hyperpara': 20, 'dist_type': 'geo_new'}
+geo_new
+best eta: 1e-05
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 10, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'geo_new'}
+geo_new
+best eta: 1e-05
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 10, 'r_min': 0, 'dist_hyperpara': 20, 'dist_type': 'geo_new'}
+geo_new
+best eta: 1e-05
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 0.5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'uniform'}
+uniform
+best eta: 1e-05
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 0.5, 'r_min': 0, 'dist_hyperpara': 20, 'dist_type': 'uniform'}
+uniform
+best eta: 1e-05
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 1, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'uniform'}
+uniform
+best eta: 1e-05
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 1, 'r_min': 0, 'dist_hyperpara': 20, 'dist_type': 'uniform'}
+uniform
+best eta: 1e-05
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'uniform'}
+uniform
+best eta: 0.1
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 5, 'r_min': 0, 'dist_hyperpara': 20, 'dist_type': 'uniform'}
+uniform
+best eta: 1e-05
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 10, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'uniform'}
+uniform
+best eta: 1e-05
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 10, 'r_min': 0, 'dist_hyperpara': 20, 'dist_type': 'uniform'}
+uniform
+best eta: 0.05
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 0.5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'poisson'}
+poisson
+best eta: 0.1
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 0.5, 'r_min': 0, 'dist_hyperpara': 20, 'dist_type': 'poisson'}
+poisson
+best eta: 0.05
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 1, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'poisson'}
+poisson
+best eta: 0.05
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 1, 'r_min': 0, 'dist_hyperpara': 20, 'dist_type': 'poisson'}
+poisson
+best eta: 1e-05
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'poisson'}
+poisson
+best eta: 0.1
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 5, 'r_min': 0, 'dist_hyperpara': 20, 'dist_type': 'poisson'}
+poisson
+best eta: 1e-05
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 10, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'poisson'}
+poisson
+best eta: 0.05
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 10, 'r_min': 0, 'dist_hyperpara': 20, 'dist_type': 'poisson'}
+poisson
+best eta: 1e-05
+{'density': 1, 'type_number': 5, 'gamma': 1, 'w_std': 0.5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'geo_new'}
+geo_new
+best eta: 0.2
+{'density': 1, 'type_number': 5, 'gamma': 1, 'w_std': 0.5, 'r_min': 0, 'dist_hyperpara': 20, 'dist_type': 'geo_new'}
+geo_new
+best eta: 0.1
+{'density': 1, 'type_number': 5, 'gamma': 1, 'w_std': 1, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'geo_new'}
+geo_new
+best eta: 0.05
+{'density': 1, 'type_number': 5, 'gamma': 1, 'w_std': 1, 'r_min': 0, 'dist_hyperpara': 20, 'dist_type': 'geo_new'}
+geo_new
+best eta: 0.05
+{'density': 1, 'type_number': 5, 'gamma': 1, 'w_std': 5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'geo_new'}
+geo_new
+best eta: 0.1
+{'density': 1, 'type_number': 5, 'gamma': 1, 'w_std': 5, 'r_min': 0, 'dist_hyperpara': 20, 'dist_type': 'geo_new'}
+geo_new
+best eta: 1e-05
+{'density': 1, 'type_number': 5, 'gamma': 1, 'w_std': 10, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'geo_new'}
+geo_new
+best eta: 1e-05
+{'density': 1, 'type_number': 5, 'gamma': 1, 'w_std': 10, 'r_min': 0, 'dist_hyperpara': 20, 'dist_type': 'geo_new'}
+geo_new
+best eta: 0.05
+{'density': 1, 'type_number': 5, 'gamma': 1, 'w_std': 0.5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'uniform'}
+uniform
+best eta: 0.05
+{'density': 1, 'type_number': 5, 'gamma': 1, 'w_std': 0.5, 'r_min': 0, 'dist_hyperpara': 20, 'dist_type': 'uniform'}
+uniform
+best eta: 0.05
+{'density': 1, 'type_number': 5, 'gamma': 1, 'w_std': 1, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'uniform'}
+uniform
+best eta: 0.05
+{'density': 1, 'type_number': 5, 'gamma': 1, 'w_std': 1, 'r_min': 0, 'dist_hyperpara': 20, 'dist_type': 'uniform'}
+uniform
+best eta: 0.05
+{'density': 1, 'type_number': 5, 'gamma': 1, 'w_std': 5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'uniform'}
+uniform
+best eta: 0.1
+{'density': 1, 'type_number': 5, 'gamma': 1, 'w_std': 5, 'r_min': 0, 'dist_hyperpara': 20, 'dist_type': 'uniform'}
+uniform
+best eta: 0.05
+{'density': 1, 'type_number': 5, 'gamma': 1, 'w_std': 10, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'uniform'}
+uniform
+best eta: 0.05
+{'density': 1, 'type_number': 5, 'gamma': 1, 'w_std': 10, 'r_min': 0, 'dist_hyperpara': 20, 'dist_type': 'uniform'}
+uniform
+best eta: 0.05
+{'density': 1, 'type_number': 5, 'gamma': 1, 'w_std': 0.5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'poisson'}
+poisson
+best eta: 1e-05
+{'density': 1, 'type_number': 5, 'gamma': 1, 'w_std': 0.5, 'r_min': 0, 'dist_hyperpara': 20, 'dist_type': 'poisson'}
+poisson
+best eta: 1e-05
+{'density': 1, 'type_number': 5, 'gamma': 1, 'w_std': 1, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'poisson'}
+poisson
+best eta: 0.05
+{'density': 1, 'type_number': 5, 'gamma': 1, 'w_std': 1, 'r_min': 0, 'dist_hyperpara': 20, 'dist_type': 'poisson'}
+poisson
+best eta: 1e-05
+{'density': 1, 'type_number': 5, 'gamma': 1, 'w_std': 5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'poisson'}
+poisson
+best eta: 1e-05
+{'density': 1, 'type_number': 5, 'gamma': 1, 'w_std': 5, 'r_min': 0, 'dist_hyperpara': 20, 'dist_type': 'poisson'}
+poisson
+best eta: 1e-05
+{'density': 1, 'type_number': 5, 'gamma': 1, 'w_std': 10, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'poisson'}
+poisson
+best eta: 0.1
+{'density': 1, 'type_number': 5, 'gamma': 1, 'w_std': 10, 'r_min': 0, 'dist_hyperpara': 20, 'dist_type': 'poisson'}
+poisson
+best eta: 0.05
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'geo_new'}
+geo_new
+best eta: 1e-05
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'uni_fix_b'}
+uni_fix_b
+best eta: 1e-05
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'poisson'}
+poisson
+best eta: 0.1
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 3, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'geo_new'}
+geo_new
+best eta: 1e-05
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 3, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'uni_fix_b'}
+uni_fix_b
+best eta: 1e-05
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 3, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'poisson'}
+poisson
+best eta: 1e-05
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 3, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'geo_new'}
+geo_new
+best eta: 1e-05
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 3, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'uni_fix_b'}
+uni_fix_b
+best eta: 1e-05
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 3, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'poisson'}
+poisson
+best eta: 1e-05
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 3, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'geo_new'}
+geo_new
+best eta: 0.1
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'geo_new'}
+geo_new
+best eta: 0.1
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'uni_fix_b'}
+uni_fix_b
+best eta: 0.1
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'poisson'}
+poisson
+best eta: 0.1
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'geo_new'}
+geo_new
+best eta: 0.1
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'uni_fix_b'}
+uni_fix_b
+best eta: 0.1
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'poisson'}
+poisson
+best eta: 0.1
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'geo_new'}
+geo_new
+best eta: 0.1
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'uni_fix_b'}
+uni_fix_b
+best eta: 0.1
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'poisson'}
+poisson
+best eta: 0.1
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 0.5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'geo_new'}
+geo_new
+best eta: 0.1
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 1, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'geo_new'}
+geo_new
+best eta: 0.1
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 3, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'geo_new'}
+geo_new
+best eta: 0.1
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'geo_new'}
+geo_new
+best eta: 0.1
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 0.5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'uni_fix_b'}
+uni_fix_b
+best eta: 0.1
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 1, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'uni_fix_b'}
+uni_fix_b
+best eta: 0.1
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 3, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'uni_fix_b'}
+uni_fix_b
+best eta: 0.2
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'uni_fix_b'}
+uni_fix_b
+best eta: 0.1
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 0.5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'poisson'}
+poisson
+best eta: 0.1
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 1, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'poisson'}
+poisson
+best eta: 0.1
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 3, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'poisson'}
+poisson
+best eta: 0.1
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'poisson'}
+poisson
+best eta: 0.1
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 0.5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'geo_new'}
+geo_new
+best eta: 0.3
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 1, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'geo_new'}
+geo_new
+best eta: 0.1
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 3, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'geo_new'}
+geo_new
+best eta: 0.2
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'geo_new'}
+geo_new
+best eta: 0.3
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 0.5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'uni_fix_b'}
+uni_fix_b
+best eta: 0.1
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 1, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'uni_fix_b'}
+uni_fix_b
+best eta: 0.1
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 3, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'uni_fix_b'}
+uni_fix_b
+best eta: 0.1
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'uni_fix_b'}
+uni_fix_b
+best eta: 0.2
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 0.5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'poisson'}
+poisson
+best eta: 0.1
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 1, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'poisson'}
+poisson
+best eta: 0.1
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 3, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'poisson'}
+poisson
+best eta: 0.1
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'poisson'}
+poisson
+best eta: 0.1
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 0.5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'uni_fix_b'}
+uni_fix_b
+best eta: 1e-05
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 1, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'uni_fix_b'}
+uni_fix_b
+best eta: 1e-05
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 3, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'uni_fix_b'}
+uni_fix_b
+best eta: 1e-05
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'uni_fix_b'}
+uni_fix_b
+best eta: 1e-05
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 0.5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'poisson'}
+poisson
+best eta: 1e-05
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 1, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'poisson'}
+poisson
+best eta: 1e-05
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 3, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'poisson'}
+poisson
+best eta: 0.1
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'poisson'}
+poisson
+best eta: 1e-05
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 0.5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'geo_new'}
+geo_new
+best eta: 1e-05
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 1, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'geo_new'}
+geo_new
+best eta: 1e-05
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 3, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'geo_new'}
+geo_new
+best eta: 1e-05
+{'density': 1, 'type_number': 20, 'gamma': 1, 'w_std': 5, 'r_min': 0, 'dist_hyperpara': 10, 'dist_type': 'geo_new'}
+geo_new
+best eta: 0.1

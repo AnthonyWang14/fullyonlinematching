@@ -30,7 +30,7 @@ class OnlineMatching:
             seq_one, quit_one = self.G.gene_an_arrival()
             seq.append(seq_one)
             quit_time.append(quit_one)
-        print('max quit time', max(quit_time))
+        # print('max quit time', max(quit_time))
         return seq, quit_time
 
     def test_matching_valid(self, algo, matching, reward, seq, quit_time):
@@ -65,7 +65,8 @@ class OnlineMatching:
             print('error reward', algo, r, reward)
         return
 
-    def run_test(self, algo_list = ['OFF'], gamma=0.42, test_num = 1, save = 0, threshold=1):
+    def run_test(self, algo_list = ['OFF'], gamma=0.42, test_num = 1, save = 0, threshold=1, k_rcp=0.25):
+        np.random.seed(0)
         algo_result = {}
         algo_mean = {}
         run_time = {}
@@ -80,6 +81,10 @@ class OnlineMatching:
             seq, quit_time = self.gene_sequence()
             tested_seqs.append(seq)
             tested_quit_time.append(quit_time)
+        for k in range(test_num):
+            # seq, quit_time = self.gene_sequence()
+            # tested_seqs.append(seq)
+            # tested_quit_time.append(quit_time)
             # print(quit_time)
             for algo in algo_list:
                 start = time.time()
@@ -95,65 +100,66 @@ class OnlineMatching:
                     samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 1)
                     reward = samp.eval()
                     matching = samp.matching
+                    samp.save_match_prob('prob.txt')
 
-                if algo == 'STH0.1':
-                    samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 1, threshold=0.1)
-                    reward = samp.eval_threshold()
-                    matching = samp.matching 
+                # if algo == 'STH0.1':
+                #     samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 1, threshold=0.1)
+                #     reward = samp.eval_threshold()
+                #     matching = samp.matching 
 
-                if algo == 'STH0.25':
-                    samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 1, threshold=0.25)
-                    reward = samp.eval_threshold()
-                    matching = samp.matching   
+                # if algo == 'STH0.25':
+                #     samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 1, threshold=0.25)
+                #     reward = samp.eval_threshold()
+                #     matching = samp.matching   
                 
-                if algo == 'STH0.5':
-                    samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 1, threshold=0.5)
-                    reward = samp.eval_threshold()
-                    matching = samp.matching                  
+                # if algo == 'STH0.5':
+                #     samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 1, threshold=0.5)
+                #     reward = samp.eval_threshold()
+                #     matching = samp.matching                  
 
-                if algo == 'SAM2':
-                    samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 2)
-                    reward = samp.eval()
-                    matching = samp.matching
+                # if algo == 'SAM2':
+                #     samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 2)
+                #     reward = samp.eval()
+                #     matching = samp.matching
 
-                if algo == 'SAM3':
-                    samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 3)
-                    reward = samp.eval()
-                    matching = samp.matching   
+                # if algo == 'SAM3':
+                #     samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 3)
+                #     reward = samp.eval()
+                #     matching = samp.matching   
 
-                if algo == 'SAM4':
-                    samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 4)
-                    reward = samp.eval()
-                    matching = samp.matching
+                # if algo == 'SAM4':
+                #     samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 4)
+                #     reward = samp.eval()
+                #     matching = samp.matching
 
                 if algo == 'COL1':
                     samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 1)
                     reward = samp.eval_Collina()
                     matching = samp.matching
                 
-                if algo == 'CTH0.1':
-                    samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 1, threshold=0.1)
-                    reward = samp.eval_Collina()
-                    matching = samp.matching
+                # if algo == 'CTH0.1':
+                #     samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 1, threshold=0.1)
+                #     reward = samp.eval_Collina()
+                #     matching = samp.matching
                     
-                if algo == 'CTH0.5':
-                    samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 1, threshold=0.5)
-                    reward = samp.eval_Collina()
-                    matching = samp.matching
-                if algo == 'COL2':
-                    samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 2)
-                    reward = samp.eval_Collina()
-                    matching = samp.matching               
+                # if algo == 'CTH0.5':
+                #     samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 1, threshold=0.5)
+                #     reward = samp.eval_Collina()
+                #     matching = samp.matching
+                # if algo == 'COL2':
+                #     samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 2)
+                #     reward = samp.eval_Collina()
+                #     matching = samp.matching               
                 
-                if algo == 'COL3':
-                    samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 3)
-                    reward = samp.eval_Collina()
-                    matching = samp.matching
+                # if algo == 'COL3':
+                #     samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 3)
+                #     reward = samp.eval_Collina()
+                #     matching = samp.matching
                                     
-                if algo == 'SAMC4':
-                    samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 4)
-                    reward = samp.eval_Collina()
-                    matching = samp.matching
+                # if algo == 'SAMC4':
+                #     samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 4)
+                #     reward = samp.eval_Collina()
+                #     matching = samp.matching
                     
                 if algo == 'SAM1N':
                     samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 1)
@@ -173,11 +179,25 @@ class OnlineMatching:
 
                 if algo == 'SAMTH':
                     samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 1, threshold=threshold)
-                    reward = samp.eval_threshold()
+                    reward, multiset_ratio = samp.eval_threshold()
                     matching = samp.matching
+                    samp.save_match_prob('prob.txt')
                 
+                if algo == 'COLTH':
+                    samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 1, threshold=threshold)
+                    reward = samp.eval_Collina()
+                    matching = samp.matching
+
+                    # samp.save_match_prob('prob.txt')
+                if algo == 'SAMTH0':
+                    samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 1, threshold=1e-5)
+                    reward, multiset_ratio = samp.eval_threshold()
+                    matching = samp.matching
+                    samp.save_match_prob('prob.txt')
+                    
                 if algo == 'RCP':
-                    rcp = RandCompMatching(graph=self.G, seq=seq, quit_time=quit_time)
+                    rcp = RandCompMatching(graph=self.G, seq=seq, quit_time=quit_time, k_rcp=k_rcp)
+                    print('k_rcp', k_rcp)
                     reward = rcp.eval()
                     matching = rcp.matching
 
@@ -217,8 +237,8 @@ class OnlineMatching:
                     alive = [1 for i in range(len(seq))]
                     max_match = MaxMatching(graph=self.G, seq=seq, quit_time=quit_time, alive=alive)
                     reward = max_match.eval()
+   
                     matching = max_match.matching
-                    # reward = 1
 
                 if algo == 'HG':
                     hgmatch = HGMatching(graph=self.G, seq=seq, quit_time=quit_time, mapping_file=self.mapping_file, L=self.L)
@@ -238,7 +258,7 @@ class OnlineMatching:
             # min quit_time of each sequence
             max_quit_time = [max(tested_quit_time[j]) for j in range(test_num)]
             max_bsize = int(max(max_quit_time))
-            # to speed up, we find out in our tested parameters, optimal batch size is less than 20.
+            # to speed up, for our tested parameters, optimal batch size is less than 20.
             max_bsize = min(20, max_bsize)
             # print('max_bsize', max_bsize)
             # print('max_bsize', max_bsize)
@@ -267,10 +287,17 @@ class OnlineMatching:
                 algo_result['BAT'] = [0] * test_num
             run_time['BAT'] = time.time()-start
             # print(min_quit_time)
+
+
+
         # find the optimal batch for bath tune graph.
         if 'STH' in algo_list:
             start = time.time()
-            test_th = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+            test_th = 0.05*np.arange(1, 21)
+            np.append(test_th, 1e-5)
+            test_th = [0.1, 0.2, 0.3, 0.4, 0.5]
+            # test_th = [0.05, 0.1, 0.15, 0.2, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90, 0.95, 0.1]
+            # test_th = [0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
 
             # test_bsize = list(range(1, max_bsize+1))
             reward_list = []
@@ -298,27 +325,126 @@ class OnlineMatching:
             optimal_th = test_th[max_index]
             print('optimal threshold for STH', optimal_th)
             print('multiset_ratio_of_optimal_threshold', multiset_avg_list[max_index])
+            sorted_with_index = sorted(enumerate(reward_list),
+                                    key=lambda x: x[1], 
+                                    reverse=True)
+
+            sorted_values = [value for _, value in sorted_with_index]
+            sorted_indices = [index for index, _ in sorted_with_index]
+
+            print("sorted")
+            for rank, (idx, val) in enumerate(sorted_with_index, 1):
+                print(val, test_th[idx])
+
+            # show the matching prob
+            samp = Samp(graph=self.G, seq=tested_seqs[0], quit_time=tested_quit_time[0], gamma = 1, threshold=optimal_th)
+            reward, multiset_ratio = samp.eval_threshold()
+            samp.save_match_prob('prob.txt')
+            print('optimal th\'s larger_th_count and original prob count', samp.two_counts)
+
             algo_result['STH'] = reward_th_list[max_index]
             run_time['STH'] = time.time()-start
 
-        # if save == 1:
-        #     for algo in algo_list:
-        #         print(algo)
-        # for algo in algo_list:
-        #     algo_mean[algo] = np.mean(algo_result[algo])
-        
-        # for algo in algo_list:
-        #     if save == 1:
-        #         print(algo_mean[algo]/algo_mean['OFF'])
-        #     else:
-        #         print(algo, algo_mean[algo], algo_mean[algo]/algo_mean['OFF'])
-        
-        #         algo_ratio[algo] = algo_mean[algo]/algo_mean['OFF']
+
+
+        # find the optimal gamma for bath tune graph.
+        if 'SAM+' in algo_list:
+            start = time.time()
+            test_th = np.arange(1, 11)
+            # test_bsize = list(range(1, max_bsize+1))
+            reward_list = []
+            reward_th_list = []
+            multiset_avg_list = []
+            for th in test_th:
+                reward_single_th_list = []
+                multiset_ratio_list = []
+                for j in range(len(tested_seqs)):
+                    # batch_g = BatchMatching(graph=self.G, seq=tested_seqs[j], quit_time=tested_quit_time[j], batch_type='G')
+                    samp = Samp(graph=self.G, seq=tested_seqs[j], quit_time=tested_quit_time[j], gamma = th, threshold=1)
+                    reward = samp.eval()
+                    reward_single_th_list.append(reward)
+                    # multiset_ratio_list.append(multiset_ratio)
+                # sum of rewards over different realizations.
+                total_reward = sum(np.array(reward_single_th_list))
+                # print('reward_single_bsize_list', reward_single_bsize_list)
+                reward_th_list.append(reward_single_th_list)
+                reward_list.append(total_reward)
+            max_index = reward_list.index(max(reward_list))
+            # print('reward_list', reward_list)
+            # print('reward_bsize_list', reward_bsize_list)
+            optimal_th = test_th[max_index]
+            # print('optimal gamma for SAM', optimal_th)
+            sorted_with_index = sorted(enumerate(reward_list),
+                                    key=lambda x: x[1], 
+                                    reverse=True)
+
+            sorted_values = [value for _, value in sorted_with_index]
+            sorted_indices = [index for index, _ in sorted_with_index]
+
+            # for rank, (idx, val) in enumerate(sorted_with_index, 1):
+            #     print(val, test_th[idx])
+
+            # show the matching prob
+            samp = Samp(graph=self.G, seq=tested_seqs[0], quit_time=tested_quit_time[0], gamma = optimal_th, threshold=1)
+            reward = samp.eval()
+            samp.save_match_prob('prob.txt')
+            # print('optimal th\'s larger_th_count and original prob count', samp.two_counts)
+
+            algo_result['SAM+'] = reward_th_list[max_index]
+            run_time['SAM+'] = time.time()-start
+
+
+
+        # find the optimal gamma for tune graph.
+        if 'COL+' in algo_list:
+            start = time.time()
+            test_th = np.arange(1, 11)
+            # test_bsize = list(range(1, max_bsize+1))
+            reward_list = []
+            reward_th_list = []
+            multiset_avg_list = []
+            for th in test_th:
+                reward_single_th_list = []
+                multiset_ratio_list = []
+                for j in range(len(tested_seqs)):
+                    # batch_g = BatchMatching(graph=self.G, seq=tested_seqs[j], quit_time=tested_quit_time[j], batch_type='G')
+                    samp = Samp(graph=self.G, seq=tested_seqs[j], quit_time=tested_quit_time[j], gamma = th, threshold=1)
+                    reward = samp.eval_Collina()
+                    reward_single_th_list.append(reward)
+                    # multiset_ratio_list.append(multiset_ratio)
+                # sum of rewards over different realizations.
+                total_reward = sum(np.array(reward_single_th_list))
+                # print('reward_single_bsize_list', reward_single_bsize_list)
+                reward_th_list.append(reward_single_th_list)
+                reward_list.append(total_reward)
+            max_index = reward_list.index(max(reward_list))
+            # print('reward_list', reward_list)
+            # print('reward_bsize_list', reward_bsize_list)
+            optimal_th = test_th[max_index]
+            # print('optimal gamma for SAM', optimal_th)
+            sorted_with_index = sorted(enumerate(reward_list),
+                                    key=lambda x: x[1], 
+                                    reverse=True)
+
+            sorted_values = [value for _, value in sorted_with_index]
+            sorted_indices = [index for index, _ in sorted_with_index]
+
+            # for rank, (idx, val) in enumerate(sorted_with_index, 1):
+            #     print(val, test_th[idx])
+
+            # show the matching prob
+            samp = Samp(graph=self.G, seq=tested_seqs[0], quit_time=tested_quit_time[0], gamma = optimal_th, threshold=1)
+            reward = samp.eval()
+            samp.save_match_prob('prob.txt')
+            # print('optimal th\'s larger_th_count and original prob count', samp.two_counts)
+
+            algo_result['COL+'] = reward_th_list[max_index]
+            run_time['COL+'] = time.time()-start
 
 
         if 'CTH' in algo_list:
             start = time.time()
-            test_th = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+            test_th = [1e-5, 0.1, 0.2, 0.3, 0.4, 0.5]
 
             # test_bsize = list(range(1, max_bsize+1))
             reward_list = []

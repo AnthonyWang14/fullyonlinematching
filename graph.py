@@ -58,14 +58,14 @@ class Graph:
         self.weights_norm = (self.weights) / (np.mean(self.weights))
         # print the variance of weights
         # print standard deviation of weights
-        print('std of weights', np.std(self.weights_norm))
+        # print('std of weights', np.std(self.weights_norm))
         # count the number of weights less than 1e-5
         zero_count = 0
         for i in range(self.N):
             for j in range(self.N):
                 if self.weights[i][j] < 1e-5:
                     zero_count += 1
-        print('density', 1-zero_count/self.N**2)
+        # print('density', 1-zero_count/self.N**2)
         large_edge_count = 0
         for i in range(self.N):
             wii = self.weights[i][i]
@@ -150,6 +150,7 @@ class Graph:
         # need define quit_pamameter, mean quit time list
         self.dist_paras = []
         self.mean_quit_time = []
+
         if self.dist_type == 'twovalue':
             # std variance = 0.1
             samples = truncated_normal(self.dist_hyperpara, 0.01, low=0, high=1, size=self.N)
@@ -177,8 +178,11 @@ class Graph:
                 self.dist_paras.append(paras)
                 self.mean_quit_time.append(paras['d'])
 
-        if self.dist_type == 'uniform':
-            samples = np.random.randint(0, self.dist_hyperpara+1, self.N)
+        if self.dist_type == 'uniform' or self.dist_type == 'uni_fix_b':
+            # Dmin = 5
+            Dmax = self.dist_hyperpara
+            Dmin = 1
+            samples = np.random.randint(Dmin, Dmax+1, self.N)
             # for i in range(self.N):
             #     if np.random.rand() < 0.5:
             #         samples[i] = np.random.randint(1, 5)
@@ -189,7 +193,23 @@ class Graph:
                 paras['d'] = samples[i]
                 self.dist_paras.append(paras)
                 self.mean_quit_time.append(paras['d'])
-
+            # random choose one as Dmin and one as Dmax
+            indices = random.sample(range(self.N), 2)
+            dmin_index = indices[0]
+            dmax_index = indices[1]
+            self.dist_paras[dmin_index]['d'] = Dmin
+            self.mean_quit_time[dmin_index] = Dmin
+            self.dist_paras[dmax_index]['d'] = Dmax
+            self.mean_quit_time[dmax_index] = Dmax
+            # print(self.dist_paras, self.mean_quit_time)
+        
+        # fix c from discrete uniform [mean-c, mean+c]
+        if self.dist_type == 'uni_fix_c':
+            c = self.dist_hyperpara
+            fixed_mean = 10
+            for i in range(self.N):
+                self.dist_paras.append(c)
+                self.mean_quit_time.append(fixed_mean)
 
         if self.dist_type == 'fix':
             fixd = self.dist_hyperpara
@@ -218,15 +238,26 @@ class Graph:
         
         # dist para is the expectation, 1/p
         if self.dist_type == 'geo_new':
-            dmax = self.dist_hyperpara
+            
+            Dmax = self.dist_hyperpara
+            Dmin = 1
             # random sample d from 1 to dmax (noninteger), size = self.N
-            samples = np.random.uniform(1, dmax, self.N)
+            samples = np.random.uniform(Dmin, Dmax, self.N)
             # fix p_min
             # samples = np.array([self.p_min for i in range(self.N)])
             for i in range(self.N):
                 d = samples[i]
                 self.dist_paras.append(d)
                 self.mean_quit_time.append(d)
+            
+            indices = random.sample(range(self.N), 2)
+            dmin_index = indices[0]
+            dmax_index = indices[1]
+            self.dist_paras[dmin_index] = Dmin
+            self.mean_quit_time[dmin_index] = Dmin
+            self.dist_paras[dmax_index] = Dmax
+            self.mean_quit_time[dmax_index] = Dmax
+            # print(self.dist_paras, self.mean_quit_time)
 
 
         if self.dist_type == 'sin':
@@ -296,12 +327,26 @@ class Graph:
 
         if self.dist_type == 'poisson':
             lam_max = self.dist_hyperpara
+            Dmax = lam_max
+            Dmin = 0
             for i in range(self.N):
                 paras = {}
-                paras['lam'] = lam_max*np.random.rand()
+                # paras['lam'] = lam_max*np.random.rand()
+                paras['lam'] = random.uniform(Dmin, Dmax)
                 paras['dev'] = 0
                 self.dist_paras.append(paras)
                 self.mean_quit_time.append(paras['lam']+paras['dev'])
+
+            indices = random.sample(range(self.N), 2)
+            dmin_index = indices[0]
+            dmax_index = indices[1]
+            self.dist_paras[dmin_index]['lam'] = Dmin
+            self.dist_paras[dmin_index]['dev'] = 0
+            self.mean_quit_time[dmin_index] = Dmin
+            self.dist_paras[dmax_index]['lam'] = Dmax
+            self.dist_paras[dmax_index]['dev'] = 0
+            self.mean_quit_time[dmax_index] = Dmax
+            # print(self.dist_paras, self.mean_quit_time)
 
         if self.dist_type == 'fix_geo':
             # dist_hyperpara is the expectation's range
@@ -366,6 +411,24 @@ class Graph:
         if self.dist_type == 'uniform':
             mean = self.dist_paras[ind]['d']
             return np.random.randint(0, 2*mean+1)
+        
+        if self.dist_type == 'uni_fix_b':
+            mean = self.dist_paras[ind]['d']
+            b = 1
+            if mean < b:
+                print('mean should be larger than c')
+                return 0
+            # sample from [mean-b, mean+b]
+            return np.random.randint(mean-b, mean+b+1)            
+        
+        if self.dist_type == 'uni_fix_c':
+            mean = self.mean_quit_time[ind]
+            c = self.dist_paras[ind]
+            if mean < c:
+                print('mean should be larger than c')
+                return 0
+            # sample from [mean-c, mean+c]
+            return np.random.randint(mean-c, mean+c+1)
         
         if self.dist_type == 'binomial':
             n = self.dist_paras[ind]['n']

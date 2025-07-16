@@ -1,0 +1,52 @@
+2025-05-25 10:33:21
+density=1 type_number=20 gamma=1 w_std=0.5 r_min=0 dist_hyperpara=10 dist_type=uni_fix_b
+gamma OFF SAM
+1 1.0 0.664
+2 1.0 0.729
+3 1.0 0.742
+4 1.0 0.754
+5 1.0 0.754
+6 1.0 0.77
+7 1.0 0.756
+8 1.0 0.731
+9 1.0 0.767
+10 1.0 0.755
+2025-05-25 10:33:46
+density=1 type_number=20 gamma=1 w_std=1 r_min=0 dist_hyperpara=10 dist_type=uni_fix_b
+gamma OFF SAM
+1 1.0 0.648
+2 1.0 0.733
+3 1.0 0.757
+4 1.0 0.783
+5 1.0 0.779
+6 1.0 0.783
+7 1.0 0.783
+8 1.0 0.779
+9 1.0 0.788
+10 1.0 0.785
+2025-05-25 10:34:12
+density=1 type_number=20 gamma=1 w_std=5 r_min=0 dist_hyperpara=10 dist_type=uni_fix_b
+gamma OFF SAM
+1 1.0 0.68
+2 1.0 0.768
+3 1.0 0.79
+4 1.0 0.796
+5 1.0 0.791
+6 1.0 0.803
+7 1.0 0.796
+8 1.0 0.811
+9 1.0 0.807
+10 1.0 0.803
+2025-05-25 10:34:38
+density=1 type_number=20 gamma=1 w_std=10 r_min=0 dist_hyperpara=10 dist_type=uni_fix_b
+gamma OFF SAM
+1 1.0 0.697
+2 1.0 0.767
+3 1.0 0.797
+4 1.0 0.776
+5 1.0 0.81
+6 1.0 0.804
+7 1.0 0.783
+8 1.0 0.804
+9 1.0 0.803
+10 1.0 0.793

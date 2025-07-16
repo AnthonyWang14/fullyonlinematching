@@ -80,8 +80,8 @@ class Samp:
             for j in range(self.G.N):
                 if i <= j:
                     if self.G.mean_quit_time[i]+self.G.mean_quit_time[j] < 1e-5:
-                        self.sol[str(i)+'_'+str(j)] = 1
-                        self.sol[str(j)+'_'+str(i)] = 1
+                        self.sol[str(i)+'_'+str(j)] = 0
+                        self.sol[str(j)+'_'+str(i)] = 0
                     else:
                         t = (temp_sol[i][j]+temp_sol[j][i])/(self.G.mean_quit_time[i]+self.G.mean_quit_time[j])
                         t = (temp_sol[i][j]*self.G.rates[j] + temp_sol[j][i]*self.G.rates[i])/(self.G.mean_quit_time[i]+self.G.mean_quit_time[j])
@@ -89,6 +89,55 @@ class Samp:
                         xji = t*self.G.mean_quit_time[j]/self.G.rates[i]
                         self.sol[str(i)+'_'+str(j)] = xij    
                         self.sol[str(j)+'_'+str(i)] = xji    
+
+    def save_match_prob(self, filename):
+        # save the 2-d matrix self.matching_prob_matrix to file
+        np.savetxt("matrix.txt", self.matching_prob_matrix, fmt="%.3f")
+        np.savetxt('weights.txt', self.G.weights, fmt="%.3f")
+        # print('*'*10)
+        # for u in range(self.G.N):
+        #     for v in range(self.G.N):
+        #         if self.matching_prob_matrix[u][v] > 1e-5:
+        #             print(self.matching_prob_matrix[u][v], self.G.weights[u][v])
+        
+        # print('-'*10)
+
+        data = np.array(self.matching_prob_matrix).flatten()
+
+        # 生成自定义区间边界
+        bins = [0, 1e-5] # 0 to 1e-5
+        # 前0.1部分：1e-5-0.01, 0.01-0.02,...,0.09-0.10（左闭右开）
+        bins += [x/100 for x in range(1, 11)]  # 生成1e-5,0.01,...,0.10
+        # 后0.1部分：0.10-0.20,0.20-0.30,...,0.90-1.00（左闭右闭）
+        bins += [x/10 for x in range(2, 11)]   # 生成0.2,0.3,...,1.0
+        
+        # 保证最后一个区间包含1.0
+        bins[-1] += 1e-9  # 微小偏移包含上限
+
+        # 统计分布
+        counts, _ = np.histogram(data, bins=bins)
+        total = data.size
+        proportions = counts / total
+
+        # 生成区间标签
+        labels = []
+        labels.append(f"0-{1e-5:.2f}")
+        # 前0.1部分标签
+        for i in range(10):
+            labels.append(f"{i/100:.2f}-{(i+1)/100:.2f}")
+            
+        # 后0.1部分标签
+        for i in range(1, 10):
+            lower = i/10
+            upper = (i+1)/10 if i < 9 else 1.0
+            labels.append(f"{lower:.1f}-{upper:.1f}")
+
+        # # 打印结果
+        # print("区间范围\t\t数量\t占比")
+        # for label, count, prop in zip(labels, counts, proportions):
+        #     print(f"{label}\t{count}\t{prop*100:.2f}%")
+
+
 
     # more tight constraint adjust:
     def adjust_sol_tight(self):
@@ -153,6 +202,7 @@ class Samp:
         return self.reward
     
     def eval(self):
+        np.random.seed(23)
         self.solve()
         self.adjust_sol()
         # check maximal matching prob
@@ -161,15 +211,17 @@ class Samp:
             for v in range(self.G.N):
                 # matching_prob_matrix[u][v] = self.sol[str(u)+'_'+str(v)]/(self.G.mean_quit_time[u]*self.G.rates[u])
                 if self.G.mean_quit_time[u] < 1e-5:
-                    matching_prob_matrix[u][v] = 1
+                    matching_prob_matrix[u][v] = 0
                 else:
                     matching_prob_matrix[u][v] = self.sol[str(u)+'_'+str(v)]/(self.G.mean_quit_time[u]*self.G.rates[u])
         max_matching_prob = np.max(matching_prob_matrix)
+        # save for testing
+        self.matching_prob_matrix = matching_prob_matrix
         col_counts = 0
         for u in range(self.G.N):
             if self.G.mean_quit_time[u]*self.G.rates[u] > 1:
                 col_counts += 1
-        print('col_counts', col_counts, col_counts)
+        # print('col_counts', col_counts, col_counts)
         # print how many prob is larger than 1/2    
         # print('num_prob_larger_than_half', np.sum(matching_prob_matrix > 0.5))
         # print('num_prob_larger_than_1/4', np.sum(matching_prob_matrix > 0.25))
@@ -219,6 +271,7 @@ class Samp:
     
 
     def eval_threshold(self):
+        np.random.seed(23)
         self.solve()
         self.adjust_sol()
         # check maximal matching prob
@@ -227,10 +280,11 @@ class Samp:
             for v in range(self.G.N):
                 # matching_prob_matrix[u][v] = self.sol[str(u)+'_'+str(v)]/(self.G.mean_quit_time[u]*self.G.rates[u])
                 if self.G.mean_quit_time[u] < 1e-5:
-                    matching_prob_matrix[u][v] = 1
+                    matching_prob_matrix[u][v] = 0
                 else:
                     matching_prob_matrix[u][v] = self.sol[str(u)+'_'+str(v)]/(self.G.mean_quit_time[u]*self.G.rates[u])
         max_matching_prob = np.max(matching_prob_matrix)
+        self.matching_prob_matrix = matching_prob_matrix
         # # print how many prob is larger than 1/2    
         # print('num_prob_larger_than_half', np.sum(matching_prob_matrix > 0.5))
         # print('num_prob_larger_than_1/4', np.sum(matching_prob_matrix > 0.25))
@@ -245,6 +299,8 @@ class Samp:
         # print(self.d, 'd')
         multi_set_count = 0
         max_quit_time = max(self.quit_time)
+        larger_th_count = 0
+        original_prob_count = 0
         for t in range(len(self.seq)):
             if t > 0:
                 v = self.seq[t]
@@ -264,6 +320,9 @@ class Samp:
                     prob = self.gamma*matching_prob_matrix[u][v]
                     if prob > self.threshold:
                         prob = 1
+                        larger_th_count += 1
+                    else:
+                        original_prob_count += 1
                     # with probability prob, match u with v
                     if np.random.random() <= prob:
                         for ind in candidate_index:
@@ -278,6 +337,8 @@ class Samp:
                         break
 
         # print('multi_set_count of sth', multi_set_count/self.T)
+        self.two_counts = [larger_th_count, original_prob_count]
+        # print('larger_th_count', larger_th_count, 'threshold', self.threshold)
         return self.reward, multi_set_count/self.T
     
     def eval_Collina(self):

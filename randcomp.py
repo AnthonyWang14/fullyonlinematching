@@ -4,10 +4,12 @@ from gurobipy import *
 
 class RandCompMatching:
     
-    def __init__(self, graph, seq, quit_time) -> None:
+    def __init__(self, graph = [], seq = [], quit_time = [], k_rcp=0.25) -> None:
         self.G = graph
         self.seq = seq
         self.quit_time = quit_time
+        # default value of   k = 0.25
+        self.k_rcp = k_rcp
 
 
     def flow_decomposition(self):
@@ -65,7 +67,8 @@ class RandCompMatching:
         for i in range(self.G.N):
             for j in range(self.G.N):
                 eij = str(i)+'_'+str(j)
-                self.flowij[i][j] = 0.25*x[eij].getAttr(GRB.Attr.X)
+                # here we use self.k instead of 0.25 in the paper
+                self.flowij[i][j] = self.k_rcp*x[eij].getAttr(GRB.Attr.X)
                 
         # print('flowij', self.flowij)
         sum_row = np.sum(self.flowij, axis=1) # sum_j x_ij

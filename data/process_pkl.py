@@ -37,6 +37,9 @@ def gen_weight(d, type_list, L, A):
     max_weight = np.max(weights)
     # normalize weights to 0~1
     weights = weights/max_weight
+
+    print('std', np.std(weights)/np.mean(weights))
+    print('*'*20)
     return weights
 
 def distance(u, v):
@@ -61,8 +64,18 @@ def check_weight(d, a, b, L, A):
         route4 = distance(a_start, b_start) + distance(b_start, b_end) + distance(b_end, a_end)
         # new weight definition
         # a = np.random.uniform(1, A)
-        weight = A*(distance(a_start, a_end)+distance(b_start, b_end))-min(route1, route2, route3, route4)
-        weight = max(weight, 0)
+        # weight = A*(distance(a_start, a_end)+distance(b_start, b_end))-min(route1, route2, route3, route4)
+        # weight = max(weight, 0)
+        # add new constraint.
+        tau_u = distance(a_start, a_end)
+        tau_v = distance(b_start, b_end)
+        r_uv = min(route1, route2, route3, route4)
+        if (tau_u+tau_v) < r_uv:
+            # print('a, b', a, b)
+            weight = 0
+        else:
+            weight = A*(tau_u+tau_v)-r_uv
+            weight = max(weight, 0)
         # threshold = 0.5
         # if weight < threshold:
         #     weight = 0
@@ -83,6 +96,14 @@ def gene_weight_kmeans(a, b, A):
     # print('min_route', min(route1, route2, route3, route4))
     # print('distance(a_start, a_end)+distance(b_start, b_end)', distance(a_start, a_end)+distance(b_start, b_end))
     weight = A*(distance(a_start, a_end)+distance(b_start, b_end))-min(route1, route2, route3, route4)
+    # add new constraint.
+    tau_u = distance(a_start, a_end)
+    tau_v = distance(b_start, b_end)
+    r_uv = min(route1, route2, route3, route4)
+    # rho = 1/1.1
+    # if (tau_u+tau_v) < rho*r_uv:
+    #     # print('a, b', a, b)
+    #     weight = 0
     # print('A', A)
     weight = max(weight, 0)
     # print('weight', weight)
@@ -101,6 +122,7 @@ def cal_kmeans(pickup, dropoff, A, type_number):
     # turn the data into numpy array
     data = np.array(data)
     print(data[1:10])
+    np.random.seed(42)
     # Perform KMeans clustering
     kmeans = KMeans(n_clusters=type_number, random_state=42)
     kmeans.fit(data)
@@ -144,7 +166,12 @@ def cal_kmeans(pickup, dropoff, A, type_number):
                 deg[i] += 1
     # print('avg deg', sum(deg)/len(deg))
     # print('max deg', max(deg), 'min deg', min(deg))
+    print('*'*20)
     print('density', 2*nontrivialedges/(type_number*(type_number+1)))
+    # std over all weights
+    print('std', np.std(weights)/np.mean(weights))
+    print('*'*20)
+
     L = 10
     # save_data(rates, weights, L, d, type_number)
     filename = 'nyc_'+str(type_number)+'_'+str(A)
@@ -162,9 +189,9 @@ def cal_kmeans(pickup, dropoff, A, type_number):
         # Scale and convert to integers
         scaled_matrix[:, i] = ((matrix[:, i] - min_val) / (max_val - min_val) * L).astype(int)
 
-    # Output the scaled matrix
-    print("Original matrix:\n", matrix)
-    print("\nScaled matrix:\n", scaled_matrix)
+    # # Output the scaled matrix
+    # print("Original matrix:\n", matrix)
+    # print("\nScaled matrix:\n", scaled_matrix)
     # save_type_mapping(L, 0, type_number, type_list)
     filename = 'mapping_nyc_'+str(type_number)+'_'+str(A)
     with open(filename, 'w') as f:
@@ -175,7 +202,7 @@ def cal_kmeans(pickup, dropoff, A, type_number):
 
 
 
-def cal_rate_bound(pickup, dropoff, L, d, A):
+def cal_rate_bound(pickup, dropoff, L, tn, A):
     x1_list = []
     y1_list = []
     pick_list = []
@@ -242,7 +269,7 @@ def cal_rate_bound(pickup, dropoff, L, d, A):
         # count += 1
     # print(count_table)
 
-    # type_number = 50
+    # type_number = tn
     # top_k_indices_2d = top_type_number(type_number, count_table, L)
     # count_list = np.zeros(type_number)
     # for i in range(len(top_k_indices_2d)):
@@ -263,18 +290,22 @@ def cal_rate_bound(pickup, dropoff, L, d, A):
     count_list = []
 
     # # use min count to filter out the small types
-    # min_count = 200
+    # type_number = 0
+    # min_count = 300
     # for i in range(M):
     #     for j in range(M):
     #         if count_table[i][j] >= min_count:
-    #             type_list.append([i, j])
-    #             count_list.append(count_table[i][j])
+    #             type_number += 1
+    #             # type_list.append([i, j])
+    #             # count_list.append(count_table[i][j])
     #             # rates.append(count_table[i][j]/count)
 
     # use type number to filter out the small types
-    type_number = 20
+    # d = L
+    type_number = tn
+    # print(min_count, type_number)
     top_k_indices_2d = top_type_number(type_number, count_table, L)
-    print('top_k_indices_2d', top_k_indices_2d)
+    # print('top_k_indices_2d', top_k_indices_2d)
     type_list = top_k_indices_2d
     for k in range(len(type_list)):
         [x, y] = type_list[k]
@@ -286,7 +317,8 @@ def cal_rate_bound(pickup, dropoff, L, d, A):
     print(count)
     type_number = len(rates)
     print('type number', type_number)
-    weights = gen_weight(d, type_list, L, A)
+    # first parameter is the threshold d, we set it as L+1
+    weights = gen_weight(2*L, type_list, L, A)
     deg = [0 for i in weights]
     nontrivialedges = 0
     for i in range(len(weights)):
@@ -301,9 +333,9 @@ def cal_rate_bound(pickup, dropoff, L, d, A):
                 deg[i] += 1
     # print('avg deg', sum(deg)/len(deg))
     # print('max deg', max(deg), 'min deg', min(deg))
-    print('d', d, '*'*10, 'density', 2*nontrivialedges/(type_number*(type_number+1)))
-    save_data(rates, weights, L, d, len(rates))
-    save_type_mapping(L, d, type_number, type_list)
+    print('*'*10, 'density', 2*nontrivialedges/(type_number*(type_number+1)))
+    save_data(rates, weights, L, len(rates))
+    save_type_mapping(L, type_number, type_list)
     return
 
 def convert_indices_2d(indices, shape):
@@ -319,15 +351,15 @@ def top_type_number(type_number, count_table, L):
     print("Top-k indices in 2D:", top_k_indices_2d)
     return top_k_indices_2d
 
-def save_data(rates, weights, L, d, type_number):
-    filename = 'nyc_'+str(L)+'_'+str(d)+'_'+str(type_number)+'_'+str(A)
+def save_data(rates, weights, L, type_number):
+    filename = 'nyc_'+str(L)+'_'+str(type_number)+'_'+str(A)
     with open(filename, 'w') as f:
         f.write(' '.join([str(i) for i in rates])+'\n')
         for i in range(len(weights)):
             f.write(' '.join([str(j) for j in weights[i]])+'\n')
 
-def save_type_mapping(L, d, type_number, top_k_indices_2d):
-    filename = 'mapping_nyc_'+str(L)+'_'+str(d)+'_'+str(type_number)+'_'+str(A)
+def save_type_mapping(L, type_number, top_k_indices_2d):
+    filename = 'mapping_nyc_'+str(L)+'_'+str(type_number)+'_'+str(A)
     with open(filename, 'w') as f:
         for i in range(type_number):
             f.write(str(top_k_indices_2d[i][0] // L)+' '+str(top_k_indices_2d[i][0] % L)+' '+str(top_k_indices_2d[i][1] // L)+' '+str(top_k_indices_2d[i][1] % L)+'\n')
@@ -386,11 +418,14 @@ if __name__ == '__main__':
     # for A in A_list:
     #     cal_rate_bound(pickup, dropoff, L, d, A)
     # cr_list = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3]
-    # A_list = [1, 1.1, 1.2, 1.3, 1.4, 1.5]
+    # A_list = [1.3]
     A_list = [1.3]
-    tn = 35
+    # A_list = [1,1.3]
+    tn_list = [10, 15, 20, 25, 30]
     for A in A_list:
-        cal_kmeans(pickup, dropoff, A, tn)
+        for tn in tn_list:
+            # cal_kmeans(pickup, dropoff, A, tn)
+            cal_rate_bound(pickup, dropoff, L, tn, A)
     infile.close()
 
 
