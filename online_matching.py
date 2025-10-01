@@ -136,6 +136,11 @@ class OnlineMatching:
                     samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 1)
                     reward = samp.eval_Collina()
                     matching = samp.matching
+
+                if algo == 'COL':
+                    samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = gamma)
+                    reward = samp.eval_Collina()
+                    matching = samp.matching    
                 
                 # if algo == 'CTH0.1':
                 #     samp = Samp(graph=self.G, seq=seq, quit_time=quit_time, gamma = 1, threshold=0.1)

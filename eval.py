@@ -392,15 +392,15 @@ def diff_gamma(dist_type = 'geometric', dist_hyperpara = 0.5, density = 0.5, typ
     paras_dict = {'density':density, 'type_number':type_number, 'gamma':1, 'w_std':w_std, 'r_min':r_min, 'dist_hyperpara': dist_hyperpara, 'dist_type':dist_type}
     print('test different gamma')
     if input_file:
-        algo_list = ['OFF', 'SAM']
+        algo_list = ['OFF', 'COL']
         # algo_list = ['OFF', 'RCP']
         f = input_file
     else:
         input_file = 'syn'
-        algo_list = ['OFF', 'SAM']
+        algo_list = ['OFF', 'COL']
         f = None
     # rmin = 0
-    filename = 'result/gamma_'+dist_type+input_file
+    filename = 'result/col_gamma_'+dist_type+input_file
     topstr = 'gamma '+' '.join([algo for algo in algo_list])
     algo_ratio_mean_list = []
     algo_ratio_std_list = []
@@ -410,7 +410,7 @@ def diff_gamma(dist_type = 'geometric', dist_hyperpara = 0.5, density = 0.5, typ
         algo_ratio_std_list.append(algo_ratio_std)
 
     # best gamma
-    sam_ratio_mean = np.array([algo_ratio_mean_list[i]['SAM'] for i in range(len(gamma_list)) ])
+    sam_ratio_mean = np.array([algo_ratio_mean_list[i]['COL'] for i in range(len(gamma_list)) ])
     # arr = np.array(algo_ratio_mean_list)
     max_index = sam_ratio_mean.argmax()  
     print('*'*10)
