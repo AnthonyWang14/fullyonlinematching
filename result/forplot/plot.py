@@ -38,8 +38,8 @@ new_colors_dict = {
     'HG': 'darkgoldenrod',
     'STH0.5': 'lime',  # Brighter green for contrast
     'CTH0.5': 'purple',
-    'SAM+': 'lime',  # Brighter green for contrast
-    'COL+': 'purple',
+    'SAM+': 'purple',  # Brighter green for contrast
+    'COL+': 'lime',
     'SGAM': 'forestgreen'
 }
 
@@ -56,7 +56,7 @@ markers_dict = {
     'SAMC': 'v',  # Downward triangle marker
     'STH0.5': '8',  # Octagon marker for distinction
     'CTH0.5': 'X',   # Cross marker for distinction
-    'SAM+': '8',  # Octagon marker for distinction
+    'SAM+': '^',  # Octagon marker for distinction
     'COL+': 'X',   # Cross marker for distinction
     'SGAM': 'd'
 }
@@ -147,7 +147,7 @@ def plot_one_RCP(filename, show_RCP = True):
             algo = algo_name_list[i]
             # plt.plot(x, res[i], color=new_colors_dict[algo], marker = markers_dict[algo], label=algo)
             smooth_res = savgol_filter(res[i], window_length=5, polyorder=2)  # make the window size larger to smooth the curve
-            plt.plot(x, smooth_res, color=new_colors_dict[algo], marker=markers_dict[algo], label=algo)
+            plt.plot(x, smooth_res, color=new_colors_dict[algo], marker=markers_dict[algo], label=algo, markersize = 9)
 
 
         plt.xlabel(xlabel, fontsize=16)
@@ -178,7 +178,7 @@ def plot_one_RCP(filename, show_RCP = True):
 
 def plot_gamma(filename):
     color_list = ['darkgoldenrod', 'blue', 'forestgreen', 'orange','red','slateblue']
-    marker_list = ['x', '^', 'o', 'x', '^', 'o']
+    marker_list = ['x', '^', 'o', 's', '*', 'd']
     latex_labels = {
         'p^G=0.1,p_m=0': r'$P^G=0.1,p_m=0$',
         'p^G=0.5,p_m=0': r'$P^G=0.5,p_m=0$',
@@ -334,6 +334,7 @@ if __name__ == '__main__':
     # plot_one_RCP('rmin_geo.txt')
     # plot_one_RCP('rmin_uni.txt')
     # plot_one_RCP('rmin_poi.txt')
+    
     # plot_one_RCP('sigma_uni.txt')
     # plot_one_RCP('sigma_geo.txt')
     # plot_one_RCP('sigma_poi.txt')
@@ -382,21 +383,21 @@ if __name__ == '__main__':
     # plot_gamma('gam_geo_nyc_wf')
     # plot_gamma('gam_uni_nyc_wf')
     # plot_gamma('gam_poi_nyc_wf')
-    # plot_gamma('gam_geo_tn')
-    # plot_gamma('gam_uni_tn')
-    # plot_gamma('gam_poi_tn')
+    plot_gamma('gam_geo_tn')
+    plot_gamma('gam_uni_tn')
+    plot_gamma('gam_poi_tn')
     # plot_gamma('eta_geo')
     # plot_gamma('eta_uni')
     # plot_gamma('eta_poi')
     # plot_gamma('col_eta_geo')
     # plot_gamma('col_eta_uni')
     # plot_gamma('col_eta_poi')
-    plot_gamma('col_gam_geo')
-    plot_gamma('col_gam_geo2')
-    plot_gamma('col_gam_uni')
-    plot_gamma('col_gam_uni2')
-    plot_gamma('col_gam_poi')
-    plot_gamma('col_gam_poi2')
+    # plot_gamma('col_gam_geo')
+    # plot_gamma('col_gam_geo2')
+    # plot_gamma('col_gam_uni')
+    # plot_gamma('col_gam_uni2')
+    # plot_gamma('col_gam_poi')
+    # plot_gamma('col_gam_poi2')
     # plot_gamma('gam_geo_nycLdel2A1')
     # plot_gamma('gam_sin_nycLdel2A1')
     # plot_gamma('gam_poi_nycLdel2A1')
